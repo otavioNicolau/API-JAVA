@@ -1,0 +1,7 @@
+/home/otavio/API-JAVA/app/application/src/main/java/com/pdfprocessor/application/usecase/CancelJobUseCase.java
+/home/otavio/API-JAVA/app/application/src/main/java/com/pdfprocessor/application/usecase/GetJobStatusUseCase.java
+/home/otavio/API-JAVA/app/application/src/main/java/com/pdfprocessor/application/dto/JobResponse.java
+/home/otavio/API-JAVA/app/application/src/main/java/com/pdfprocessor/application/usecase/ListAllJobsUseCase.java
+/home/otavio/API-JAVA/app/application/src/main/java/com/pdfprocessor/application/usecase/DownloadResultUseCase.java
+/home/otavio/API-JAVA/app/application/src/main/java/com/pdfprocessor/application/dto/CreateJobRequest.java
+/home/otavio/API-JAVA/app/application/src/main/java/com/pdfprocessor/application/usecase/CreateJobUseCase.java

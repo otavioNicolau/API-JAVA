@@ -1,0 +1,204 @@
+2025-09-03 14:38:40 - [REQUEST] GET /api/v1/health from 0:0:0:0:0:0:0:1
+2025-09-03 14:38:40 - [RESPONSE] GET /api/v1/health - Status: 200 - Duration: 24ms
+2025-09-03 14:38:48 - [REQUEST] GET /api/v1/health from 0:0:0:0:0:0:0:1
+2025-09-03 14:38:48 - [RESPONSE] GET /api/v1/health - Status: 200 - Duration: 2ms
+2025-09-03 14:38:54 - [REQUEST] GET /api/v1/health from 0:0:0:0:0:0:0:1
+2025-09-03 14:38:54 - [RESPONSE] GET /api/v1/health - Status: 200 - Duration: 2ms
+2025-09-03 14:38:59 - [REQUEST] GET /api/v1/metrics from 0:0:0:0:0:0:0:1
+2025-09-03 14:38:59 - [RESPONSE] GET /api/v1/metrics - Status: 500 - Duration: 16ms
+2025-09-03 14:39:05 - [REQUEST] GET /api/v1/operations from 0:0:0:0:0:0:0:1
+2025-09-03 14:39:05 - [RESPONSE] GET /api/v1/operations - Status: 200 - Duration: 6ms
+2025-09-03 14:39:13 - [REQUEST] GET /api/v1/monitoring/metrics from 0:0:0:0:0:0:0:1
+2025-09-03 14:39:13 - [RESPONSE] GET /api/v1/monitoring/metrics - Status: 200 - Duration: 3ms
+2025-09-03 14:39:26 - [REQUEST] GET /api/v1/monitoring/metrics from 0:0:0:0:0:0:0:1
+2025-09-03 14:39:26 - [RESPONSE] GET /api/v1/monitoring/metrics - Status: 200 - Duration: 3ms
+2025-09-03 14:40:07 - [REQUEST] GET /api/v1/health from 0:0:0:0:0:0:0:1
+2025-09-03 14:40:07 - [RESPONSE] GET /api/v1/health - Status: 200 - Duration: 2ms
+2025-09-03 14:40:14 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 14:40:14 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 5ms
+2025-09-03 14:40:20 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 14:40:20 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 4ms
+2025-09-03 14:49:39 - [REQUEST] GET /api/v1/operations from 0:0:0:0:0:0:0:1
+2025-09-03 14:49:39 - [RESPONSE] GET /api/v1/operations - Status: 200 - Duration: 4ms
+2025-09-03 15:24:03 - [REQUEST] GET /api/v1/operations from 0:0:0:0:0:0:0:1
+2025-09-03 15:24:03 - [RESPONSE] GET /api/v1/operations - Status: 200 - Duration: 13ms
+2025-09-03 15:42:50 - [REQUEST] GET /api/v1/health from 0:0:0:0:0:0:0:1
+2025-09-03 15:42:50 - [RESPONSE] GET /api/v1/health - Status: 200 - Duration: 3ms
+2025-09-03 15:42:50 - [REQUEST] GET /api/v1/operations from 0:0:0:0:0:0:0:1
+2025-09-03 15:42:50 - [RESPONSE] GET /api/v1/operations - Status: 200 - Duration: 2ms
+2025-09-03 15:42:50 - [REQUEST] GET /api/v1/operations/MERGE/options-schema from 0:0:0:0:0:0:0:1
+2025-09-03 15:42:50 - [RESPONSE] GET /api/v1/operations/MERGE/options-schema - Status: 500 - Duration: 14ms
+2025-09-03 15:42:50 - [REQUEST] GET /api/v1/operations/PDF_CROP/options-schema from 0:0:0:0:0:0:0:1
+2025-09-03 15:42:50 - [RESPONSE] GET /api/v1/operations/PDF_CROP/options-schema - Status: 500 - Duration: 4ms
+2025-09-03 15:42:50 - [REQUEST] GET /api/v1/operations/WATERMARK/options-schema from 0:0:0:0:0:0:0:1
+2025-09-03 15:42:50 - [RESPONSE] GET /api/v1/operations/WATERMARK/options-schema - Status: 500 - Duration: 5ms
+2025-09-03 15:42:50 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:42:50 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 4ms
+2025-09-03 15:42:50 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:42:50 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 3ms
+2025-09-03 15:42:50 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:42:50 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 2ms
+2025-09-03 15:42:50 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:42:50 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 5ms
+2025-09-03 15:42:50 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:42:50 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 3ms
+2025-09-03 15:42:50 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:42:50 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 3ms
+2025-09-03 15:42:50 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:42:50 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 2ms
+2025-09-03 15:42:50 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:42:50 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 2ms
+2025-09-03 15:42:50 - [REQUEST] GET /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:42:50 - [RESPONSE] GET /api/v1/jobs - Status: 200 - Duration: 173ms
+2025-09-03 15:45:25 - [REQUEST] GET /api/v1/health from 0:0:0:0:0:0:0:1
+2025-09-03 15:45:25 - [RESPONSE] GET /api/v1/health - Status: 200 - Duration: 2ms
+2025-09-03 15:45:25 - [REQUEST] GET /api/v1/operations from 0:0:0:0:0:0:0:1
+2025-09-03 15:45:25 - [RESPONSE] GET /api/v1/operations - Status: 200 - Duration: 1ms
+2025-09-03 15:45:25 - [REQUEST] GET /api/v1/operations/MERGE/options-schema from 0:0:0:0:0:0:0:1
+2025-09-03 15:45:25 - [RESPONSE] GET /api/v1/operations/MERGE/options-schema - Status: 500 - Duration: 6ms
+2025-09-03 15:45:25 - [REQUEST] GET /api/v1/operations/PDF_CROP/options-schema from 0:0:0:0:0:0:0:1
+2025-09-03 15:45:25 - [RESPONSE] GET /api/v1/operations/PDF_CROP/options-schema - Status: 500 - Duration: 3ms
+2025-09-03 15:45:25 - [REQUEST] GET /api/v1/operations/WATERMARK/options-schema from 0:0:0:0:0:0:0:1
+2025-09-03 15:45:25 - [RESPONSE] GET /api/v1/operations/WATERMARK/options-schema - Status: 500 - Duration: 2ms
+2025-09-03 15:45:25 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:45:25 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 4ms
+2025-09-03 15:45:25 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:45:25 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 2ms
+2025-09-03 15:45:25 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:45:25 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 3ms
+2025-09-03 15:45:25 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:45:25 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 2ms
+2025-09-03 15:45:25 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:45:26 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 4ms
+2025-09-03 15:45:26 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:45:26 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 2ms
+2025-09-03 15:45:26 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:45:26 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 2ms
+2025-09-03 15:45:26 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:45:26 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 2ms
+2025-09-03 15:45:26 - [REQUEST] GET /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:45:26 - [RESPONSE] GET /api/v1/jobs - Status: 200 - Duration: 19ms
+2025-09-03 15:48:41 - [REQUEST] GET /api/v1/health from 0:0:0:0:0:0:0:1
+2025-09-03 15:48:41 - [RESPONSE] GET /api/v1/health - Status: 200 - Duration: 0ms
+2025-09-03 15:48:41 - [REQUEST] GET /api/v1/operations from 0:0:0:0:0:0:0:1
+2025-09-03 15:48:41 - [RESPONSE] GET /api/v1/operations - Status: 200 - Duration: 1ms
+2025-09-03 15:48:41 - [REQUEST] GET /api/v1/operations/MERGE/options-schema from 0:0:0:0:0:0:0:1
+2025-09-03 15:48:41 - [RESPONSE] GET /api/v1/operations/MERGE/options-schema - Status: 500 - Duration: 2ms
+2025-09-03 15:48:41 - [REQUEST] GET /api/v1/operations/PDF_CROP/options-schema from 0:0:0:0:0:0:0:1
+2025-09-03 15:48:41 - [RESPONSE] GET /api/v1/operations/PDF_CROP/options-schema - Status: 500 - Duration: 2ms
+2025-09-03 15:48:41 - [REQUEST] GET /api/v1/operations/WATERMARK/options-schema from 0:0:0:0:0:0:0:1
+2025-09-03 15:48:41 - [RESPONSE] GET /api/v1/operations/WATERMARK/options-schema - Status: 500 - Duration: 2ms
+2025-09-03 15:48:41 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:48:41 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 2ms
+2025-09-03 15:48:41 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:48:41 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 2ms
+2025-09-03 15:48:41 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:48:41 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 1ms
+2025-09-03 15:48:41 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:48:41 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 1ms
+2025-09-03 15:48:41 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:48:41 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 2ms
+2025-09-03 15:48:41 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:48:41 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 1ms
+2025-09-03 15:48:41 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:48:41 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 2ms
+2025-09-03 15:48:41 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:48:41 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 2ms
+2025-09-03 15:48:41 - [REQUEST] GET /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:48:41 - [RESPONSE] GET /api/v1/jobs - Status: 200 - Duration: 13ms
+2025-09-03 15:49:29 - [REQUEST] GET /api/v1/health from 0:0:0:0:0:0:0:1
+2025-09-03 15:49:29 - [RESPONSE] GET /api/v1/health - Status: 200 - Duration: 32ms
+2025-09-03 15:49:29 - [REQUEST] GET /api/v1/operations from 0:0:0:0:0:0:0:1
+2025-09-03 15:49:29 - [RESPONSE] GET /api/v1/operations - Status: 200 - Duration: 16ms
+2025-09-03 15:49:29 - [REQUEST] GET /api/v1/operations/MERGE/options-schema from 0:0:0:0:0:0:0:1
+2025-09-03 15:49:29 - [RESPONSE] GET /api/v1/operations/MERGE/options-schema - Status: 500 - Duration: 13ms
+2025-09-03 15:49:29 - [REQUEST] GET /api/v1/operations/PDF_CROP/options-schema from 0:0:0:0:0:0:0:1
+2025-09-03 15:49:29 - [RESPONSE] GET /api/v1/operations/PDF_CROP/options-schema - Status: 500 - Duration: 2ms
+2025-09-03 15:49:29 - [REQUEST] GET /api/v1/operations/WATERMARK/options-schema from 0:0:0:0:0:0:0:1
+2025-09-03 15:49:29 - [RESPONSE] GET /api/v1/operations/WATERMARK/options-schema - Status: 500 - Duration: 2ms
+2025-09-03 15:49:29 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:49:29 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 5ms
+2025-09-03 15:49:29 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:49:29 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 1ms
+2025-09-03 15:49:29 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:49:29 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 3ms
+2025-09-03 15:49:29 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:49:29 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 2ms
+2025-09-03 15:49:29 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:49:29 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 1ms
+2025-09-03 15:49:29 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:49:29 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 2ms
+2025-09-03 15:49:29 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:49:29 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 1ms
+2025-09-03 15:49:29 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:49:29 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 1ms
+2025-09-03 15:49:29 - [REQUEST] GET /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:49:33 - [RESPONSE] GET /api/v1/jobs - Status: 200 - Duration: 3665ms
+2025-09-03 15:50:32 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:50:32 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 13ms
+2025-09-03 15:51:13 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:51:13 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 3ms
+2025-09-03 15:52:12 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:52:12 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 44ms
+2025-09-03 15:52:48 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:52:49 - [RESPONSE] POST /api/v1/jobs - Status: 200 - Duration: 202ms
+2025-09-03 15:53:20 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:53:20 - [RESPONSE] POST /api/v1/jobs - Status: 200 - Duration: 31ms
+2025-09-03 15:53:33 - [REQUEST] GET /api/v1/health from 0:0:0:0:0:0:0:1
+2025-09-03 15:53:33 - [RESPONSE] GET /api/v1/health - Status: 200 - Duration: 2ms
+2025-09-03 15:53:33 - [REQUEST] GET /api/v1/operations from 0:0:0:0:0:0:0:1
+2025-09-03 15:53:33 - [RESPONSE] GET /api/v1/operations - Status: 200 - Duration: 3ms
+2025-09-03 15:53:33 - [REQUEST] GET /api/v1/operations/MERGE/options-schema from 0:0:0:0:0:0:0:1
+2025-09-03 15:53:33 - [RESPONSE] GET /api/v1/operations/MERGE/options-schema - Status: 500 - Duration: 3ms
+2025-09-03 15:53:33 - [REQUEST] GET /api/v1/operations/PDF_CROP/options-schema from 0:0:0:0:0:0:0:1
+2025-09-03 15:53:33 - [RESPONSE] GET /api/v1/operations/PDF_CROP/options-schema - Status: 500 - Duration: 2ms
+2025-09-03 15:53:33 - [REQUEST] GET /api/v1/operations/WATERMARK/options-schema from 0:0:0:0:0:0:0:1
+2025-09-03 15:53:33 - [RESPONSE] GET /api/v1/operations/WATERMARK/options-schema - Status: 500 - Duration: 2ms
+2025-09-03 15:53:33 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:53:33 - [RESPONSE] POST /api/v1/jobs - Status: 200 - Duration: 8ms
+2025-09-03 15:53:33 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:53:33 - [RESPONSE] POST /api/v1/jobs - Status: 200 - Duration: 5ms
+2025-09-03 15:53:33 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:53:33 - [RESPONSE] POST /api/v1/jobs - Status: 200 - Duration: 6ms
+2025-09-03 15:53:33 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:53:33 - [RESPONSE] POST /api/v1/jobs - Status: 400 - Duration: 4ms
+2025-09-03 15:53:33 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:53:33 - [RESPONSE] POST /api/v1/jobs - Status: 400 - Duration: 2ms
+2025-09-03 15:53:33 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:53:33 - [RESPONSE] POST /api/v1/jobs - Status: 400 - Duration: 1ms
+2025-09-03 15:53:33 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:53:33 - [RESPONSE] POST /api/v1/jobs - Status: 400 - Duration: 2ms
+2025-09-03 15:53:33 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:53:33 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 1ms
+2025-09-03 15:53:33 - [REQUEST] GET /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:53:33 - [RESPONSE] GET /api/v1/jobs - Status: 200 - Duration: 29ms
+2025-09-03 15:53:49 - [REQUEST] GET /api/v1/jobs/1d165a2a-aee1-4edd-a52d-b4e13e7f0949 from 0:0:0:0:0:0:0:1
+2025-09-03 15:53:49 - [RESPONSE] GET /api/v1/jobs/1d165a2a-aee1-4edd-a52d-b4e13e7f0949 - Status: 200 - Duration: 3ms
+2025-09-03 15:54:10 - [REQUEST] GET /api/v1/jobs/1d165a2a-aee1-4edd-a52d-b4e13e7f0949 from 0:0:0:0:0:0:0:1
+2025-09-03 15:54:10 - [RESPONSE] GET /api/v1/jobs/1d165a2a-aee1-4edd-a52d-b4e13e7f0949 - Status: 200 - Duration: 14ms
+2025-09-03 15:56:23 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:56:23 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 13ms
+2025-09-03 15:56:32 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:56:32 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 2ms
+2025-09-03 15:56:54 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:56:54 - [RESPONSE] POST /api/v1/jobs - Status: 200 - Duration: 11ms
+2025-09-03 15:57:05 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:57:05 - [RESPONSE] POST /api/v1/jobs - Status: 200 - Duration: 12ms
+2025-09-03 15:57:10 - [REQUEST] GET /api/v1/jobs/1d63a321-2cd5-4a27-ac94-10220cd3dd9a from 0:0:0:0:0:0:0:1
+2025-09-03 15:57:10 - [RESPONSE] GET /api/v1/jobs/1d63a321-2cd5-4a27-ac94-10220cd3dd9a - Status: 200 - Duration: 2ms
+2025-09-03 15:57:19 - [REQUEST] GET /api/v1/jobs/4b2bd863-8192-4b51-98f2-7a7522dd9ffe from 0:0:0:0:0:0:0:1
+2025-09-03 15:57:19 - [RESPONSE] GET /api/v1/jobs/4b2bd863-8192-4b51-98f2-7a7522dd9ffe - Status: 200 - Duration: 3ms
+2025-09-03 15:57:28 - [REQUEST] GET /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 15:57:28 - [RESPONSE] GET /api/v1/jobs - Status: 200 - Duration: 46ms
+2025-09-03 16:13:46 - [REQUEST] GET /api/v1/operations from 0:0:0:0:0:0:0:1
+2025-09-03 16:13:46 - [RESPONSE] GET /api/v1/operations - Status: 200 - Duration: 39ms
+2025-09-03 16:15:25 - [REQUEST] GET /api/v1/operations from 0:0:0:0:0:0:0:1
+2025-09-03 16:15:25 - [RESPONSE] GET /api/v1/operations - Status: 200 - Duration: 39ms
+2025-09-03 16:16:41 - [REQUEST] GET /api/v1/operations from 0:0:0:0:0:0:0:1
+2025-09-03 16:16:42 - [RESPONSE] GET /api/v1/operations - Status: 200 - Duration: 36ms
+2025-09-03 16:17:17 - [REQUEST] GET /api/v1/operations from 0:0:0:0:0:0:0:1
+2025-09-03 16:17:17 - [RESPONSE] GET /api/v1/operations - Status: 200 - Duration: 3ms
+2025-09-03 16:17:27 - [REQUEST] GET /api/v1/operations from 0:0:0:0:0:0:0:1
+2025-09-03 16:17:27 - [RESPONSE] GET /api/v1/operations - Status: 200 - Duration: 2ms
+2025-09-03 16:17:33 - [REQUEST] POST /api/v1/jobs from 0:0:0:0:0:0:0:1
+2025-09-03 16:17:33 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 21ms

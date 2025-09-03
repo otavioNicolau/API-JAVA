@@ -1,0 +1,8 @@
+com/pdfprocessor/application/usecase/CreateJobUseCase.class
+com/pdfprocessor/application/usecase/DownloadResultUseCase$DownloadResponse.class
+com/pdfprocessor/application/usecase/GetJobStatusUseCase.class
+com/pdfprocessor/application/usecase/DownloadResultUseCase.class
+com/pdfprocessor/application/usecase/CancelJobUseCase.class
+com/pdfprocessor/application/dto/JobResponse.class
+com/pdfprocessor/application/dto/CreateJobRequest.class
+com/pdfprocessor/application/usecase/ListAllJobsUseCase.class

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <!-- Exclude test classes -->
+    <Match>
+        <Class name="~.*Test.*"/>
+    </Match>
+    
+    <!-- Exclude generated classes -->
+    <Match>
+        <Class name="~.*\.generated\..*"/>
+    </Match>
+    
+    <!-- Exclude Spring Boot auto-configuration -->
+    <Match>
+        <Class name="~.*Application"/>
+        <Bug pattern="UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR"/>
+    </Match>
+    
+    <!-- Exclude serialization warnings for DTOs -->
+    <Match>
+        <Class name="~.*\.dto\..*"/>
+        <Bug pattern="SE_NO_SERIALVERSIONID"/>
+    </Match>
+    
+    <!-- Exclude null pointer warnings for Spring injected fields -->
+    <Match>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+        <Method name="~.*Controller.*"/>
+    </Match>
+    
+    <!-- Exclude warnings about unused parameters in interface implementations -->
+    <Match>
+        <Bug pattern="UP_UNUSED_PARAMETER"/>
+        <Class name="~.*ServiceImpl"/>
+    </Match>
+    
+    <!-- Exclude warnings about hardcoded strings in configuration -->
+    <Match>
+        <Class name="~.*Config.*"/>
+        <Bug pattern="DM_STRING_CTOR"/>
+    </Match>
+    
+    <!-- Exclude warnings about exception handling in global exception handler -->
+    <Match>
+        <Class name="~.*GlobalExceptionHandler"/>
+        <Bug pattern="REC_CATCH_EXCEPTION"/>
+    </Match>
+</FindBugsFilter>

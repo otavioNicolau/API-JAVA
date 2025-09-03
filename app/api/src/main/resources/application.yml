@@ -1,0 +1,63 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: pdf-processor-api
+  
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 100MB
+      enabled: true
+  
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when-authorized
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+logging:
+  level:
+    com.pdfprocessor: INFO
+    org.springframework: WARN
+    root: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# Configurações específicas da aplicação
+app:
+  storage:
+    base-path: ./storage
+  processing:
+    max-concurrent-jobs: 10
+    timeout-seconds: 300
+  queue:
+    name: pdf-processing-queue
+    retry-attempts: 3
+  security:
+    api-keys:
+      - "dev-key-12345"
+      - "test-key-67890"
+      - "prod-key-abcdef"

@@ -1,0 +1,10 @@
+com/pdfprocessor/domain/port/JobRepository.class
+com/pdfprocessor/domain/port/StorageService.class
+com/pdfprocessor/domain/model/Job.class
+com/pdfprocessor/domain/model/JobOperation.class
+com/pdfprocessor/domain/port/PdfProcessingService.class
+com/pdfprocessor/domain/exception/JobNotCompletedException.class
+com/pdfprocessor/domain/exception/JobNotFoundException.class
+com/pdfprocessor/domain/port/JobQueue.class
+com/pdfprocessor/domain/model/JobStatus.class
+com/pdfprocessor/domain/exception/ResultNotFoundException.class

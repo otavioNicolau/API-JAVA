@@ -1,0 +1,647 @@
+openapi: 3.0.3
+info:
+  title: PDF Processor API
+  description: |
+    API REST para processamento assíncrono de PDFs com Clean Architecture.
+    
+    Esta API permite realizar diversas operações em arquivos PDF de forma assíncrona,
+    incluindo merge, split, watermark, criptografia, OCR e muito mais.
+    
+    ## Autenticação
+    Todas as requisições devem incluir o header `X-API-Key` com uma chave válida.
+    
+    ## Fluxo de Uso
+    1. **Criar Job**: POST /api/v1/jobs com arquivos e operação desejada
+    2. **Verificar Status**: GET /api/v1/jobs/{id} para acompanhar progresso
+    3. **Download**: GET /api/v1/jobs/{id}/download quando status for COMPLETED
+    
+    ## Operações Disponíveis
+    - **Básicas**: merge, split, compress, pdf_to_images, images_to_pdf, rotate, watermark, encrypt, decrypt, extract_metadata, extract_text
+    - **Avançadas**: pdf_crop, pdf_reorder, pdf_resize, pdf_compare, pdf_create, pdf_edit, pdf_protect, pdf_unlock, pdf_optimize, pdf_validate, pdf_repair, pdf_extract_resources, pdf_remove_resources, pdf_to_pdfa, pdf_ocr, pdf_to_audio, pdf_from_epub, pdf_from_djvu
+  version: 1.0.0
+  contact:
+    name: PDF Processor API
+    email: support@pdfprocessor.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:8080
+    description: Servidor de desenvolvimento local
+
+security:
+  - ApiKeyAuth: []
+
+paths:
+  /api/v1/jobs:
+    post:
+      tags:
+        - Jobs
+      summary: Criar novo job de processamento
+      description: |
+        Cria um novo job de processamento de PDF. Você pode enviar arquivos via upload
+        ou referenciar arquivos já existentes no sistema.
+      operationId: createJob
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - operation
+              properties:
+                operation:
+                  type: string
+                  enum: [merge, split, compress, pdf_to_images, images_to_pdf, rotate, watermark, encrypt, decrypt, extract_metadata, extract_text, pdf_crop, pdf_reorder, pdf_resize, pdf_compare, pdf_create, pdf_edit, pdf_protect, pdf_unlock, pdf_optimize, pdf_validate, pdf_repair, pdf_extract_resources, pdf_remove_resources, pdf_to_pdfa, pdf_ocr, pdf_to_audio, pdf_from_epub, pdf_from_djvu]
+                  description: Tipo de operação a ser executada
+                  example: merge
+                files:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  description: Arquivos PDF para upload (opcional se inputFiles for fornecido)
+                inputFiles:
+                  type: array
+                  items:
+                    type: string
+                  description: Lista de caminhos de arquivos já existentes no sistema
+                  example: ["job-123/input1.pdf", "job-456/input2.pdf"]
+                optionsJson:
+                  type: string
+                  description: Opções específicas da operação em formato JSON
+                  example: '{"output_filename":"merged.pdf"}'
+            examples:
+              merge_operation:
+                summary: Merge de PDFs
+                value:
+                  operation: merge
+                  optionsJson: '{"output_filename":"merged_document.pdf"}'
+              split_operation:
+                summary: Split de PDF
+                value:
+                  operation: split
+                  optionsJson: '{"pages_per_file":5,"output_prefix":"page_"}'
+              watermark_operation:
+                summary: Adicionar marca d'água
+                value:
+                  operation: watermark
+                  optionsJson: '{"text":"CONFIDENCIAL","opacity":0.5,"position":"center"}'
+              crop_operation:
+                summary: Recortar páginas do PDF
+                value:
+                  operation: pdf_crop
+                  optionsJson: '{"x":50,"y":50,"width":500,"height":700,"pages":"1-3"}'
+              reorder_operation:
+                summary: Reordenar páginas do PDF
+                value:
+                  operation: pdf_reorder
+                  optionsJson: '{"page_order":"3,1,4,2"}'
+              resize_operation:
+                summary: Redimensionar páginas do PDF
+                value:
+                  operation: pdf_resize
+                  optionsJson: '{"page_size":"A3","pages":"all"}'
+              encrypt_operation:
+                summary: Criptografar PDF
+                value:
+                  operation: encrypt
+                  optionsJson: '{"user_password":"1234","owner_password":"admin","permissions":["print"]}'
+      responses:
+        '200':
+          description: Job criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobResponse'
+              example:
+                jobId: "550e8400-e29b-41d4-a716-446655440000"
+                operation: "MERGE"
+                status: "PENDING"
+                createdAt: "2024-01-15T10:30:00Z"
+                updatedAt: "2024-01-15T10:30:00Z"
+                inputFiles: ["job-550e8400/input1.pdf", "job-550e8400/input2.pdf"]
+                options: {"output_filename":"merged_document.pdf"}
+                progress: 0
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "Bad Request"
+                message: "Operation parameter is required"
+                timestamp: "2024-01-15T10:30:00Z"
+        '401':
+          description: Não autorizado - X-API-Key inválida ou ausente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '413':
+          description: Arquivo muito grande
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Dados não processáveis
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    get:
+      tags:
+        - Jobs
+      summary: Listar todos os jobs
+      description: Retorna uma lista paginada de todos os jobs
+      operationId: listAllJobs
+      parameters:
+        - name: page
+          in: query
+          description: Número da página (começando em 0)
+          required: false
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+          example: 0
+        - name: size
+          in: query
+          description: Tamanho da página
+          required: false
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+          example: 20
+      responses:
+        '200':
+          description: Lista de jobs retornada com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/JobResponse'
+              example:
+                - jobId: "550e8400-e29b-41d4-a716-446655440000"
+                  operation: "MERGE"
+                  status: "COMPLETED"
+                  createdAt: "2024-01-15T10:30:00Z"
+                  updatedAt: "2024-01-15T10:35:00Z"
+                  completedAt: "2024-01-15T10:35:00Z"
+                  inputFiles: ["job-550e8400/input1.pdf", "job-550e8400/input2.pdf"]
+                  outputFiles: ["job-550e8400/merged_document.pdf"]
+                  options: {"output_filename":"merged_document.pdf"}
+                  progress: 100
+                - jobId: "660f9511-f3ac-52e5-b827-557766551111"
+                  operation: "SPLIT"
+                  status: "PROCESSING"
+                  createdAt: "2024-01-15T10:32:00Z"
+                  updatedAt: "2024-01-15T10:33:00Z"
+                  inputFiles: ["job-660f9511/document.pdf"]
+                  options: {"pages_per_file":5}
+                  progress: 45
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/jobs/{jobId}:
+    get:
+      tags:
+        - Jobs
+      summary: Obter status do job
+      description: Retorna o status atual e detalhes de um job específico
+      operationId: getJobStatus
+      parameters:
+        - name: jobId
+          in: path
+          description: ID único do job
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+      responses:
+        '200':
+          description: Status do job retornado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobResponse'
+              examples:
+                completed_job:
+                  summary: Job concluído
+                  value:
+                    jobId: "550e8400-e29b-41d4-a716-446655440000"
+                    operation: "MERGE"
+                    status: "COMPLETED"
+                    createdAt: "2024-01-15T10:30:00Z"
+                    updatedAt: "2024-01-15T10:35:00Z"
+                    completedAt: "2024-01-15T10:35:00Z"
+                    inputFiles: ["job-550e8400/input1.pdf", "job-550e8400/input2.pdf"]
+                    outputFiles: ["job-550e8400/merged_document.pdf"]
+                    options: {"output_filename":"merged_document.pdf"}
+                    progress: 100
+                processing_job:
+                  summary: Job em processamento
+                  value:
+                    jobId: "660f9511-f3ac-52e5-b827-557766551111"
+                    operation: "SPLIT"
+                    status: "PROCESSING"
+                    createdAt: "2024-01-15T10:32:00Z"
+                    updatedAt: "2024-01-15T10:33:00Z"
+                    inputFiles: ["job-660f9511/document.pdf"]
+                    options: {"pages_per_file":5}
+                    progress: 45
+                failed_job:
+                  summary: Job com erro
+                  value:
+                    jobId: "770g0622-g4bd-63f6-c938-668877662222"
+                    operation: "DECRYPT"
+                    status: "FAILED"
+                    createdAt: "2024-01-15T10:40:00Z"
+                    updatedAt: "2024-01-15T10:41:00Z"
+                    inputFiles: ["job-770g0622/encrypted.pdf"]
+                    options: {"password":"wrong_password"}
+                    progress: 0
+                    errorMessage: "Invalid password for encrypted PDF"
+        '404':
+          description: Job não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "Not Found"
+                message: "Job with ID 550e8400-e29b-41d4-a716-446655440000 not found"
+                timestamp: "2024-01-15T10:30:00Z"
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      tags:
+        - Jobs
+      summary: Cancelar job
+      description: Cancela um job em execução ou pendente
+      operationId: cancelJob
+      parameters:
+        - name: jobId
+          in: path
+          description: ID único do job
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+      responses:
+        '200':
+          description: Job cancelado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobResponse'
+              example:
+                jobId: "550e8400-e29b-41d4-a716-446655440000"
+                operation: "MERGE"
+                status: "CANCELLED"
+                createdAt: "2024-01-15T10:30:00Z"
+                updatedAt: "2024-01-15T10:32:00Z"
+                inputFiles: ["job-550e8400/input1.pdf", "job-550e8400/input2.pdf"]
+                options: {"output_filename":"merged_document.pdf"}
+                progress: 25
+        '404':
+          description: Job não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Job não pode ser cancelado (já concluído ou falhou)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "Conflict"
+                message: "Cannot cancel job in COMPLETED status"
+                timestamp: "2024-01-15T10:30:00Z"
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/jobs/{jobId}/download:
+    get:
+      tags:
+        - Jobs
+      summary: Download do resultado do job
+      description: |
+        Faz o download do arquivo resultado de um job concluído.
+        Para operações que geram múltiplos arquivos, retorna um ZIP.
+      operationId: downloadResult
+      parameters:
+        - name: jobId
+          in: path
+          description: ID único do job
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+      responses:
+        '200':
+          description: Arquivo resultado retornado com sucesso
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+              example: "[Conteúdo binário do PDF]"
+            application/zip:
+              schema:
+                type: string
+                format: binary
+              example: "[Conteúdo binário do ZIP com múltiplos arquivos]"
+            image/png:
+              schema:
+                type: string
+                format: binary
+              example: "[Conteúdo binário da imagem PNG]"
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+              example: "[Conteúdo binário da imagem JPEG]"
+            text/plain:
+              schema:
+                type: string
+              example: "Texto extraído do PDF..."
+            application/json:
+              schema:
+                type: object
+              example:
+                metadata:
+                  title: "Documento de Exemplo"
+                  author: "João Silva"
+                  pages: 10
+                  created: "2024-01-15T10:00:00Z"
+          headers:
+            Content-Disposition:
+              description: Nome do arquivo para download
+              schema:
+                type: string
+              example: "attachment; filename=merged_document.pdf"
+            Content-Length:
+              description: Tamanho do arquivo em bytes
+              schema:
+                type: integer
+              example: 1048576
+        '404':
+          description: Job não encontrado ou resultado não disponível
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                job_not_found:
+                  summary: Job não encontrado
+                  value:
+                    error: "Not Found"
+                    message: "Job with ID 550e8400-e29b-41d4-a716-446655440000 not found"
+                    timestamp: "2024-01-15T10:30:00Z"
+                result_not_ready:
+                  summary: Resultado não disponível
+                  value:
+                    error: "Not Found"
+                    message: "Job result not available. Current status: PROCESSING"
+                    timestamp: "2024-01-15T10:30:00Z"
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /actuator/health:
+    get:
+      tags:
+        - Monitoring
+      summary: Health check da aplicação
+      description: Verifica o status de saúde da aplicação e suas dependências
+      operationId: healthCheck
+      responses:
+        '200':
+          description: Aplicação saudável
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [UP, DOWN]
+                  components:
+                    type: object
+                    properties:
+                      redis:
+                        type: object
+                        properties:
+                          status:
+                            type: string
+                            enum: [UP, DOWN]
+                      storage:
+                        type: object
+                        properties:
+                          status:
+                            type: string
+                            enum: [UP, DOWN]
+              example:
+                status: "UP"
+                components:
+                  redis:
+                    status: "UP"
+                  storage:
+                    status: "UP"
+        '503':
+          description: Aplicação não saudável
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: "DOWN"
+                components:
+                  redis:
+                    status: "DOWN"
+                    details:
+                      error: "Connection refused"
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Chave de API para autenticação
+
+  schemas:
+    JobResponse:
+      type: object
+      required:
+        - jobId
+        - operation
+        - status
+        - createdAt
+        - updatedAt
+        - inputFiles
+        - options
+        - progress
+      properties:
+        jobId:
+          type: string
+          format: uuid
+          description: ID único do job
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        operation:
+          type: string
+          enum: [MERGE, SPLIT, COMPRESS, PDF_TO_IMAGES, IMAGES_TO_PDF, ROTATE, WATERMARK, ENCRYPT, DECRYPT, EXTRACT_METADATA, EXTRACT_TEXT, PDF_CROP, PDF_REORDER, PDF_RESIZE]
+          description: Tipo de operação
+          example: "MERGE"
+        status:
+          type: string
+          enum: [PENDING, PROCESSING, COMPLETED, FAILED, CANCELLED]
+          description: Status atual do job
+          example: "COMPLETED"
+        createdAt:
+          type: string
+          format: date-time
+          description: Data e hora de criação do job
+          example: "2024-01-15T10:30:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: Data e hora da última atualização
+          example: "2024-01-15T10:35:00Z"
+        completedAt:
+          type: string
+          format: date-time
+          description: Data e hora de conclusão (apenas para jobs concluídos)
+          example: "2024-01-15T10:35:00Z"
+        inputFiles:
+          type: array
+          items:
+            type: string
+          description: Lista de arquivos de entrada
+          example: ["job-550e8400/input1.pdf", "job-550e8400/input2.pdf"]
+        outputFiles:
+          type: array
+          items:
+            type: string
+          description: Lista de arquivos de saída (apenas para jobs concluídos)
+          example: ["job-550e8400/merged_document.pdf"]
+        options:
+          type: object
+          description: Opções específicas da operação
+          example: {"output_filename":"merged_document.pdf"}
+        progress:
+          type: integer
+          minimum: 0
+          maximum: 100
+          description: Progresso do job em porcentagem
+          example: 100
+        errorMessage:
+          type: string
+          description: Mensagem de erro (apenas para jobs com falha)
+          example: "Invalid password for encrypted PDF"
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - message
+        - timestamp
+      properties:
+        error:
+          type: string
+          description: Tipo do erro
+          example: "Bad Request"
+        message:
+          type: string
+          description: Descrição detalhada do erro
+          example: "Operation parameter is required"
+        timestamp:
+          type: string
+          format: date-time
+          description: Data e hora do erro
+          example: "2024-01-15T10:30:00Z"
+        details:
+          type: object
+          description: Detalhes adicionais do erro
+          example:
+            field: "operation"
+            rejectedValue: null
+            code: "NotNull"
+
+    OperationOptions:
+      type: object
+      description: |
+        Opções específicas para cada tipo de operação. Os campos variam conforme a operação:
+        
+        **MERGE**:
+        - `output_filename` (string): Nome do arquivo de saída
+        
+        **SPLIT**:
+        - `pages_per_file` (integer): Páginas por arquivo
+        - `output_prefix` (string): Prefixo dos arquivos de saída
+        - `page_ranges` (array): Intervalos específicos de páginas
+        
+        **WATERMARK**:
+        - `text` (string): Texto da marca d'água
+        - `image_path` (string): Caminho da imagem para marca d'água
+        - `opacity` (number): Opacidade (0.0 a 1.0)
+        - `position` (string): Posição (center, top-left, top-right, bottom-left, bottom-right)
+        - `rotation` (number): Rotação em graus
+        
+        **ENCRYPT**:
+        - `user_password` (string): Senha do usuário
+        - `owner_password` (string): Senha do proprietário
+        - `permissions` (array): Permissões (print, copy, modify, annotate)
+        
+        **DECRYPT**:
+        - `password` (string): Senha para descriptografar
+        
+        **ROTATE**:
+        - `angle` (integer): Ângulo de rotação (90, 180, 270)
+        - `pages` (string): Páginas a rotacionar ("all", "1,3,5", "1-10")
+        
+        **PDF_TO_IMAGES**:
+        - `format` (string): Formato da imagem (png, jpeg)
+        - `dpi` (integer): Resolução em DPI
+        - `pages` (string): Páginas a converter
+        
+        **IMAGES_TO_PDF**:
+        - `page_size` (string): Tamanho da página (A4, Letter, Custom)
+        - `orientation` (string): Orientação (portrait, landscape)
+        - `margin_mm` (number): Margem em milímetros
+      example:
+        output_filename: "merged_document.pdf"
+        pages_per_file: 5
+        text: "CONFIDENCIAL"
+        opacity: 0.5
+        position: "center"
