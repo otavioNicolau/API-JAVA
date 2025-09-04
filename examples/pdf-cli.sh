@@ -202,6 +202,15 @@ create_job_interactive() {
             "PDF_CROP")
                 options_json='{"inputFile": "document.pdf", "x": 50, "y": 50, "width": 400, "height": 600, "pages": "all", "outputFileName": "cropped.pdf"}'
                 ;;
+            "COMPRESS")
+                options_json='{"inputFile": "document.pdf", "compressionLevel": "medium", "outputFileName": "compressed.pdf"}'
+                ;;
+            "PDF_COMPARE")
+                options_json='{"inputFiles": ["document1.pdf", "document2.pdf"], "outputFileName": "comparison_report.pdf", "compareText": true, "comparePages": true}'
+                ;;
+            "PDF_CREATE")
+                options_json='{"pageSize": "A4", "content": "Este é um PDF criado automaticamente.", "outputFileName": "new_document.pdf"}'
+                ;;
             *)
                 echo -e "${RED}Exemplo não disponível para $operation${NC}"
                 return 1

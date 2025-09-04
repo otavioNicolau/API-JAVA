@@ -6,10 +6,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.pdfprocessor.domain.model.Job;
 import com.pdfprocessor.domain.model.JobOperation;
-import com.pdfprocessor.domain.model.JobStatus;
+//import com.pdfprocessor.domain.model.JobStatus;
 import com.pdfprocessor.domain.port.JobQueue;
 import com.pdfprocessor.worker.processor.JobProcessor;
-import java.time.LocalDateTime;
+//import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Optional;

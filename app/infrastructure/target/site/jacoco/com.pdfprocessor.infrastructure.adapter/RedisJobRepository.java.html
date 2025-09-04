@@ -65,9 +65,9 @@ public class RedisJobRepository implements JobRepository {
 
 <span class="fc" id="L66">      System.out.println(&quot;Job not found in Redis: &quot; + id);</span>
 <span class="fc" id="L67">      return Optional.empty();</span>
-<span class="fc" id="L68">    } catch (Exception e) {</span>
-<span class="fc" id="L69">      System.err.println(&quot;Failed to find job in Redis: &quot; + id + &quot;, &quot; + e.getMessage());</span>
-<span class="fc" id="L70">      return Optional.empty();</span>
+<span class="nc" id="L68">    } catch (Exception e) {</span>
+<span class="nc" id="L69">      System.err.println(&quot;Failed to find job in Redis: &quot; + id + &quot;, &quot; + e.getMessage());</span>
+<span class="nc" id="L70">      return Optional.empty();</span>
     }
   }
 
@@ -76,7 +76,7 @@ public class RedisJobRepository implements JobRepository {
     try {
 <span class="fc" id="L77">      Set&lt;Object&gt; jobIds = redisTemplate.opsForSet().members(JOBS_INDEX_KEY);</span>
 
-<span class="fc bfc" id="L79" title="All 4 branches covered.">      if (jobIds == null || jobIds.isEmpty()) {</span>
+<span class="pc bpc" id="L79" title="1 of 4 branches missed.">      if (jobIds == null || jobIds.isEmpty()) {</span>
 <span class="fc" id="L80">        return List.of();</span>
       }
 
@@ -88,9 +88,9 @@ public class RedisJobRepository implements JobRepository {
 <span class="fc" id="L88">          .filter(Optional::isPresent)</span>
 <span class="fc" id="L89">          .map(Optional::get)</span>
 <span class="fc" id="L90">          .toList();</span>
-<span class="fc" id="L91">    } catch (Exception e) {</span>
-<span class="fc" id="L92">      System.err.println(&quot;Failed to find all jobs in Redis: &quot; + e.getMessage());</span>
-<span class="fc" id="L93">      return List.of();</span>
+<span class="nc" id="L91">    } catch (Exception e) {</span>
+<span class="nc" id="L92">      System.err.println(&quot;Failed to find all jobs in Redis: &quot; + e.getMessage());</span>
+<span class="nc" id="L93">      return List.of();</span>
     }
   }
 
@@ -103,12 +103,12 @@ public class RedisJobRepository implements JobRepository {
 <span class="fc" id="L103">      redisTemplate.delete(jobKey);</span>
 
       // Remove from index
-<span class="fc" id="L106">      redisTemplate.opsForSet().remove(JOBS_INDEX_KEY, id);</span>
+<span class="nc" id="L106">      redisTemplate.opsForSet().remove(JOBS_INDEX_KEY, id);</span>
 
-<span class="fc" id="L108">      System.out.println(&quot;Deleted job from Redis: &quot; + id);</span>
+<span class="nc" id="L108">      System.out.println(&quot;Deleted job from Redis: &quot; + id);</span>
 <span class="fc" id="L109">    } catch (Exception e) {</span>
 <span class="fc" id="L110">      System.err.println(&quot;Failed to delete job from Redis: &quot; + id + &quot;, &quot; + e.getMessage());</span>
-    }
+<span class="nc" id="L111">    }</span>
 <span class="fc" id="L112">  }</span>
 
   @Override
@@ -116,12 +116,12 @@ public class RedisJobRepository implements JobRepository {
     try {
 <span class="fc" id="L117">      String jobKey = JOBS_KEY_PREFIX + id;</span>
 <span class="fc" id="L118">      Boolean exists = redisTemplate.hasKey(jobKey);</span>
-<span class="fc bfc" id="L119" title="All 4 branches covered.">      boolean result = exists != null &amp;&amp; exists;</span>
+<span class="pc bpc" id="L119" title="1 of 4 branches missed.">      boolean result = exists != null &amp;&amp; exists;</span>
 <span class="fc" id="L120">      System.out.println(&quot;Checking if job exists in Redis: &quot; + id + &quot; -&gt; &quot; + result);</span>
 <span class="fc" id="L121">      return result;</span>
-<span class="fc" id="L122">    } catch (Exception e) {</span>
-<span class="fc" id="L123">      System.err.println(&quot;Failed to check job existence in Redis: &quot; + id + &quot;, &quot; + e.getMessage());</span>
-<span class="fc" id="L124">      return false;</span>
+<span class="nc" id="L122">    } catch (Exception e) {</span>
+<span class="nc" id="L123">      System.err.println(&quot;Failed to check job existence in Redis: &quot; + id + &quot;, &quot; + e.getMessage());</span>
+<span class="nc" id="L124">      return false;</span>
     }
   }
 }

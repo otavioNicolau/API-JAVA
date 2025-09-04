@@ -25,7 +25,7 @@ public class JobResponse {
 
 <span class="fc" id="L26">  public JobResponse() {}</span>
 
-<span class="fc" id="L28">  public JobResponse(</span>
+  public JobResponse(
       String id,
       JobOperation operation,
       JobStatus status,
@@ -36,7 +36,7 @@ public class JobResponse {
       Integer progress,
       LocalDateTime createdAt,
       LocalDateTime startedAt,
-      LocalDateTime completedAt) {
+<span class="fc" id="L39">      LocalDateTime completedAt) {</span>
 <span class="fc" id="L40">    this.id = id;</span>
 <span class="fc" id="L41">    this.operation = operation;</span>
 <span class="fc" id="L42">    this.status = status;</span>
@@ -172,14 +172,14 @@ public class JobResponse {
   public String toString() {
 <span class="fc" id="L173">    return &quot;JobResponse{&quot;</span>
         + &quot;id='&quot;
-<span class="fc" id="L175">        + id</span>
+        + id
         + '\''
         + &quot;, operation=&quot;
-<span class="fc" id="L178">        + operation</span>
+        + operation
         + &quot;, status=&quot;
-<span class="fc" id="L180">        + status</span>
+        + status
         + &quot;, progress=&quot;
-<span class="fc" id="L182">        + progress</span>
+        + progress
         + '}';
   }
 }

@@ -20,10 +20,10 @@ public class JobProcessor {
   private final PdfProcessingService pdfProcessingService;
 
   @Autowired
-<span class="fc" id="L23">  public JobProcessor(</span>
+  public JobProcessor(
       JobRepository jobRepository,
       StorageService storageService,
-      PdfProcessingService pdfProcessingService) {
+<span class="fc" id="L26">      PdfProcessingService pdfProcessingService) {</span>
 <span class="fc" id="L27">    this.jobRepository = jobRepository;</span>
 <span class="fc" id="L28">    this.storageService = storageService;</span>
 <span class="fc" id="L29">    this.pdfProcessingService = pdfProcessingService;</span>
@@ -62,7 +62,7 @@ public class JobProcessor {
 <span class="fc" id="L62">      jobRepository.save(job);</span>
 
 <span class="fc" id="L64">      throw new RuntimeException(&quot;Falha no processamento do job: &quot; + job.getId(), e);</span>
-    }
+<span class="fc" id="L65">    }</span>
 <span class="fc" id="L66">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

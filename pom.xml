@@ -22,8 +22,12 @@
         
         <!-- PDF Processing -->
         <pdfbox.version>3.0.1</pdfbox.version>
+        <itext.version>8.0.2</itext.version>
+        <bouncycastle.version>1.77</bouncycastle.version>
         <tess4j.version>5.9.0</tess4j.version>
         <twelvemonkeys.version>3.10.1</twelvemonkeys.version>
+        <verapdf.version>1.25.157</verapdf.version>
+        <pdfbox-tools.version>3.0.1</pdfbox-tools.version>
         
         <!-- Documentation -->
         <springdoc.version>2.3.0</springdoc.version>
@@ -90,9 +94,50 @@
                 <version>${pdfbox.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.itextpdf</groupId>
+                <artifactId>itext-core</artifactId>
+                <version>${itext.version}</version>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>com.itextpdf</groupId>
+                <artifactId>kernel</artifactId>
+                <version>${itext.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.itextpdf</groupId>
+                <artifactId>layout</artifactId>
+                <version>${itext.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk18on</artifactId>
+                <version>${bouncycastle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcpkix-jdk18on</artifactId>
+                <version>${bouncycastle.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>net.sourceforge.tess4j</groupId>
                 <artifactId>tess4j</artifactId>
                 <version>${tess4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.verapdf</groupId>
+                <artifactId>validation-model</artifactId>
+                <version>${verapdf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.verapdf</groupId>
+                <artifactId>core</artifactId>
+                <version>${verapdf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.pdfbox</groupId>
+                <artifactId>pdfbox-tools</artifactId>
+                <version>${pdfbox-tools.version}</version>
             </dependency>
             
             <!-- Image Processing -->

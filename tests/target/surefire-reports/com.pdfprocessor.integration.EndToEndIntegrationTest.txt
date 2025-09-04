@@ -1,8 +1,8 @@
 -------------------------------------------------------------------------------
 Test set: com.pdfprocessor.integration.EndToEndIntegrationTest
 -------------------------------------------------------------------------------
-Tests run: 6, Failures: 4, Errors: 0, Skipped: 0, Time elapsed: 7.379 s <<< FAILURE! -- in com.pdfprocessor.integration.EndToEndIntegrationTest
-com.pdfprocessor.integration.EndToEndIntegrationTest.shouldCreateSplitJobViaApi -- Time elapsed: 2.244 s <<< FAILURE!
+Tests run: 6, Failures: 4, Errors: 0, Skipped: 0, Time elapsed: 6.700 s <<< FAILURE! -- in com.pdfprocessor.integration.EndToEndIntegrationTest
+com.pdfprocessor.integration.EndToEndIntegrationTest.shouldCreateSplitJobViaApi -- Time elapsed: 1.916 s <<< FAILURE!
 java.lang.AssertionError: 
 1 expectation failed.
 Expected status code <200> but was <401>.
@@ -73,7 +73,7 @@ Expected status code <200> but was <401>.
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 
-com.pdfprocessor.integration.EndToEndIntegrationTest.shouldCreateMergeJobViaApi -- Time elapsed: 0.034 s <<< FAILURE!
+com.pdfprocessor.integration.EndToEndIntegrationTest.shouldCreateMergeJobViaApi -- Time elapsed: 0.026 s <<< FAILURE!
 java.lang.AssertionError: 
 1 expectation failed.
 Expected status code <200> but was <401>.
@@ -103,7 +103,7 @@ Expected status code <200> but was <401>.
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 
-com.pdfprocessor.integration.EndToEndIntegrationTest.shouldGetJobByIdViaApi -- Time elapsed: 0.031 s <<< FAILURE!
+com.pdfprocessor.integration.EndToEndIntegrationTest.shouldGetJobByIdViaApi -- Time elapsed: 0.026 s <<< FAILURE!
 java.lang.AssertionError: 
 1 expectation failed.
 Expected status code <200> but was <401>.

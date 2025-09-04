@@ -2,6 +2,6 @@ GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_
 PDF Processor Domain,com.pdfprocessor.domain.exception,ResultNotFoundException,0,11,0,0,0,4,0,2,0,2
 PDF Processor Domain,com.pdfprocessor.domain.exception,JobNotCompletedException,0,11,0,0,0,4,0,2,0,2
 PDF Processor Domain,com.pdfprocessor.domain.exception,JobNotFoundException,0,11,0,0,0,4,0,2,0,2
-PDF Processor Domain,com.pdfprocessor.domain.model,Job,91,208,19,19,17,54,16,27,1,23
-PDF Processor Domain,com.pdfprocessor.domain.model,JobOperation,3,331,0,0,1,35,1,2,1,2
-PDF Processor Domain,com.pdfprocessor.domain.model,JobStatus,0,54,0,0,0,11,0,1,0,1
+PDF Processor Domain,com.pdfprocessor.domain.model,Job,89,209,19,19,17,50,16,27,1,23
+PDF Processor Domain,com.pdfprocessor.domain.model,JobOperation,3,214,0,0,1,33,1,2,1,2
+PDF Processor Domain,com.pdfprocessor.domain.model,JobStatus,0,33,0,0,0,6,0,1,0,1

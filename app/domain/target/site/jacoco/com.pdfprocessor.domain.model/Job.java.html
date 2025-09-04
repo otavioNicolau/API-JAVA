@@ -23,8 +23,8 @@ public class Job {
   private LocalDateTime startedAt;
   private LocalDateTime completedAt;
 
-<span class="fc" id="L26">  public Job(</span>
-      String id, JobOperation operation, List&lt;String&gt; inputFiles, Map&lt;String, Object&gt; options) {
+  public Job(
+<span class="fc" id="L27">      String id, JobOperation operation, List&lt;String&gt; inputFiles, Map&lt;String, Object&gt; options) {</span>
 <span class="fc" id="L28">    this.id = Objects.requireNonNull(id, &quot;Job ID cannot be null&quot;);</span>
 <span class="fc" id="L29">    this.operation = Objects.requireNonNull(operation, &quot;Operation cannot be null&quot;);</span>
 <span class="fc" id="L30">    this.inputFiles = Objects.requireNonNull(inputFiles, &quot;Input files cannot be null&quot;);</span>
@@ -35,7 +35,7 @@ public class Job {
 <span class="fc" id="L35">  }</span>
 
   @JsonCreator
-<span class="nc" id="L38">  public Job(</span>
+  public Job(
       @JsonProperty(&quot;id&quot;) String id,
       @JsonProperty(&quot;operation&quot;) JobOperation operation,
       @JsonProperty(&quot;inputFiles&quot;) List&lt;String&gt; inputFiles,
@@ -46,7 +46,7 @@ public class Job {
       @JsonProperty(&quot;resultPath&quot;) String resultPath,
       @JsonProperty(&quot;progress&quot;) Integer progress,
       @JsonProperty(&quot;startedAt&quot;) LocalDateTime startedAt,
-      @JsonProperty(&quot;completedAt&quot;) LocalDateTime completedAt) {
+<span class="nc" id="L49">      @JsonProperty(&quot;completedAt&quot;) LocalDateTime completedAt) {</span>
 <span class="nc" id="L50">    this.id = Objects.requireNonNull(id, &quot;Job ID cannot be null&quot;);</span>
 <span class="nc" id="L51">    this.operation = Objects.requireNonNull(operation, &quot;Operation cannot be null&quot;);</span>
 <span class="nc" id="L52">    this.inputFiles = Objects.requireNonNull(inputFiles, &quot;Input files cannot be null&quot;);</span>
@@ -174,14 +174,14 @@ public class Job {
   public String toString() {
 <span class="fc" id="L175">    return &quot;Job{&quot;</span>
         + &quot;id='&quot;
-<span class="fc" id="L177">        + id</span>
+        + id
         + '\''
         + &quot;, operation=&quot;
-<span class="fc" id="L180">        + operation</span>
+        + operation
         + &quot;, status=&quot;
-<span class="fc" id="L182">        + status</span>
+        + status
         + &quot;, progress=&quot;
-<span class="fc" id="L184">        + progress</span>
+        + progress
         + '}';
   }
 }

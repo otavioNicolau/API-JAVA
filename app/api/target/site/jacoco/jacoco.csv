@@ -13,7 +13,7 @@ PDF Processor API,com.pdfprocessor.api,ApiApplication,5,3,0,0,2,1,1,1,1,1
 PDF Processor API,com.pdfprocessor.api.security,SecurityHeadersFilter,0,70,0,4,0,19,0,4,0,2
 PDF Processor API,com.pdfprocessor.api.service,RateLimitService,4,141,4,12,1,33,4,10,0,6
 PDF Processor API,com.pdfprocessor.api.service,RateLimitService.RequestWindow,0,17,0,0,0,5,0,2,0,2
-PDF Processor API,com.pdfprocessor.api.service,InputValidationService,103,443,25,79,18,91,25,40,0,13
+PDF Processor API,com.pdfprocessor.api.service,InputValidationService,111,435,29,75,19,90,29,36,0,13
 PDF Processor API,com.pdfprocessor.api.controller,OperationsController.OperationInfo,21,0,0,0,8,0,4,0,4,0
 PDF Processor API,com.pdfprocessor.api.controller,JobController.new TypeReference() {...},3,0,0,0,1,0,1,0,1,0
 PDF Processor API,com.pdfprocessor.api.controller,OperationsController,81,6,4,0,25,3,6,1,4,1

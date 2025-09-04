@@ -21,8 +21,8 @@ public class CreateJobRequest {
 
 <span class="fc" id="L22">  public CreateJobRequest() {}</span>
 
-<span class="fc" id="L24">  public CreateJobRequest(</span>
-      JobOperation operation, List&lt;String&gt; inputFiles, Map&lt;String, Object&gt; options) {
+  public CreateJobRequest(
+<span class="fc" id="L25">      JobOperation operation, List&lt;String&gt; inputFiles, Map&lt;String, Object&gt; options) {</span>
 <span class="fc" id="L26">    this.operation = operation;</span>
 <span class="fc" id="L27">    this.inputFiles = inputFiles;</span>
 <span class="fc" id="L28">    this.options = options;</span>
@@ -79,11 +79,11 @@ public class CreateJobRequest {
   public String toString() {
 <span class="fc" id="L80">    return &quot;CreateJobRequest{&quot;</span>
         + &quot;operation=&quot;
-<span class="fc" id="L82">        + operation</span>
+        + operation
         + &quot;, inputFiles=&quot;
-<span class="fc" id="L84">        + inputFiles</span>
+        + inputFiles
         + &quot;, options=&quot;
-<span class="fc" id="L86">        + options</span>
+        + options
         + '}';
   }
 }

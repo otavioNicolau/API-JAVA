@@ -6,8 +6,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pdfprocessor.api.config.ApiKeyAuthenticationFilter;
-import com.pdfprocessor.api.config.SecurityConfig;
+//import com.pdfprocessor.api.config.ApiKeyAuthenticationFilter;
+//import com.pdfprocessor.api.config.SecurityConfig;
 import com.pdfprocessor.application.dto.CreateJobRequest;
 import com.pdfprocessor.application.dto.JobResponse;
 import com.pdfprocessor.application.usecase.CreateJobUseCase;
@@ -18,8 +18,8 @@ import com.pdfprocessor.domain.model.JobStatus;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+//import java.util.List;
+//import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

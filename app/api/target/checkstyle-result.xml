@@ -7,7 +7,6 @@
 <error line="45" severity="warning" message="Line is longer than 120 characters (found 121)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
 </file>
 <file name="/home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/controller/JobController.java">
-<error line="5" column="8" severity="warning" message="Unused import - com.pdfprocessor.api.exception.SecurityValidationException." source="com.puppycrawl.tools.checkstyle.checks.imports.UnusedImportsCheck"/>
 <error line="34" column="47" severity="warning" message="Using the &apos;.*&apos; form of import should be avoided - org.springframework.web.bind.annotation.*." source="com.puppycrawl.tools.checkstyle.checks.imports.AvoidStarImportCheck"/>
 <error line="58" column="10" severity="warning" message="More than 7 parameters (found 9)." source="com.puppycrawl.tools.checkstyle.checks.sizes.ParameterNumberCheck"/>
 <error line="83" severity="warning" message="Line is longer than 120 characters (found 141)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
@@ -30,9 +29,6 @@
 <error line="48" severity="warning" message="Line is longer than 120 characters (found 150)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
 <error line="77" severity="warning" message="Line is longer than 120 characters (found 263)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
 <error line="82" severity="warning" message="Line is longer than 120 characters (found 293)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-</file>
-<file name="/home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/service/InputValidationService.java">
-<error line="6" column="8" severity="warning" message="Unused import - java.util.Map." source="com.puppycrawl.tools.checkstyle.checks.imports.UnusedImportsCheck"/>
 </file>
 <file name="/home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/service/RateLimitService.java">
 <error line="53" column="44" severity="warning" message="&apos;||&apos; should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.whitespace.OperatorWrapCheck"/>

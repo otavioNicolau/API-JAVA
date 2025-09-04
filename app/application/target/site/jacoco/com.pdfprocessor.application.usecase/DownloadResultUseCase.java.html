@@ -38,7 +38,7 @@ public class DownloadResultUseCase {
     }
 
 <span class="nc" id="L40">    Job job =</span>
-<span class="nc" id="L41">        jobRepository</span>
+        jobRepository
 <span class="nc" id="L42">            .findById(jobId)</span>
 <span class="nc" id="L43">            .orElseThrow(() -&gt; new JobNotFoundException(&quot;Job not found: &quot; + jobId));</span>
 
@@ -94,8 +94,8 @@ public class DownloadResultUseCase {
     private final long fileSize;
     private final String contentType;
 
-<span class="nc" id="L97">    public DownloadResponse(</span>
-        InputStream fileStream, String filename, long fileSize, String contentType) {
+    public DownloadResponse(
+<span class="nc" id="L98">        InputStream fileStream, String filename, long fileSize, String contentType) {</span>
 <span class="nc" id="L99">      this.fileStream = fileStream;</span>
 <span class="nc" id="L100">      this.filename = filename;</span>
 <span class="nc" id="L101">      this.fileSize = fileSize;</span>

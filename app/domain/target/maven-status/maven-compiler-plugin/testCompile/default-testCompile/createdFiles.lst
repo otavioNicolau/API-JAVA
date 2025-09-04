@@ -1,0 +1,4 @@
+com/pdfprocessor/domain/exception/JobNotCompletedExceptionTest.class
+com/pdfprocessor/domain/model/JobTest.class
+com/pdfprocessor/domain/exception/JobNotFoundExceptionTest.class
+com/pdfprocessor/domain/exception/ResultNotFoundExceptionTest.class

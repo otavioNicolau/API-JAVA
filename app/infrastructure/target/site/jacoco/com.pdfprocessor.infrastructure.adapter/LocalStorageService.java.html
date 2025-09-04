@@ -64,8 +64,8 @@ import org.springframework.stereotype.Component;
 
 <span class="fc" id="L65">      try (Stream&lt;Path&gt; files = Files.list(jobDir)) {</span>
 <span class="fc" id="L66">        List&lt;String&gt; fileList =</span>
-<span class="fc" id="L67">            files</span>
-<span class="fc" id="L68">                .filter(Files::isRegularFile)</span>
+            files
+<span class="pc" id="L68">                .filter(Files::isRegularFile)</span>
 <span class="pc" id="L69">                .map(path -&gt; &quot;./storage/&quot; + jobId + &quot;/&quot; + path.getFileName().toString())</span>
 <span class="fc" id="L70">                .toList();</span>
 <span class="fc" id="L71">        System.out.println(&quot;Listed &quot; + fileList.size() + &quot; files for job: &quot; + jobId);</span>
@@ -84,7 +84,7 @@ import org.springframework.stereotype.Component;
 <span class="fc" id="L84">      boolean deleted = Files.deleteIfExists(path);</span>
 <span class="fc bfc" id="L85" title="All 2 branches covered.">      if (deleted) {</span>
 <span class="fc" id="L86">        System.out.println(&quot;Deleted file: &quot; + filePath);</span>
-<span class="fc" id="L87">      } else {</span>
+      } else {
 <span class="fc" id="L88">        System.out.println(&quot;File not found for deletion: &quot; + filePath);</span>
       }
 <span class="fc" id="L90">      return deleted;</span>
@@ -108,15 +108,15 @@ import org.springframework.stereotype.Component;
 <span class="nc bnc" id="L108" title="All 2 branches missed.">          if (Files.deleteIfExists(file)) {</span>
 <span class="nc" id="L109">            deletedCount++;</span>
           }
-        }
+<span class="nc" id="L111">        }</span>
       }
 
       // Tentar remover o diretório se estiver vazio
       try {
 <span class="fc" id="L116">        Files.deleteIfExists(jobDir);</span>
-<span class="pc" id="L117">      } catch (DirectoryNotEmptyException e) {</span>
+<span class="nc" id="L117">      } catch (DirectoryNotEmptyException e) {</span>
         // Ignorar se o diretório não estiver vazio
-      }
+<span class="fc" id="L119">      }</span>
 
 <span class="fc" id="L121">      System.out.println(&quot;Deleted &quot; + deletedCount + &quot; files for job: &quot; + jobId);</span>
 <span class="fc" id="L122">      return deletedCount;</span>

@@ -18,8 +18,8 @@ public class CreateJobUseCase {
   private final JobQueue jobQueue;
   private final PdfProcessingService pdfProcessingService;
 
-<span class="fc" id="L21">  public CreateJobUseCase(</span>
-      JobRepository jobRepository, JobQueue jobQueue, PdfProcessingService pdfProcessingService) {
+  public CreateJobUseCase(
+<span class="fc" id="L22">      JobRepository jobRepository, JobQueue jobQueue, PdfProcessingService pdfProcessingService) {</span>
 <span class="fc" id="L23">    this.jobRepository = Objects.requireNonNull(jobRepository);</span>
 <span class="fc" id="L24">    this.jobQueue = Objects.requireNonNull(jobQueue);</span>
 <span class="fc" id="L25">    this.pdfProcessingService = Objects.requireNonNull(pdfProcessingService);</span>
@@ -69,7 +69,7 @@ public class CreateJobUseCase {
 <span class="fc" id="L69">        &quot;DEBUG: Supported operations: &quot; + pdfProcessingService.getSupportedOperations());</span>
 <span class="fc" id="L70">    System.out.println(&quot;DEBUG: Checking operation: &quot; + request.getOperation());</span>
 <span class="fc" id="L71">    System.out.println(</span>
-<span class="fc" id="L72">        &quot;DEBUG: Operation supported: &quot;</span>
+        &quot;DEBUG: Operation supported: &quot;
 <span class="fc" id="L73">            + pdfProcessingService.supportsOperation(request.getOperation()));</span>
 
     // Valida se a operação é suportada

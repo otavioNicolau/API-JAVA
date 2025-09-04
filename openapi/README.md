@@ -73,7 +73,9 @@ openapi-generator-cli generate -i openapi.yaml -g javascript -o ./client-js
 - `PDF_COMPARE` - Comparar PDFs
 - `PDF_EDIT` - Editar conteúdo
 - `PDF_PROTECT` - Proteger com senha
-- `PDF_OPTIMIZE` - Otimizar tamanho
+- `PDF_OPTIMIZE` - Otimizar tamanho e compressão
+- `PDF_VALIDATE` - Validar estrutura e conformidade
+- `PDF_REPAIR` - Reparar PDF corrompido
 - `PDF_OCR` - Reconhecimento de texto
 - `PDF_EXTRACT_TEXT` - Extrair texto
 - `PDF_EXTRACT_IMAGES` - Extrair imagens
@@ -82,7 +84,6 @@ openapi-generator-cli generate -i openapi.yaml -g javascript -o ./client-js
 - `PDF_ADD_ANNOTATIONS` - Adicionar anotações
 - `PDF_REMOVE_ANNOTATIONS` - Remover anotações
 - `PDF_FLATTEN` - Achatar formulários
-- `PDF_REPAIR` - Reparar PDF corrompido
 
 ## Autenticação
 

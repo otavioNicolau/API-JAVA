@@ -109,6 +109,31 @@ paths:
                 value:
                   operation: encrypt
                   optionsJson: '{"user_password":"1234","owner_password":"admin","permissions":["print"]}'
+              compare_operation:
+                summary: Comparar dois PDFs
+                value:
+                  operation: pdf_compare
+                  optionsJson: '{"output_filename":"comparison_report.pdf","compare_text":true,"compare_pages":true}'
+              create_operation:
+                summary: Criar novo PDF
+                value:
+                  operation: pdf_create
+                  optionsJson: '{"page_size":"A4","content":"Este é um PDF criado automaticamente.","output_filename":"new_document.pdf"}'
+              optimize_operation:
+                summary: Otimizar PDF
+                value:
+                  operation: pdf_optimize
+                  optionsJson: '{"compression_level":"medium","remove_unused_objects":true,"compress_images":true}'
+              validate_operation:
+                summary: Validar PDF
+                value:
+                  operation: pdf_validate
+                  optionsJson: '{"validation_type":"detailed","compliance_standard":"pdf_a"}'
+              repair_operation:
+                summary: Reparar PDF
+                value:
+                  operation: pdf_repair
+                  optionsJson: '{"repair_type":"advanced","fix_structure":true,"fix_metadata":false,"remove_corrupted_objects":true}'
       responses:
         '200':
           description: Job criado com sucesso
@@ -520,7 +545,7 @@ components:
           example: "550e8400-e29b-41d4-a716-446655440000"
         operation:
           type: string
-          enum: [MERGE, SPLIT, COMPRESS, PDF_TO_IMAGES, IMAGES_TO_PDF, ROTATE, WATERMARK, ENCRYPT, DECRYPT, EXTRACT_METADATA, EXTRACT_TEXT, PDF_CROP, PDF_REORDER, PDF_RESIZE]
+          enum: [MERGE, SPLIT, COMPRESS, PDF_TO_IMAGES, IMAGES_TO_PDF, ROTATE, WATERMARK, ENCRYPT, DECRYPT, EXTRACT_METADATA, EXTRACT_TEXT, PDF_CROP, PDF_REORDER, PDF_RESIZE, PDF_COMPARE, PDF_CREATE, PDF_EDIT, PDF_PROTECT, PDF_UNLOCK, PDF_OPTIMIZE, PDF_VALIDATE, PDF_REPAIR]
           description: Tipo de operação
           example: "MERGE"
         status:
@@ -639,9 +664,60 @@ components:
         - `page_size` (string): Tamanho da página (A4, Letter, Custom)
         - `orientation` (string): Orientação (portrait, landscape)
         - `margin_mm` (number): Margem em milímetros
+        
+        **PDF_EDIT**:
+        - `edit_type` (string): Tipo de edição (add_text, remove_text, replace_text)
+        - `text` (string): Texto a ser adicionado ou removido
+        - `new_text` (string): Novo texto para substituição (apenas para replace_text)
+        - `x` (number): Posição X do texto
+        - `y` (number): Posição Y do texto
+        - `page` (integer): Número da página (padrão: 1)
+        - `font_size` (number): Tamanho da fonte (padrão: 12)
+        - `color` (string): Cor do texto em hex (padrão: #000000)
+        
+        **PDF_PROTECT**:
+        - `user_password` (string): Senha do usuário (opcional)
+        - `owner_password` (string): Senha do proprietário (opcional)
+        - `allow_printing` (boolean): Permitir impressão (padrão: true)
+        - `allow_copying` (boolean): Permitir cópia (padrão: true)
+        - `allow_modification` (boolean): Permitir modificação (padrão: false)
+        - `allow_annotation` (boolean): Permitir anotações (padrão: true)
+        
+        **PDF_UNLOCK**:
+        - `password` (string): Senha para desbloquear o PDF
+        
+        **PDF_OPTIMIZE**:
+        - `compression_level` (string|integer): Nível de compressão ("low", "medium", "high" ou 1-10)
+        - `remove_unused_objects` (boolean): Remover objetos não utilizados (padrão: true)
+        - `compress_images` (boolean): Comprimir imagens (padrão: true)
+        - `optimize_fonts` (boolean): Otimizar fontes (padrão: false)
+        
+        **PDF_VALIDATE**:
+        - `validation_type` (string): Tipo de validação ("basic", "detailed")
+        - `compliance_standard` (string): Padrão de conformidade ("pdf_a", "pdf_x", "pdf_ua")
+        - `check_structure` (boolean): Verificar estrutura do PDF (padrão: true)
+        - `check_metadata` (boolean): Verificar metadados (padrão: true)
+        
+        **PDF_REPAIR**:
+        - `repair_type` (string): Tipo de reparo ("basic", "advanced")
+        - `fix_structure` (boolean): Corrigir estrutura do PDF (padrão: true)
+        - `fix_metadata` (boolean): Corrigir metadados (padrão: true)
+        - `remove_corrupted_objects` (boolean): Remover objetos corrompidos (padrão: true)
+        - `rebuild_xref` (boolean): Reconstruir tabela de referências (padrão: false)
       example:
         output_filename: "merged_document.pdf"
         pages_per_file: 5
         text: "CONFIDENCIAL"
         opacity: 0.5
         position: "center"
+        edit_type: "add_text"
+        x: 100
+        y: 200
+        page: 1
+        font_size: 14
+        color: "#FF0000"
+        user_password: "user123"
+        owner_password: "owner456"
+        allow_printing: true
+        allow_copying: false
+        password: "unlock123"

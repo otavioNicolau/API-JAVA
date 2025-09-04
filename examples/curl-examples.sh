@@ -255,6 +255,25 @@ main() {
     }'
     create_job "COMPRESS" "$compress_options" "Compressão média"
     
+    # Exemplo 10: Comparação de PDFs (Operação Avançada)
+    echo -e "${GREEN}Exemplo 10: Comparação de PDFs${NC}"
+    local compare_options='{
+        "inputFiles": ["document1.pdf", "document2.pdf"],
+        "outputFileName": "comparison_report.pdf",
+        "compareText": true,
+        "comparePages": true
+    }'
+    create_job "PDF_COMPARE" "$compare_options" "Comparação de dois PDFs"
+    
+    # Exemplo 11: Criação de PDF (Operação Avançada)
+    echo -e "${GREEN}Exemplo 11: Criação de PDF${NC}"
+    local create_options='{
+        "pageSize": "A4",
+        "content": "Este é um PDF criado automaticamente pela API.\n\nConteúdo de exemplo com múltiplas linhas.",
+        "outputFileName": "new_document.pdf"
+    }'
+    create_job "PDF_CREATE" "$create_options" "Criação de novo PDF"
+    
     echo -e "${BLUE}=== Fim dos Exemplos ===${NC}"
     echo -e "${YELLOW}Para usar este script:${NC}"
     echo "1. Certifique-se de que a API está rodando"

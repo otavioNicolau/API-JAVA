@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.pdfprocessor.infrastructure.adapter.PdfProcessingServiceImplTest
 -------------------------------------------------------------------------------
-Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.053 s -- in com.pdfprocessor.infrastructure.adapter.PdfProcessingServiceImplTest
+Tests run: 30, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.091 s -- in com.pdfprocessor.infrastructure.adapter.PdfProcessingServiceImplTest

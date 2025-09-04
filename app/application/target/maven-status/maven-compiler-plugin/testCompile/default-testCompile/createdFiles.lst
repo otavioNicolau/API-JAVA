@@ -1,0 +1,4 @@
+com/pdfprocessor/application/dto/CreateJobRequestTest.class
+com/pdfprocessor/application/dto/JobResponseTest.class
+com/pdfprocessor/application/usecase/GetJobStatusUseCaseTest.class
+com/pdfprocessor/application/usecase/CreateJobUseCaseTest.class

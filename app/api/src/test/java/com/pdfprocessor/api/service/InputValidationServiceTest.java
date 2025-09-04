@@ -3,7 +3,7 @@ package com.pdfprocessor.api.service;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.pdfprocessor.api.exception.SecurityValidationException;
-import com.pdfprocessor.domain.model.JobOperation;
+//import com.pdfprocessor.domain.model.JobOperation;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;

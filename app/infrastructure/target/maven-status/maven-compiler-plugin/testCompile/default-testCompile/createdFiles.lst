@@ -1,0 +1,6 @@
+com/pdfprocessor/infrastructure/adapter/LocalStorageServiceTest.class
+com/pdfprocessor/infrastructure/adapter/TestErrorMessages.class
+com/pdfprocessor/infrastructure/config/RedisConfigTest.class
+com/pdfprocessor/infrastructure/adapter/RedisJobQueueTest.class
+com/pdfprocessor/infrastructure/adapter/PdfProcessingServiceImplTest.class
+com/pdfprocessor/infrastructure/adapter/RedisJobRepositoryTest.class

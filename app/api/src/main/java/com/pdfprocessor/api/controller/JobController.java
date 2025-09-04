@@ -2,7 +2,7 @@ package com.pdfprocessor.api.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pdfprocessor.api.exception.SecurityValidationException;
+//import com.pdfprocessor.api.exception.SecurityValidationException;
 import com.pdfprocessor.api.service.InputValidationService;
 import com.pdfprocessor.api.service.RateLimitService;
 import com.pdfprocessor.application.dto.CreateJobRequest;

@@ -3,3 +3,4 @@
 /home/otavio/API-JAVA/app/infrastructure/src/test/java/com/pdfprocessor/infrastructure/adapter/RedisJobRepositoryTest.java
 /home/otavio/API-JAVA/app/infrastructure/src/test/java/com/pdfprocessor/infrastructure/config/RedisConfigTest.java
 /home/otavio/API-JAVA/app/infrastructure/src/test/java/com/pdfprocessor/infrastructure/adapter/RedisJobQueueTest.java
+/home/otavio/API-JAVA/app/infrastructure/src/test/java/com/pdfprocessor/infrastructure/adapter/TestErrorMessages.java

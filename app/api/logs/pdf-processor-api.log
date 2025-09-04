@@ -7309,3 +7309,295 @@ This generated password is for development use only. Your security configuration
 2025-09-03 21:42:14 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
 2025-09-03 21:42:14 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
 2025-09-03 21:42:14 - WARN  [main] c.p.a.e.GlobalExceptionHandler - Security validation failed: MAX_FILES_EXCEEDED - Maximum 10 files allowed per job, but 11 files provided
+2025-09-03 22:11:06 - INFO  [main] c.p.a.s.SecurityHeadersIntegrationTest - Starting SecurityHeadersIntegrationTest using Java 21.0.8 with PID 860275 (started by otavio in /home/otavio/API-JAVA/app/api)
+2025-09-03 22:11:06 - INFO  [main] c.p.a.s.SecurityHeadersIntegrationTest - No active profile set, falling back to 1 default profile: "default"
+2025-09-03 22:11:08 - WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: 08b380a9-d8b4-4a4f-98c7-423d39c22206
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-09-03 22:11:09 - INFO  [main] c.p.a.s.SecurityHeadersIntegrationTest - Started SecurityHeadersIntegrationTest in 4.077 seconds (process running for 7.56)
+2025-09-03 22:11:09 - INFO  [main] c.p.a.c.RateLimitIntegrationTest - Starting RateLimitIntegrationTest using Java 21.0.8 with PID 860275 (started by otavio in /home/otavio/API-JAVA/app/api)
+2025-09-03 22:11:09 - INFO  [main] c.p.a.c.RateLimitIntegrationTest - The following 1 profile is active: "test"
+2025-09-03 22:11:10 - WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: 308a8861-c7c7-4c45-a647-9045bfb805a5
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-09-03 22:11:10 - INFO  [main] c.p.a.c.RateLimitIntegrationTest - Started RateLimitIntegrationTest in 1.116 seconds (process running for 8.839)
+2025-09-03 22:11:11 - WARN  [main] c.p.a.e.GlobalExceptionHandler - Security validation failed: INVALID_API_KEY - Invalid API key
+2025-09-03 22:11:11 - WARN  [main] c.p.a.e.GlobalExceptionHandler - Security validation failed: RATE_LIMIT_EXCEEDED - Rate limit exceeded. Try again in 60 minutes.
+2025-09-03 22:11:11 - WARN  [main] c.p.a.e.GlobalExceptionHandler - Security validation failed: RATE_LIMIT_EXCEEDED - Rate limit exceeded. Try again in 60 minutes.
+2025-09-03 22:11:11 - INFO  [main] c.p.api.controller.JobControllerTest - Starting JobControllerTest using Java 21.0.8 with PID 860275 (started by otavio in /home/otavio/API-JAVA/app/api)
+2025-09-03 22:11:11 - INFO  [main] c.p.api.controller.JobControllerTest - No active profile set, falling back to 1 default profile: "default"
+2025-09-03 22:11:11 - WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: 7ca17b1c-b578-4f79-b4f8-a87a93a4a33e
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-09-03 22:11:11 - INFO  [main] c.p.api.controller.JobControllerTest - Started JobControllerTest in 0.587 seconds (process running for 9.979)
+2025-09-03 22:11:11 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 22:11:11 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 22:11:11 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
+2025-09-03 22:11:12 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 22:11:12 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 22:11:12 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
+2025-09-03 22:11:12 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 22:11:12 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [MISSING]
+2025-09-03 22:11:12 - WARN  [main] c.p.a.c.ApiKeyAuthenticationFilter - Missing X-API-Key header for endpoint: /api/v1/jobs
+2025-09-03 22:11:12 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Sending unauthorized response: Missing X-API-Key header
+2025-09-03 22:11:12 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: GET /api/v1/jobs/job-123
+2025-09-03 22:11:12 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs/job-123, X-API-Key: [PRESENT]
+2025-09-03 22:11:12 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs/job-123
+2025-09-03 22:11:12 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: GET /api/v1/jobs
+2025-09-03 22:11:12 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 22:11:12 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
+2025-09-03 22:11:12 - INFO  [main] c.p.a.c.SecurityValidationTest - Starting SecurityValidationTest using Java 21.0.8 with PID 860275 (started by otavio in /home/otavio/API-JAVA/app/api)
+2025-09-03 22:11:12 - INFO  [main] c.p.a.c.SecurityValidationTest - No active profile set, falling back to 1 default profile: "default"
+2025-09-03 22:11:12 - WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: 962c4ebd-1e29-4f95-bd00-959b51d2ec8c
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-09-03 22:11:12 - INFO  [main] c.p.a.c.SecurityValidationTest - Started SecurityValidationTest in 0.221 seconds (process running for 10.463)
+2025-09-03 22:11:12 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 22:11:12 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 22:11:12 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
+2025-09-03 22:11:12 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 22:11:12 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 22:11:12 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
+2025-09-03 22:11:12 - WARN  [main] c.p.a.e.GlobalExceptionHandler - Security validation failed: MAX_FILES_EXCEEDED - Maximum 10 files allowed per job, but 11 files provided
+2025-09-03 22:11:12 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 22:11:12 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 22:11:12 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
+2025-09-03 22:11:12 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 22:11:12 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 22:11:12 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
+2025-09-03 22:11:12 - WARN  [main] c.p.a.e.GlobalExceptionHandler - Security validation failed: FILE_SIZE_EXCEEDED - File 'large-file.pdf' exceeds maximum size of 50 MB. File size: 60.00 MB
+2025-09-03 22:11:12 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 22:11:12 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 22:11:12 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
+2025-09-03 22:11:12 - WARN  [main] c.p.a.e.GlobalExceptionHandler - Security validation failed: MAX_FILES_EXCEEDED - Maximum 10 files allowed per job, but 11 files provided
+2025-09-03 22:12:11 - INFO  [main] c.p.a.s.SecurityHeadersIntegrationTest - Starting SecurityHeadersIntegrationTest using Java 21.0.8 with PID 862910 (started by otavio in /home/otavio/API-JAVA/app/api)
+2025-09-03 22:12:11 - INFO  [main] c.p.a.s.SecurityHeadersIntegrationTest - No active profile set, falling back to 1 default profile: "default"
+2025-09-03 22:12:14 - WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: 92cdb76d-183d-4e94-b274-aca597a6fce0
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-09-03 22:12:14 - INFO  [main] c.p.a.s.SecurityHeadersIntegrationTest - Started SecurityHeadersIntegrationTest in 3.627 seconds (process running for 6.884)
+2025-09-03 22:12:15 - INFO  [main] c.p.a.c.RateLimitIntegrationTest - Starting RateLimitIntegrationTest using Java 21.0.8 with PID 862910 (started by otavio in /home/otavio/API-JAVA/app/api)
+2025-09-03 22:12:15 - INFO  [main] c.p.a.c.RateLimitIntegrationTest - The following 1 profile is active: "test"
+2025-09-03 22:12:15 - WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: ed0b2567-d6df-4358-9394-1d8548caf87a
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-09-03 22:12:16 - INFO  [main] c.p.a.c.RateLimitIntegrationTest - Started RateLimitIntegrationTest in 1.064 seconds (process running for 8.09)
+2025-09-03 22:12:16 - WARN  [main] c.p.a.e.GlobalExceptionHandler - Security validation failed: INVALID_API_KEY - Invalid API key
+2025-09-03 22:12:16 - WARN  [main] c.p.a.e.GlobalExceptionHandler - Security validation failed: RATE_LIMIT_EXCEEDED - Rate limit exceeded. Try again in 60 minutes.
+2025-09-03 22:12:16 - WARN  [main] c.p.a.e.GlobalExceptionHandler - Security validation failed: RATE_LIMIT_EXCEEDED - Rate limit exceeded. Try again in 60 minutes.
+2025-09-03 22:12:16 - INFO  [main] c.p.api.controller.JobControllerTest - Starting JobControllerTest using Java 21.0.8 with PID 862910 (started by otavio in /home/otavio/API-JAVA/app/api)
+2025-09-03 22:12:16 - INFO  [main] c.p.api.controller.JobControllerTest - No active profile set, falling back to 1 default profile: "default"
+2025-09-03 22:12:17 - WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: 426a066d-e8ee-42db-8b91-e674041e5214
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-09-03 22:12:17 - INFO  [main] c.p.api.controller.JobControllerTest - Started JobControllerTest in 0.608 seconds (process running for 9.307)
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [MISSING]
+2025-09-03 22:12:17 - WARN  [main] c.p.a.c.ApiKeyAuthenticationFilter - Missing X-API-Key header for endpoint: /api/v1/jobs
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Sending unauthorized response: Missing X-API-Key header
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: GET /api/v1/jobs/job-123
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs/job-123, X-API-Key: [PRESENT]
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs/job-123
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: GET /api/v1/jobs
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.SecurityValidationTest - Starting SecurityValidationTest using Java 21.0.8 with PID 862910 (started by otavio in /home/otavio/API-JAVA/app/api)
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.SecurityValidationTest - No active profile set, falling back to 1 default profile: "default"
+2025-09-03 22:12:17 - WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: 73f09fec-18ec-448a-8ec3-47609d2260b4
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.SecurityValidationTest - Started SecurityValidationTest in 0.216 seconds (process running for 9.791)
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
+2025-09-03 22:12:17 - WARN  [main] c.p.a.e.GlobalExceptionHandler - Security validation failed: MAX_FILES_EXCEEDED - Maximum 10 files allowed per job, but 11 files provided
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
+2025-09-03 22:12:17 - WARN  [main] c.p.a.e.GlobalExceptionHandler - Security validation failed: FILE_SIZE_EXCEEDED - File 'large-file.pdf' exceeds maximum size of 50 MB. File size: 60.00 MB
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 22:12:17 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
+2025-09-03 22:12:17 - WARN  [main] c.p.a.e.GlobalExceptionHandler - Security validation failed: MAX_FILES_EXCEEDED - Maximum 10 files allowed per job, but 11 files provided
+2025-09-03 23:04:50 - INFO  [main] c.p.a.s.SecurityHeadersIntegrationTest - Starting SecurityHeadersIntegrationTest using Java 21.0.8 with PID 940865 (started by otavio in /home/otavio/API-JAVA/app/api)
+2025-09-03 23:04:50 - INFO  [main] c.p.a.s.SecurityHeadersIntegrationTest - No active profile set, falling back to 1 default profile: "default"
+2025-09-03 23:04:52 - WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: 83566898-086a-48e5-9016-9fce181bceab
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-09-03 23:04:53 - INFO  [main] c.p.a.s.SecurityHeadersIntegrationTest - Started SecurityHeadersIntegrationTest in 3.714 seconds (process running for 6.973)
+2025-09-03 23:04:53 - INFO  [main] c.p.a.c.RateLimitIntegrationTest - Starting RateLimitIntegrationTest using Java 21.0.8 with PID 940865 (started by otavio in /home/otavio/API-JAVA/app/api)
+2025-09-03 23:04:53 - INFO  [main] c.p.a.c.RateLimitIntegrationTest - The following 1 profile is active: "test"
+2025-09-03 23:04:54 - WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: 59ea5aa4-c3eb-421f-97bd-f4fe16882b81
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-09-03 23:04:54 - INFO  [main] c.p.a.c.RateLimitIntegrationTest - Started RateLimitIntegrationTest in 0.879 seconds (process running for 8.006)
+2025-09-03 23:04:54 - WARN  [main] c.p.a.e.GlobalExceptionHandler - Security validation failed: INVALID_API_KEY - Invalid API key
+2025-09-03 23:04:54 - WARN  [main] c.p.a.e.GlobalExceptionHandler - Security validation failed: RATE_LIMIT_EXCEEDED - Rate limit exceeded. Try again in 60 minutes.
+2025-09-03 23:04:54 - WARN  [main] c.p.a.e.GlobalExceptionHandler - Security validation failed: RATE_LIMIT_EXCEEDED - Rate limit exceeded. Try again in 60 minutes.
+2025-09-03 23:04:54 - INFO  [main] c.p.api.controller.JobControllerTest - Starting JobControllerTest using Java 21.0.8 with PID 940865 (started by otavio in /home/otavio/API-JAVA/app/api)
+2025-09-03 23:04:54 - INFO  [main] c.p.api.controller.JobControllerTest - No active profile set, falling back to 1 default profile: "default"
+2025-09-03 23:04:55 - WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: de4b1f0f-9fe4-4317-8d08-4e07d566cf2b
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-09-03 23:04:55 - INFO  [main] c.p.api.controller.JobControllerTest - Started JobControllerTest in 0.467 seconds (process running for 8.887)
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [MISSING]
+2025-09-03 23:04:55 - WARN  [main] c.p.a.c.ApiKeyAuthenticationFilter - Missing X-API-Key header for endpoint: /api/v1/jobs
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Sending unauthorized response: Missing X-API-Key header
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: GET /api/v1/jobs/job-123
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs/job-123, X-API-Key: [PRESENT]
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs/job-123
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: GET /api/v1/jobs
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.SecurityValidationTest - Starting SecurityValidationTest using Java 21.0.8 with PID 940865 (started by otavio in /home/otavio/API-JAVA/app/api)
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.SecurityValidationTest - No active profile set, falling back to 1 default profile: "default"
+2025-09-03 23:04:55 - WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: f43d581d-e5dc-4579-8c25-98e20fc5dbc2
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.SecurityValidationTest - Started SecurityValidationTest in 0.19 seconds (process running for 9.287)
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
+2025-09-03 23:04:55 - WARN  [main] c.p.a.e.GlobalExceptionHandler - Security validation failed: MAX_FILES_EXCEEDED - Maximum 10 files allowed per job, but 11 files provided
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
+2025-09-03 23:04:55 - WARN  [main] c.p.a.e.GlobalExceptionHandler - Security validation failed: FILE_SIZE_EXCEEDED - File 'large-file.pdf' exceeds maximum size of 50 MB. File size: 60.00 MB
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 23:04:55 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
+2025-09-03 23:04:55 - WARN  [main] c.p.a.e.GlobalExceptionHandler - Security validation failed: MAX_FILES_EXCEEDED - Maximum 10 files allowed per job, but 11 files provided
+2025-09-03 23:06:22 - INFO  [main] c.p.a.s.SecurityHeadersIntegrationTest - Starting SecurityHeadersIntegrationTest using Java 21.0.8 with PID 944220 (started by otavio in /home/otavio/API-JAVA/app/api)
+2025-09-03 23:06:22 - INFO  [main] c.p.a.s.SecurityHeadersIntegrationTest - No active profile set, falling back to 1 default profile: "default"
+2025-09-03 23:06:25 - WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: 5a490f32-f9e9-48ae-94f0-dfbc576c4654
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-09-03 23:06:26 - INFO  [main] c.p.a.s.SecurityHeadersIntegrationTest - Started SecurityHeadersIntegrationTest in 3.687 seconds (process running for 7.092)
+2025-09-03 23:06:26 - INFO  [main] c.p.a.c.RateLimitIntegrationTest - Starting RateLimitIntegrationTest using Java 21.0.8 with PID 944220 (started by otavio in /home/otavio/API-JAVA/app/api)
+2025-09-03 23:06:26 - INFO  [main] c.p.a.c.RateLimitIntegrationTest - The following 1 profile is active: "test"
+2025-09-03 23:06:26 - WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: 6a4ba9a0-c0c3-4411-b183-36f554d06dae
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-09-03 23:06:27 - INFO  [main] c.p.a.c.RateLimitIntegrationTest - Started RateLimitIntegrationTest in 1.099 seconds (process running for 8.373)
+2025-09-03 23:06:27 - WARN  [main] c.p.a.e.GlobalExceptionHandler - Security validation failed: INVALID_API_KEY - Invalid API key
+2025-09-03 23:06:27 - WARN  [main] c.p.a.e.GlobalExceptionHandler - Security validation failed: RATE_LIMIT_EXCEEDED - Rate limit exceeded. Try again in 60 minutes.
+2025-09-03 23:06:27 - WARN  [main] c.p.a.e.GlobalExceptionHandler - Security validation failed: RATE_LIMIT_EXCEEDED - Rate limit exceeded. Try again in 60 minutes.
+2025-09-03 23:06:27 - INFO  [main] c.p.api.controller.JobControllerTest - Starting JobControllerTest using Java 21.0.8 with PID 944220 (started by otavio in /home/otavio/API-JAVA/app/api)
+2025-09-03 23:06:27 - INFO  [main] c.p.api.controller.JobControllerTest - No active profile set, falling back to 1 default profile: "default"
+2025-09-03 23:06:28 - WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: 33fed702-8cce-4cba-9488-cde5def7188b
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-09-03 23:06:28 - INFO  [main] c.p.api.controller.JobControllerTest - Started JobControllerTest in 0.572 seconds (process running for 9.458)
+2025-09-03 23:06:28 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 23:06:28 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 23:06:28 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
+2025-09-03 23:06:28 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 23:06:28 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 23:06:28 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
+2025-09-03 23:06:28 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 23:06:28 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [MISSING]
+2025-09-03 23:06:28 - WARN  [main] c.p.a.c.ApiKeyAuthenticationFilter - Missing X-API-Key header for endpoint: /api/v1/jobs
+2025-09-03 23:06:28 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Sending unauthorized response: Missing X-API-Key header
+2025-09-03 23:06:28 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: GET /api/v1/jobs/job-123
+2025-09-03 23:06:28 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs/job-123, X-API-Key: [PRESENT]
+2025-09-03 23:06:28 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs/job-123
+2025-09-03 23:06:28 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: GET /api/v1/jobs
+2025-09-03 23:06:28 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 23:06:28 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
+2025-09-03 23:06:28 - INFO  [main] c.p.a.c.SecurityValidationTest - Starting SecurityValidationTest using Java 21.0.8 with PID 944220 (started by otavio in /home/otavio/API-JAVA/app/api)
+2025-09-03 23:06:28 - INFO  [main] c.p.a.c.SecurityValidationTest - No active profile set, falling back to 1 default profile: "default"
+2025-09-03 23:06:28 - WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: 95824dda-7bd0-4482-b8c9-0c44ec80e11f
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-09-03 23:06:29 - INFO  [main] c.p.a.c.SecurityValidationTest - Started SecurityValidationTest in 0.275 seconds (process running for 9.99)
+2025-09-03 23:06:29 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 23:06:29 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 23:06:29 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
+2025-09-03 23:06:29 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 23:06:29 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 23:06:29 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
+2025-09-03 23:06:29 - WARN  [main] c.p.a.e.GlobalExceptionHandler - Security validation failed: MAX_FILES_EXCEEDED - Maximum 10 files allowed per job, but 11 files provided
+2025-09-03 23:06:29 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 23:06:29 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 23:06:29 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
+2025-09-03 23:06:29 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 23:06:29 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 23:06:29 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
+2025-09-03 23:06:29 - WARN  [main] c.p.a.e.GlobalExceptionHandler - Security validation failed: FILE_SIZE_EXCEEDED - File 'large-file.pdf' exceeds maximum size of 50 MB. File size: 60.00 MB
+2025-09-03 23:06:29 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 23:06:29 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 23:06:29 - INFO  [main] c.p.a.c.ApiKeyAuthenticationFilter - Valid X-API-Key, allowing access to: /api/v1/jobs
+2025-09-03 23:06:29 - WARN  [main] c.p.a.e.GlobalExceptionHandler - Security validation failed: MAX_FILES_EXCEEDED - Maximum 10 files allowed per job, but 11 files provided

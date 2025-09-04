@@ -3,7 +3,7 @@
 import com.pdfprocessor.api.exception.SecurityValidationException;
 import com.pdfprocessor.domain.model.JobOperation;
 import java.util.List;
-import java.util.Map;
+//import java.util.Map;
 import java.util.regex.Pattern;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -60,8 +60,8 @@ import org.springframework.web.multipart.MultipartFile;
     }
     
     // Verificar se contém apenas caracteres alfanuméricos e underscore
-<span class="fc bfc" id="L63" title="All 2 branches covered.">    if (!operation.matches(&quot;^[A-Z_]+$&quot;)) {</span>
-<span class="fc" id="L64">      throw new SecurityValidationException(</span>
+<span class="pc bpc" id="L63" title="1 of 2 branches missed.">    if (!operation.matches(&quot;^[A-Z_]+$&quot;)) {</span>
+<span class="nc" id="L64">      throw new SecurityValidationException(</span>
           &quot;Operation name contains invalid characters. Only uppercase letters and underscores allowed&quot;, 
           &quot;INVALID_OPERATION_FORMAT&quot;);
     }
@@ -287,14 +287,14 @@ import org.springframework.web.multipart.MultipartFile;
    */
   public void validateInputProvided(List&lt;MultipartFile&gt; files, List&lt;String&gt; inputFiles) {
 <span class="pc bpc" id="L289" title="2 of 8 branches missed.">    boolean hasFiles = files != null &amp;&amp; !files.isEmpty() &amp;&amp; files.stream().anyMatch(f -&gt; !f.isEmpty());</span>
-<span class="fc bfc" id="L290" title="All 4 branches covered.">    boolean hasInputFiles = inputFiles != null &amp;&amp; !inputFiles.isEmpty();</span>
+<span class="pc bpc" id="L290" title="1 of 4 branches missed.">    boolean hasInputFiles = inputFiles != null &amp;&amp; !inputFiles.isEmpty();</span>
     
-<span class="fc bfc" id="L292" title="All 4 branches covered.">    if (!hasFiles &amp;&amp; !hasInputFiles) {</span>
+<span class="pc bpc" id="L292" title="1 of 4 branches missed.">    if (!hasFiles &amp;&amp; !hasInputFiles) {</span>
 <span class="fc" id="L293">      throw new SecurityValidationException(</span>
           &quot;Either files or inputFiles parameter is required&quot;, &quot;NO_INPUT_PROVIDED&quot;);
     }
     
-<span class="pc bpc" id="L297" title="1 of 4 branches missed.">    if (hasFiles &amp;&amp; hasInputFiles) {</span>
+<span class="pc bpc" id="L297" title="2 of 4 branches missed.">    if (hasFiles &amp;&amp; hasInputFiles) {</span>
 <span class="nc" id="L298">      throw new SecurityValidationException(</span>
           &quot;Cannot provide both files and inputFiles parameters simultaneously&quot;, 
           &quot;CONFLICTING_INPUT_TYPES&quot;);
