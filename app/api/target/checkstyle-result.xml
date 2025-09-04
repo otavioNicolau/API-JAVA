@@ -4,26 +4,31 @@
 <error line="8" column="1" severity="warning" message="Utility classes should not have a public or default constructor." source="com.puppycrawl.tools.checkstyle.checks.design.HideUtilityClassConstructorCheck"/>
 </file>
 <file name="/home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/security/SecurityHeadersFilter.java">
-<error line="45" severity="warning" message="Line is longer than 120 characters (found 121)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="38" severity="warning" message="Line is longer than 120 characters (found 125)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="40" severity="warning" message="Line is longer than 120 characters (found 155)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="51" severity="warning" message="Line is longer than 120 characters (found 121)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
 </file>
 <file name="/home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/controller/JobController.java">
 <error line="34" column="47" severity="warning" message="Using the &apos;.*&apos; form of import should be avoided - org.springframework.web.bind.annotation.*." source="com.puppycrawl.tools.checkstyle.checks.imports.AvoidStarImportCheck"/>
-<error line="58" column="10" severity="warning" message="More than 7 parameters (found 9)." source="com.puppycrawl.tools.checkstyle.checks.sizes.ParameterNumberCheck"/>
-<error line="83" severity="warning" message="Line is longer than 120 characters (found 141)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="96" severity="warning" message="Line is longer than 120 characters (found 361)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="106" severity="warning" message="Line is longer than 120 characters (found 152)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="210" column="92" severity="warning" message="&apos;{&apos; is not followed by whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
-<error line="210" column="93" severity="warning" message="&apos;}&apos; is not preceded with whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
-<error line="245" severity="warning" message="Line is longer than 120 characters (found 463)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="279" severity="warning" message="Line is longer than 120 characters (found 456)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="284" severity="warning" message="Line is longer than 120 characters (found 311)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="289" severity="warning" message="Line is longer than 120 characters (found 376)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="301" severity="warning" message="Line is longer than 120 characters (found 177)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="319" severity="warning" message="Line is longer than 120 characters (found 130)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="351" severity="warning" message="Line is longer than 120 characters (found 172)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="356" severity="warning" message="Line is longer than 120 characters (found 166)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="395" severity="warning" message="Line is longer than 120 characters (found 364)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="406" severity="warning" message="Line is longer than 120 characters (found 155)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="60" column="10" severity="warning" message="More than 7 parameters (found 10)." source="com.puppycrawl.tools.checkstyle.checks.sizes.ParameterNumberCheck"/>
+<error line="87" severity="warning" message="Line is longer than 120 characters (found 141)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="100" severity="warning" message="Line is longer than 120 characters (found 361)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="110" severity="warning" message="Line is longer than 120 characters (found 152)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="219" column="92" severity="warning" message="&apos;{&apos; is not followed by whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
+<error line="219" column="93" severity="warning" message="&apos;}&apos; is not preceded with whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
+<error line="254" severity="warning" message="Line is longer than 120 characters (found 463)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="288" severity="warning" message="Line is longer than 120 characters (found 456)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="293" severity="warning" message="Line is longer than 120 characters (found 311)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="298" severity="warning" message="Line is longer than 120 characters (found 376)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="310" severity="warning" message="Line is longer than 120 characters (found 177)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="328" severity="warning" message="Line is longer than 120 characters (found 130)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="360" severity="warning" message="Line is longer than 120 characters (found 172)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="365" severity="warning" message="Line is longer than 120 characters (found 166)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="404" severity="warning" message="Line is longer than 120 characters (found 364)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="415" severity="warning" message="Line is longer than 120 characters (found 155)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="432" severity="warning" message="Line is longer than 120 characters (found 144)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="443" severity="warning" message="Line is longer than 120 characters (found 180)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="447" severity="warning" message="Line is longer than 120 characters (found 182)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
 </file>
 <file name="/home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/controller/HealthController.java">
 <error line="48" severity="warning" message="Line is longer than 120 characters (found 150)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
@@ -31,8 +36,20 @@
 <error line="82" severity="warning" message="Line is longer than 120 characters (found 293)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
 </file>
 <file name="/home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/service/RateLimitService.java">
-<error line="53" column="44" severity="warning" message="&apos;||&apos; should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.whitespace.OperatorWrapCheck"/>
-<error line="60" column="62" severity="warning" message="&apos;-&apos; should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.whitespace.OperatorWrapCheck"/>
-<error line="89" column="44" severity="warning" message="&apos;||&apos; should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.whitespace.OperatorWrapCheck"/>
+<error line="55" column="44" severity="warning" message="&apos;||&apos; should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.whitespace.OperatorWrapCheck"/>
+<error line="62" column="62" severity="warning" message="&apos;-&apos; should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.whitespace.OperatorWrapCheck"/>
+<error line="91" column="44" severity="warning" message="&apos;||&apos; should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.whitespace.OperatorWrapCheck"/>
+</file>
+<file name="/home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/service/SseService.java">
+<error line="81" column="70" severity="warning" message="&apos;||&apos; should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.whitespace.OperatorWrapCheck"/>
+<error line="82" column="67" severity="warning" message="&apos;||&apos; should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.whitespace.OperatorWrapCheck"/>
+</file>
+<file name="/home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/config/ApiKeyAuthenticationFilter.java">
+<error line="9" column="8" severity="warning" message="Unused import - java.util.List." source="com.puppycrawl.tools.checkstyle.checks.imports.UnusedImportsCheck"/>
+<error line="79" severity="warning" message="Line is longer than 120 characters (found 124)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+</file>
+<file name="/home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/config/SecurityConfig.java">
+<error line="62" severity="warning" message="Line is longer than 120 characters (found 160)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="71" severity="warning" message="Line is longer than 120 characters (found 137)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
 </file>
 </checkstyle>

@@ -17,6 +17,15 @@ public interface PdfProcessingService {
   String processJob(Job job);
 
   /**
+   * Processa um job de PDF com callback de progresso.
+   *
+   * @param job o job a ser processado
+   * @param progressCallback callback para reportar progresso
+   * @return caminho do arquivo resultado
+   */
+  String processJob(Job job, ProgressCallback progressCallback);
+
+  /**
    * Verifica se uma operação é suportada.
    *
    * @param operation a operação

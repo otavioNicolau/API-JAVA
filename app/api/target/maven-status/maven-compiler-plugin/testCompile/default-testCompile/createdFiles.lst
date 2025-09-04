@@ -4,5 +4,6 @@ com/pdfprocessor/api/controller/JobControllerTest.class
 com/pdfprocessor/api/controller/RateLimitIntegrationTest.class
 com/pdfprocessor/api/service/InputValidationServiceTest.class
 com/pdfprocessor/api/security/SecurityHeadersIntegrationTest.class
+com/pdfprocessor/api/service/SseServiceTest$1.class
 com/pdfprocessor/api/service/RateLimitServiceTest.class
-com/pdfprocessor/api/controller/TestSecurityConfig.class
+com/pdfprocessor/api/service/SseServiceTest.class

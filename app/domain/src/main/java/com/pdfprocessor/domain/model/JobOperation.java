@@ -33,7 +33,8 @@ public enum JobOperation {
   PDF_OCR("Aplicar OCR ao PDF"),
   PDF_TO_AUDIO("Converter texto do PDF em áudio"),
   PDF_FROM_EPUB("Converter EPUB para PDF"),
-  PDF_FROM_DJVU("Converter DjVu para PDF");
+  PDF_FROM_DJVU("Converter DjVu para PDF"),
+  PDF_SIGN("Assinar PDF digitalmente");
 
   private final String description;
 

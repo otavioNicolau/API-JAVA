@@ -13,4 +13,14 @@
 <error line="65" column="5" severity="warning" message="&apos;if&apos; construct must use &apos;{}&apos;s." source="com.puppycrawl.tools.checkstyle.checks.blocks.NeedBracesCheck"/>
 <error line="66" column="5" severity="warning" message="&apos;if&apos; construct must use &apos;{}&apos;s." source="com.puppycrawl.tools.checkstyle.checks.blocks.NeedBracesCheck"/>
 </file>
+<file name="/home/otavio/API-JAVA/app/application/src/main/java/com/pdfprocessor/application/usecase/ListAllJobsUseCase.java">
+</file>
+<file name="/home/otavio/API-JAVA/app/application/src/main/java/com/pdfprocessor/application/usecase/DownloadResultUseCase.java">
+</file>
+<file name="/home/otavio/API-JAVA/app/application/src/main/java/com/pdfprocessor/application/usecase/CreateJobUseCase.java">
+</file>
+<file name="/home/otavio/API-JAVA/app/application/src/main/java/com/pdfprocessor/application/usecase/GetJobStatusUseCase.java">
+</file>
+<file name="/home/otavio/API-JAVA/app/application/src/main/java/com/pdfprocessor/application/usecase/CancelJobUseCase.java">
+</file>
 </checkstyle>

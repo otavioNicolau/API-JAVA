@@ -1,0 +1,44 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+  
+  h2:
+    console:
+      enabled: false
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+
+app:
+  storage:
+    base-path: /tmp/pdf-processor-test
+  security:
+    api-keys:
+      - "test-key-67890"
+      - "dev-key-12345"
+
+logging:
+  level:
+    com.pdfprocessor: INFO
+    org.springframework.web: WARN
+    org.hibernate: WARN

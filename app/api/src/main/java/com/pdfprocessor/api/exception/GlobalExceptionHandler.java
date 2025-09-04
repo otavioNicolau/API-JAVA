@@ -51,6 +51,7 @@ public class GlobalExceptionHandler {
     HttpStatus status = switch (ex.getErrorCode()) {
       case "FILE_SIZE_EXCEEDED", "MAX_FILES_EXCEEDED" -> HttpStatus.PAYLOAD_TOO_LARGE;
       case "RATE_LIMIT_EXCEEDED" -> HttpStatus.TOO_MANY_REQUESTS;
+      case "INVALID_API_KEY" -> HttpStatus.UNAUTHORIZED;
       default -> HttpStatus.BAD_REQUEST;
     };
     

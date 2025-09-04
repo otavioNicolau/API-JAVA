@@ -33,6 +33,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import jakarta.servlet.http.HttpServletRequest;
 
 /** Controller REST para operações de jobs de processamento de PDF. */
@@ -54,6 +55,7 @@ public class JobController {
   private final ObjectMapper objectMapper;
   private final RateLimitService rateLimitService;
   private final InputValidationService inputValidationService;
+  private final com.pdfprocessor.api.service.SseService sseService;
 
   public JobController(
       CreateJobUseCase createJobUseCase,
@@ -64,7 +66,8 @@ public class JobController {
       StorageService storageService,
       ObjectMapper objectMapper,
       RateLimitService rateLimitService,
-      InputValidationService inputValidationService) {
+      InputValidationService inputValidationService,
+      com.pdfprocessor.api.service.SseService sseService) {
     this.createJobUseCase = createJobUseCase;
     this.getJobStatusUseCase = getJobStatusUseCase;
     this.downloadResultUseCase = downloadResultUseCase;
@@ -74,6 +77,7 @@ public class JobController {
     this.objectMapper = objectMapper;
     this.rateLimitService = rateLimitService;
     this.inputValidationService = inputValidationService;
+    this.sseService = sseService;
   }
 
   @PostMapping
@@ -171,6 +175,11 @@ public class JobController {
       // Verificar rate limit por API key
       String apiKey = httpRequest.getHeader("X-API-Key");
       rateLimitService.checkRateLimit(apiKey);
+      
+      System.out.println("DEBUG: API Key = " + apiKey);
+      System.out.println("DEBUG: Operation = " + operation);
+      System.out.println("DEBUG: Files = " + (files != null ? files.size() : "null"));
+      System.out.println("DEBUG: InputFiles = " + (inputFiles != null ? inputFiles.size() : "null"));
       
       // Validações rigorosas de entrada
       inputValidationService.validateOperation(operation);
@@ -415,5 +424,47 @@ public class JobController {
     
     JobResponse response = cancelJobUseCase.execute(jobId);
     return ResponseEntity.ok(response);
+  }
+
+  @GetMapping(value = "/{jobId}/events", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+  @Operation(
+      summary = "Acompanhar progresso do job em tempo real",
+      description = "Estabelece uma conexão Server-Sent Events (SSE) para receber atualizações em tempo real do progresso de um job específico")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Conexão SSE estabelecida com sucesso",
+            content = @Content(
+                mediaType = "text/event-stream",
+                examples = {
+                  @ExampleObject(
+                      name = "job_update",
+                      value = "event: job-update\ndata: {\"jobId\":\"550e8400-e29b-41d4-a716-446655440000\",\"operation\":\"MERGE\",\"status\":\"PROCESSING\",\"progress\":45}\n\n",
+                      description = "Atualização de progresso"),
+                  @ExampleObject(
+                      name = "job_finished",
+                      value = "event: job-finished\ndata: {\"jobId\":\"550e8400-e29b-41d4-a716-446655440000\",\"operation\":\"MERGE\",\"status\":\"COMPLETED\",\"progress\":100}\n\n",
+                      description = "Job concluído")
+                })),
+        @ApiResponse(responseCode = "404", description = "Job não encontrado"),
+        @ApiResponse(responseCode = "401", description = "Não autorizado")
+      })
+  public SseEmitter streamJobEvents(
+      @Parameter(description = "ID único do job", example = "550e8400-e29b-41d4-a716-446655440000")
+          @PathVariable
+          String jobId) {
+    // Validar ID do job
+    inputValidationService.validateJobId(jobId);
+    
+    try {
+      // Verificar se o job existe
+      getJobStatusUseCase.execute(jobId);
+      
+      // Criar e retornar o emitter SSE
+      return sseService.createEmitter(jobId);
+    } catch (com.pdfprocessor.domain.exception.JobNotFoundException ex) {
+      throw ex; // Re-lança para ser tratada pelo GlobalExceptionHandler
+    }
   }
 }

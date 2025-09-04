@@ -41,7 +41,9 @@ public class RateLimitService {
      */
     public void checkRateLimit(String apiKey) {
         if (apiKey == null || apiKey.trim().isEmpty()) {
-            throw new SecurityValidationException("Invalid API key", "INVALID_API_KEY");
+            // Skip rate limit check for null/empty API keys
+            // Authentication filter will handle this case
+            return;
         }
 
         RequestWindow window = requestWindows.computeIfAbsent(apiKey, k -> new RequestWindow());

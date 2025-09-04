@@ -54,7 +54,7 @@ paths:
               properties:
                 operation:
                   type: string
-                  enum: [merge, split, compress, pdf_to_images, images_to_pdf, rotate, watermark, encrypt, decrypt, extract_metadata, extract_text, pdf_crop, pdf_reorder, pdf_resize, pdf_compare, pdf_create, pdf_edit, pdf_protect, pdf_unlock, pdf_optimize, pdf_validate, pdf_repair, pdf_extract_resources, pdf_remove_resources, pdf_to_pdfa, pdf_ocr, pdf_to_audio, pdf_from_epub, pdf_from_djvu]
+                  enum: [merge, split, compress, pdf_to_images, images_to_pdf, rotate, watermark, encrypt, decrypt, extract_metadata, extract_text, pdf_crop, pdf_reorder, pdf_resize, pdf_compare, pdf_create, pdf_edit, pdf_protect, pdf_unlock, pdf_sign, pdf_optimize, pdf_validate, pdf_repair, pdf_extract_resources, pdf_remove_resources, pdf_to_pdfa, pdf_from_epub, pdf_from_djvu, pdf_ocr, pdf_to_audio]
                   description: Tipo de operação a ser executada
                   example: merge
                 files:
@@ -134,6 +134,11 @@ paths:
                 value:
                   operation: pdf_repair
                   optionsJson: '{"repair_type":"advanced","fix_structure":true,"fix_metadata":false,"remove_corrupted_objects":true}'
+              sign_operation:
+                summary: Assinar PDF digitalmente
+                value:
+                  operation: pdf_sign
+                  optionsJson: '{"certificate_path":"/path/to/certificate.p12","certificate_password":"cert_password","reason":"Documento aprovado","location":"São Paulo, Brasil","contact_info":"contato@empresa.com"}'
       responses:
         '200':
           description: Job criado com sucesso
@@ -545,7 +550,7 @@ components:
           example: "550e8400-e29b-41d4-a716-446655440000"
         operation:
           type: string
-          enum: [MERGE, SPLIT, COMPRESS, PDF_TO_IMAGES, IMAGES_TO_PDF, ROTATE, WATERMARK, ENCRYPT, DECRYPT, EXTRACT_METADATA, EXTRACT_TEXT, PDF_CROP, PDF_REORDER, PDF_RESIZE, PDF_COMPARE, PDF_CREATE, PDF_EDIT, PDF_PROTECT, PDF_UNLOCK, PDF_OPTIMIZE, PDF_VALIDATE, PDF_REPAIR]
+          enum: [MERGE, SPLIT, COMPRESS, PDF_TO_IMAGES, IMAGES_TO_PDF, ROTATE, WATERMARK, ENCRYPT, DECRYPT, EXTRACT_METADATA, EXTRACT_TEXT, PDF_CROP, PDF_REORDER, PDF_RESIZE, PDF_COMPARE, PDF_CREATE, PDF_EDIT, PDF_PROTECT, PDF_UNLOCK, PDF_OPTIMIZE, PDF_VALIDATE, PDF_REPAIR, PDF_EXTRACT_RESOURCES, PDF_REMOVE_RESOURCES, PDF_TO_PDFA, PDF_FROM_EPUB, PDF_FROM_DJVU, PDF_OCR, PDF_TO_AUDIO]
           description: Tipo de operação
           example: "MERGE"
         status:
@@ -704,6 +709,76 @@ components:
         - `fix_metadata` (boolean): Corrigir metadados (padrão: true)
         - `remove_corrupted_objects` (boolean): Remover objetos corrompidos (padrão: true)
         - `rebuild_xref` (boolean): Reconstruir tabela de referências (padrão: false)
+        
+        **PDF_EXTRACT_RESOURCES**:
+        - `resource_type` (string): Tipo de recurso a extrair ("images", "fonts", "all") (padrão: "all")
+        - `image_format` (string): Formato das imagens extraídas ("png", "jpeg", "original") (padrão: "png")
+        - `output_directory` (string): Diretório de saída para os recursos extraídos
+        - `include_metadata` (boolean): Incluir metadados dos recursos (padrão: true)
+        
+        **PDF_REMOVE_RESOURCES**:
+        - `resource_type` (string): Tipo de recurso a remover ("images", "fonts", "metadata", "all") (padrão: "images")
+        - `keep_structure` (boolean): Manter estrutura do documento após remoção (padrão: true)
+        - `remove_unused_only` (boolean): Remover apenas recursos não utilizados (padrão: false)
+        
+        **PDF_COMPARE**:
+        - `comparison_type` (string): Tipo de comparação ("visual", "text", "both")
+        - `detailed_diff` (boolean): Gerar diferenças detalhadas (padrão: false)
+        - `ignore_formatting` (boolean): Ignorar diferenças de formatação (padrão: false)
+        - `tolerance` (number): Tolerância para comparação visual (0.0 a 1.0, padrão: 0.1)
+        - `output_format` (string): Formato do resultado ("json", "html", "pdf")
+        
+        **PDF_CREATE**:
+        - `text_content` (string): Conteúdo de texto para o PDF
+        - `pages` (integer|string): Número de páginas a criar
+        - `page_size` (string): Tamanho da página ("A4", "LETTER", "A3", "LEGAL")
+        - `font_size` (integer): Tamanho da fonte (padrão: 12)
+        - `margin` (integer): Margem em pontos (padrão: 50)
+        - `title` (string): Título do documento
+        - `author` (string): Autor do documento
+        - `subject` (string): Assunto do documento
+        - `keywords` (string): Palavras-chave do documento
+        
+        **PDF_TO_PDFA**:
+        - `pdfa_level` (string): Nível PDF/A ("1a", "1b", "2a", "2b", "2u", "3a", "3b", "3u") (padrão: "2b")
+        - `validate_compliance` (boolean): Validar conformidade após conversão (padrão: true)
+        - `embed_fonts` (boolean): Incorporar todas as fontes (padrão: true)
+        - `color_profile` (string): Perfil de cor ICC ("sRGB", "AdobeRGB", "CMYK") (padrão: "sRGB")
+        - `output_intent` (string): Intenção de saída para impressão
+        
+        **PDF_FROM_EPUB**:
+        - `preserve_formatting` (boolean): Preservar formatação original (padrão: true)
+        - `include_toc` (boolean): Incluir índice (padrão: true)
+        - `page_size` (string): Tamanho da página ("A4", "LETTER", "A5") (padrão: "A4")
+        - `margin_mm` (number): Margem em milímetros (padrão: 20)
+        - `font_family` (string): Família da fonte ("Arial", "Times", "Helvetica") (padrão: "Arial")
+        - `font_size` (number): Tamanho da fonte (padrão: 12)
+        - `line_spacing` (number): Espaçamento entre linhas (padrão: 1.2)
+        
+        **PDF_FROM_DJVU**:
+        - `preserve_quality` (boolean): Preservar qualidade original (padrão: true)
+        - `ocr_text` (boolean): Aplicar OCR ao texto (padrão: false)
+        - `compression_level` (string): Nível de compressão ("low", "medium", "high") (padrão: "medium")
+        - `color_mode` (string): Modo de cor ("color", "grayscale", "monochrome") (padrão: "color")
+        - `dpi` (integer): Resolução em DPI (padrão: 300)
+        
+        **PDF_OCR**:
+        - `language` (string): Idioma para OCR ("por", "eng", "spa", "fra") (padrão: "por")
+        - `ocr_engine` (string): Motor OCR ("tesseract", "advanced") (padrão: "tesseract")
+        - `preserve_original` (boolean): Preservar texto original (padrão: true)
+        - `confidence_threshold` (number): Limite de confiança (0.0 a 1.0) (padrão: 0.7)
+        - `preprocess_images` (boolean): Pré-processar imagens (padrão: true)
+        - `output_format` (string): Formato de saída ("searchable", "text_only") (padrão: "searchable")
+        
+        **PDF_TO_AUDIO**:
+        - `voice` (string): Voz para síntese ("male", "female", "child") (padrão: "female")
+        - `language` (string): Idioma da síntese ("pt-BR", "en-US", "es-ES") (padrão: "pt-BR")
+        - `speed` (number): Velocidade da fala (0.5 a 2.0) (padrão: 1.0)
+        - `pitch` (number): Tom da voz (0.5 a 2.0) (padrão: 1.0)
+        - `volume` (number): Volume (0.0 a 1.0) (padrão: 0.8)
+        - `audio_format` (string): Formato de áudio ("mp3", "wav", "ogg") (padrão: "mp3")
+        - `bitrate` (integer): Taxa de bits em kbps (padrão: 128)
+        - `include_page_numbers` (boolean): Incluir números de página (padrão: false)
       example:
         output_filename: "merged_document.pdf"
         pages_per_file: 5
@@ -721,3 +796,19 @@ components:
         allow_printing: true
         allow_copying: false
         password: "unlock123"
+        comparison_type: "both"
+        detailed_diff: true
+        tolerance: 0.1
+        output_format: "json"
+        text_content: "Hello World! This is a sample PDF content."
+        pages: 3
+        page_size: "A4"
+        margin: 50
+        title: "Sample Document"
+        resource_type: "images"
+        image_format: "png"
+        output_directory: "extracted_resources"
+        include_metadata: true
+        keep_structure: true
+        remove_unused_only: false
+        author: "PDF Processor API"

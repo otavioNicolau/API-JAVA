@@ -1,6 +1,6 @@
-#Wed Sep 03 23:06:30 BRT 2025
+#Thu Sep 04 20:13:57 BRT 2025
 /home/otavio/API-JAVA/app/worker/src/main/java/com/pdfprocessor/worker/WorkerApplication.java=1756927647446
 /home/otavio/API-JAVA/app/worker/src/main/java/com/pdfprocessor/worker/config/WorkerConfig.java=1756927437800
 /home/otavio/API-JAVA/app/worker/src/main/java/com/pdfprocessor/worker/consumer/JobConsumer.java=1756943475458
-/home/otavio/API-JAVA/app/worker/src/main/java/com/pdfprocessor/worker/processor/JobProcessor.java=1756927599317
+/home/otavio/API-JAVA/app/worker/src/main/java/com/pdfprocessor/worker/processor/JobProcessor.java=1756991577679
 configuration*?=508EB1482EFCCCF80FAD0C3C8CFC0F1F43D228D6

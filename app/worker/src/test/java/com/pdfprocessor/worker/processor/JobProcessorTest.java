@@ -9,6 +9,7 @@ import com.pdfprocessor.domain.model.JobOperation;
 import com.pdfprocessor.domain.model.JobStatus;
 import com.pdfprocessor.domain.port.JobRepository;
 import com.pdfprocessor.domain.port.PdfProcessingService;
+import com.pdfprocessor.domain.port.ProgressNotificationService;
 import com.pdfprocessor.domain.port.StorageService;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -27,11 +28,13 @@ class JobProcessorTest {
 
   @Mock private PdfProcessingService pdfProcessingService;
 
+  @Mock private ProgressNotificationService progressNotificationService;
+
   private JobProcessor jobProcessor;
 
   @BeforeEach
   void setUp() {
-    jobProcessor = new JobProcessor(jobRepository, storageService, pdfProcessingService);
+    jobProcessor = new JobProcessor(jobRepository, storageService, pdfProcessingService, progressNotificationService);
   }
 
   @Test
@@ -39,7 +42,7 @@ class JobProcessorTest {
     // Given
     Job job = createTestJob();
     String expectedResultPath = "/path/to/result.pdf";
-    when(pdfProcessingService.processJob(job)).thenReturn(expectedResultPath);
+    when(pdfProcessingService.processJob(job, progressNotificationService)).thenReturn(expectedResultPath);
 
     // When
     jobProcessor.process(job);
@@ -50,7 +53,7 @@ class JobProcessorTest {
     assertNotNull(job.getCompletedAt());
     
     verify(jobRepository, times(2)).save(job); // Once for PROCESSING, once for COMPLETED
-    verify(pdfProcessingService).processJob(job);
+    verify(pdfProcessingService).processJob(job, progressNotificationService);
   }
 
   @Test
@@ -59,7 +62,7 @@ class JobProcessorTest {
     Job job = createTestJob();
     String errorMessage = "Processing failed";
     RuntimeException exception = new RuntimeException(errorMessage);
-    when(pdfProcessingService.processJob(job)).thenThrow(exception);
+    when(pdfProcessingService.processJob(job, progressNotificationService)).thenThrow(exception);
 
     // When & Then
     RuntimeException thrownException = assertThrows(RuntimeException.class, () -> {
@@ -71,7 +74,7 @@ class JobProcessorTest {
     assertEquals(errorMessage, job.getErrorMessage());
     
     verify(jobRepository, times(2)).save(job); // Once for PROCESSING, once for FAILED
-    verify(pdfProcessingService).processJob(job);
+    verify(pdfProcessingService).processJob(job, progressNotificationService);
   }
 
   @Test
@@ -79,7 +82,7 @@ class JobProcessorTest {
     // Given
     Job job = createTestJob();
     String expectedResultPath = "/path/to/result.pdf";
-    when(pdfProcessingService.processJob(job)).thenReturn(expectedResultPath);
+    when(pdfProcessingService.processJob(job, progressNotificationService)).thenReturn(expectedResultPath);
 
     // When
     jobProcessor.process(job);
@@ -96,7 +99,7 @@ class JobProcessorTest {
     // Given
     Job job = createTestJob();
     String expectedResultPath = "/path/to/result.pdf";
-    when(pdfProcessingService.processJob(job)).thenReturn(expectedResultPath);
+    when(pdfProcessingService.processJob(job, progressNotificationService)).thenReturn(expectedResultPath);
 
     // When
     jobProcessor.process(job);
@@ -110,13 +113,13 @@ class JobProcessorTest {
     // Given
     Job job = createTestJob();
     String expectedResultPath = "/path/to/result.pdf";
-    when(pdfProcessingService.processJob(job)).thenReturn(expectedResultPath);
+    when(pdfProcessingService.processJob(job, progressNotificationService)).thenReturn(expectedResultPath);
 
     // When
     jobProcessor.process(job);
 
     // Then
-    verify(pdfProcessingService).processJob(job);
+    verify(pdfProcessingService).processJob(job, progressNotificationService);
   }
 
   private Job createTestJob() {

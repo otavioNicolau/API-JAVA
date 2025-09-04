@@ -2,8 +2,10 @@
 /home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/exception/ResultNotFoundException.java
 /home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/exception/JobNotFoundException.java
 /home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/port/JobQueue.java
+/home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/port/ProgressCallback.java
 /home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/model/JobStatus.java
 /home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/model/Job.java
+/home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/port/ProgressNotificationService.java
 /home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/port/StorageService.java
 /home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/exception/JobNotCompletedException.java
 /home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/port/PdfProcessingService.java

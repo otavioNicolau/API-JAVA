@@ -1,5 +1,6 @@
 package com.pdfprocessor.api.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -18,8 +19,8 @@ import com.pdfprocessor.domain.model.JobStatus;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
-//import java.util.List;
-//import java.util.Map;
+import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -30,7 +31,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(JobController.class)
-@Import(TestSecurityConfig.class)
+@Import({com.pdfprocessor.api.config.SecurityConfig.class, com.pdfprocessor.api.exception.GlobalExceptionHandler.class})
 @TestPropertySource(properties = {
     "app.security.api-keys[0]=test-key-67890",
     "app.security.api-keys[1]=dev-key-12345"
@@ -47,6 +48,7 @@ class JobControllerTest {
   @MockBean private com.pdfprocessor.domain.port.StorageService storageService;
   @MockBean private com.pdfprocessor.api.service.RateLimitService rateLimitService;
   @MockBean private com.pdfprocessor.api.service.InputValidationService inputValidationService;
+  @MockBean private com.pdfprocessor.api.service.SseService sseService;
 
   @Autowired private ObjectMapper objectMapper;
 
@@ -168,5 +170,77 @@ class JobControllerTest {
         .andExpect(jsonPath("$[1].id").value("job-2"));
 
     verify(listAllJobsUseCase).execute(0, 20);
+  }
+
+  @Test
+  void shouldCreateSseEmitterSuccessfully() throws Exception {
+    // Given
+    String jobId = "test-job-123";
+    JobResponse jobResponse = new JobResponse();
+    jobResponse.setId(jobId);
+    jobResponse.setOperation(JobOperation.MERGE);
+    jobResponse.setStatus(JobStatus.PROCESSING);
+    jobResponse.setCreatedAt(LocalDateTime.now());
+    
+    org.springframework.web.servlet.mvc.method.annotation.SseEmitter mockEmitter = 
+        new org.springframework.web.servlet.mvc.method.annotation.SseEmitter(300000L);
+    
+    when(getJobStatusUseCase.execute(jobId)).thenReturn(jobResponse);
+    when(sseService.createEmitter(jobId)).thenReturn(mockEmitter);
+    doNothing().when(inputValidationService).validateJobId(jobId);
+
+    // When & Then
+    mockMvc
+        .perform(get("/api/v1/jobs/{jobId}/events", jobId)
+            .header("X-API-Key", "test-key-67890")
+            .accept("text/event-stream"))
+        .andExpect(status().isOk());
+
+    verify(inputValidationService).validateJobId(jobId);
+    verify(getJobStatusUseCase).execute(jobId);
+    verify(sseService).createEmitter(jobId);
+  }
+
+  @Test
+  void shouldThrowJobNotFoundExceptionInSse() throws Exception {
+    // Given
+    String jobId = "invalid-job-id";
+    doNothing().when(inputValidationService).validateJobId(jobId);
+    when(getJobStatusUseCase.execute(jobId))
+        .thenThrow(new com.pdfprocessor.domain.exception.JobNotFoundException(jobId));
+
+    // When & Then - Expect the exception to be thrown
+    try {
+      mockMvc.perform(get("/api/v1/jobs/{jobId}/events", jobId)
+          .header("X-API-Key", "test-key-67890")
+          .accept("text/event-stream"));
+    } catch (Exception e) {
+      // Verify that the root cause is JobNotFoundException
+      Throwable cause = e.getCause();
+      while (cause != null && !(cause instanceof com.pdfprocessor.domain.exception.JobNotFoundException)) {
+        cause = cause.getCause();
+      }
+      assertThat(cause).isInstanceOf(com.pdfprocessor.domain.exception.JobNotFoundException.class);
+    }
+
+    verify(inputValidationService).validateJobId(jobId);
+    verify(getJobStatusUseCase).execute(jobId);
+    verify(sseService, never()).createEmitter(anyString());
+  }
+
+  @Test
+  void shouldReturnUnauthorizedForSseWithoutApiKey() throws Exception {
+    // Given
+    String jobId = "test-job-123";
+
+    // When & Then
+    mockMvc
+        .perform(get("/api/v1/jobs/{jobId}/events", jobId)
+            .accept("text/event-stream"))
+        .andExpect(status().isUnauthorized());
+
+    verify(inputValidationService, never()).validateJobId(anyString());
+    verify(getJobStatusUseCase, never()).execute(anyString());
+    verify(sseService, never()).createEmitter(anyString());
   }
 }

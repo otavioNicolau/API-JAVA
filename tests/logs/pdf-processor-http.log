@@ -1,0 +1,26 @@
+2025-09-04 16:59:58 - Request: POST /api/v1/jobs from 127.0.0.1
+2025-09-04 16:59:58 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 135ms
+2025-09-04 16:59:58 - Request: POST /api/v1/jobs from 127.0.0.1
+2025-09-04 16:59:58 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 5ms
+2025-09-04 16:59:58 - Request: POST /api/v1/jobs from 127.0.0.1
+2025-09-04 16:59:58 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 6ms
+2025-09-04 16:59:58 - Request: POST /api/v1/jobs from 127.0.0.1
+2025-09-04 16:59:58 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 3ms
+2025-09-04 20:15:18 - Request: GET /api/v1/jobs from 127.0.0.1
+2025-09-04 20:15:19 - Response: GET /api/v1/jobs - Status: 200 - Duration: 511ms
+2025-09-04 20:15:37 - Request: GET /api/v1/jobs from 127.0.0.1
+2025-09-04 20:15:37 - Response: GET /api/v1/jobs - Status: 200 - Duration: 520ms
+2025-09-04 20:15:56 - Request: GET /api/v1/jobs from 127.0.0.1
+2025-09-04 20:15:57 - Response: GET /api/v1/jobs - Status: 200 - Duration: 478ms
+2025-09-04 20:15:58 - Request: POST /api/v1/jobs from 127.0.0.1
+2025-09-04 20:15:58 - [RESPONSE] POST /api/v1/jobs - Status: 400 - Duration: 15ms
+2025-09-04 20:15:58 - Request: POST /api/v1/jobs from 127.0.0.1
+2025-09-04 20:15:58 - [RESPONSE] POST /api/v1/jobs - Status: 400 - Duration: 2ms
+2025-09-04 20:15:58 - Request: POST /api/v1/jobs from 127.0.0.1
+2025-09-04 20:15:58 - [RESPONSE] POST /api/v1/jobs - Status: 400 - Duration: 3ms
+2025-09-04 20:15:58 - Request: POST /api/v1/jobs from 127.0.0.1
+2025-09-04 20:15:58 - [RESPONSE] POST /api/v1/jobs - Status: 400 - Duration: 3ms
+2025-09-04 20:15:59 - Request: GET /api/v1/api/v1/jobs from 127.0.0.1
+2025-09-04 20:15:59 - [RESPONSE] GET /api/v1/api/v1/jobs - Status: 500 - Duration: 15ms
+2025-09-04 20:26:42 - Request: GET /api/v1/jobs from 127.0.0.1
+2025-09-04 20:26:43 - Response: GET /api/v1/jobs - Status: 200 - Duration: 625ms

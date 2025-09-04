@@ -33,9 +33,15 @@ public class SecurityHeadersFilter implements Filter {
     // Habilita proteção XSS no browser
     httpResponse.setHeader("X-XSS-Protection", "1; mode=block");
     
-    // Content Security Policy - política restritiva para API
-    httpResponse.setHeader("Content-Security-Policy", 
-        "default-src 'none'; script-src 'none'; object-src 'none'; base-uri 'none';");
+    // Content Security Policy - permite recursos do Swagger UI
+    String requestURI = ((jakarta.servlet.http.HttpServletRequest) request).getRequestURI();
+    if (requestURI.startsWith("/swagger-ui") || requestURI.startsWith("/v3/api-docs") || requestURI.startsWith("/webjars")) {
+      httpResponse.setHeader("Content-Security-Policy", 
+          "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self';");
+    } else {
+      httpResponse.setHeader("Content-Security-Policy", 
+          "default-src 'none'; script-src 'none'; object-src 'none'; base-uri 'none';");
+    }
     
     // Referrer Policy - controla informações de referrer
     httpResponse.setHeader("Referrer-Policy", "no-referrer");
@@ -52,7 +58,6 @@ public class SecurityHeadersFilter implements Filter {
     }
     
     // Cache Control para endpoints sensíveis
-    String requestURI = ((jakarta.servlet.http.HttpServletRequest) request).getRequestURI();
     if (requestURI.contains("/api/")) {
       httpResponse.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
       httpResponse.setHeader("Pragma", "no-cache");

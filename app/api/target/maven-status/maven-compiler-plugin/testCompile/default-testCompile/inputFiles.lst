@@ -1,5 +1,5 @@
 /home/otavio/API-JAVA/app/api/src/test/java/com/pdfprocessor/api/controller/JobControllerTest.java
-/home/otavio/API-JAVA/app/api/src/test/java/com/pdfprocessor/api/controller/TestSecurityConfig.java
+/home/otavio/API-JAVA/app/api/src/test/java/com/pdfprocessor/api/service/SseServiceTest.java
 /home/otavio/API-JAVA/app/api/src/test/java/com/pdfprocessor/api/service/InputValidationServiceTest.java
 /home/otavio/API-JAVA/app/api/src/test/java/com/pdfprocessor/api/controller/RateLimitIntegrationTest.java
 /home/otavio/API-JAVA/app/api/src/test/java/com/pdfprocessor/api/service/RateLimitServiceTest.java

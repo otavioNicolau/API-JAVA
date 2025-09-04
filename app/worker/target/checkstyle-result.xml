@@ -1,3 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <checkstyle version="9.3">
+<file name="/home/otavio/API-JAVA/app/worker/src/main/java/com/pdfprocessor/worker/processor/JobProcessor.java">
+</file>
+<file name="/home/otavio/API-JAVA/app/worker/src/main/java/com/pdfprocessor/worker/WorkerApplication.java">
+</file>
+<file name="/home/otavio/API-JAVA/app/worker/src/main/java/com/pdfprocessor/worker/consumer/JobConsumer.java">
+</file>
+<file name="/home/otavio/API-JAVA/app/worker/src/main/java/com/pdfprocessor/worker/config/WorkerConfig.java">
+</file>
 </checkstyle>

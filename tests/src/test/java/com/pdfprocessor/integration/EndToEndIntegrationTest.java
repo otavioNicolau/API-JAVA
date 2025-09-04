@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.pdfprocessor.api.ApiApplication;
+import com.pdfprocessor.api.config.SecurityConfig;
 import io.restassured.RestAssured;
 import java.io.File;
 import java.io.IOException;
@@ -15,8 +16,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 
 /**
  * Testes de integração end-to-end que verificam o fluxo completo:
@@ -26,12 +30,17 @@ import org.springframework.test.context.TestPropertySource;
     classes = ApiApplication.class,
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
+@EnableAutoConfiguration(exclude = {
+    org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration.class,
+    org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration.class
+})
+@Import(SecurityConfig.class)
 @ActiveProfiles("test")
 @TestPropertySource(properties = {
     "app.storage.base-path=/tmp/pdf-processor-test",
     "app.queue.redis.host=localhost",
     "app.queue.redis.port=6379",
-    "app.security.api-key=test-api-key"
+    "app.security.api-keys[0]=test-key-67890"
 })
 class EndToEndIntegrationTest {
 
@@ -58,11 +67,11 @@ class EndToEndIntegrationTest {
   void shouldCreateMergeJobViaApi() {
     // Given & When: Criar um job de merge via API
     String jobId = given()
-        .header("X-API-Key", "test-api-key")
-        .multiPart("inputFiles", testPdf1)
-        .multiPart("inputFiles", testPdf2)
+        .header("X-API-Key", "test-key-67890")
+        .multiPart("files", testPdf1)
+        .multiPart("files", testPdf2)
         .param("operation", "MERGE")
-        .param("options", "{}")
+        .param("optionsJson", "{}")
     .when()
         .post("/jobs")
     .then()
@@ -80,10 +89,10 @@ class EndToEndIntegrationTest {
   void shouldCreateSplitJobViaApi() {
     // Given & When: Criar um job de split via API
     String jobId = given()
-        .header("X-API-Key", "test-api-key")
-        .multiPart("inputFiles", testPdf1)
+        .header("X-API-Key", "test-key-67890")
+        .multiPart("files", testPdf1)
         .param("operation", "SPLIT")
-        .param("options", "{\"pages\":[1]}")
+        .param("optionsJson", "{\"pages\":[1]}")
     .when()
         .post("/jobs")
     .then()
@@ -105,7 +114,7 @@ class EndToEndIntegrationTest {
 
     // When: Listar jobs via API
     given()
-        .header("X-API-Key", "test-api-key")
+        .header("X-API-Key", "test-key-67890")
     .when()
         .get("/jobs")
     .then()
@@ -120,7 +129,7 @@ class EndToEndIntegrationTest {
 
     // When: Buscar job por ID via API
     given()
-        .header("X-API-Key", "test-api-key")
+        .header("X-API-Key", "test-key-67890")
     .when()
         .get("/jobs/{id}", jobId)
     .then()
@@ -133,9 +142,9 @@ class EndToEndIntegrationTest {
   void shouldRejectRequestWithoutApiKey() {
     // When: Tentar criar job sem API key
     given()
-        .multiPart("inputFiles", testPdf1)
+        .multiPart("files", testPdf1)
         .param("operation", "MERGE")
-        .param("options", "{}")
+        .param("optionsJson", "{}")
     .when()
         .post("/jobs")
     .then()
@@ -147,9 +156,9 @@ class EndToEndIntegrationTest {
     // When: Tentar criar job com API key inválida
     given()
         .header("X-API-Key", "invalid-key")
-        .multiPart("inputFiles", testPdf1)
+        .multiPart("files", testPdf1)
         .param("operation", "MERGE")
-        .param("options", "{}")
+        .param("optionsJson", "{}")
     .when()
         .post("/jobs")
     .then()
@@ -158,10 +167,10 @@ class EndToEndIntegrationTest {
 
   private String createTestJob(String operation) {
     return given()
-        .header("X-API-Key", "test-api-key")
-        .multiPart("inputFiles", testPdf1)
+        .header("X-API-Key", "test-key-67890")
+        .multiPart("files", testPdf1)
         .param("operation", operation)
-        .param("options", "{}")
+        .param("optionsJson", "{}")
     .when()
         .post("/jobs")
     .then()

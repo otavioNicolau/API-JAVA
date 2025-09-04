@@ -1,11 +1,12 @@
-#Wed Sep 03 23:06:14 BRT 2025
+#Thu Sep 04 20:13:53 BRT 2025
 /home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/exception/JobNotCompletedException.java=1756927436327
 /home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/exception/JobNotFoundException.java=1756927436341
 /home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/exception/ResultNotFoundException.java=1756927436352
-/home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/model/JobOperation.java=1756927436155
+/home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/model/JobOperation.java=1756996066991
 /home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/model/JobStatus.java=1756927436297
 /home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/port/JobQueue.java=1756927436436
 /home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/port/JobRepository.java=1756927436411
-/home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/port/PdfProcessingService.java=1756927436466
+/home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/port/PdfProcessingService.java=1756991577160
+/home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/port/ProgressCallback.java=1756991577236
 /home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/port/StorageService.java=1756927436385
 configuration*?=EDEDFA2228CD10A06B1B7F0836D3F69214285B82

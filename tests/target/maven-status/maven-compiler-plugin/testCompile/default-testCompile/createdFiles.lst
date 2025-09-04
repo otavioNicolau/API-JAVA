@@ -1,1 +1,5 @@
+com/pdfprocessor/integration/SimpleAuthTest.class
+com/pdfprocessor/integration/RedisConnectivityTest.class
+com/pdfprocessor/integration/ControllerLoadingTest.class
+com/pdfprocessor/integration/SecurityConfigTest.class
 com/pdfprocessor/integration/EndToEndIntegrationTest.class

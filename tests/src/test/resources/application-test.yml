@@ -27,10 +27,12 @@ app:
       port: 6379
       database: 1
   security:
-    api-key: test-api-key
+    api-keys:
+      - "test-key-67890"
 
 logging:
   level:
-    com.pdfprocessor: INFO
+    com.pdfprocessor: DEBUG
+    com.pdfprocessor.api.security: DEBUG
     org.springframework.web: WARN
     org.hibernate: WARN

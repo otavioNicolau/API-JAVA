@@ -4,6 +4,7 @@ import com.pdfprocessor.domain.model.Job;
 import com.pdfprocessor.domain.port.JobRepository;
 import com.pdfprocessor.domain.port.PdfProcessingService;
 import com.pdfprocessor.domain.port.StorageService;
+import com.pdfprocessor.domain.port.ProgressNotificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +19,18 @@ public class JobProcessor {
   private final JobRepository jobRepository;
   private final StorageService storageService;
   private final PdfProcessingService pdfProcessingService;
+  private final ProgressNotificationService progressNotificationService;
 
   @Autowired
   public JobProcessor(
       JobRepository jobRepository,
       StorageService storageService,
-      PdfProcessingService pdfProcessingService) {
+      PdfProcessingService pdfProcessingService,
+      ProgressNotificationService progressNotificationService) {
     this.jobRepository = jobRepository;
     this.storageService = storageService;
     this.pdfProcessingService = pdfProcessingService;
+    this.progressNotificationService = progressNotificationService;
   }
 
   /**
@@ -43,8 +47,8 @@ public class JobProcessor {
       job.start();
       jobRepository.save(job);
 
-      // Processa o job usando o PdfProcessingService
-      String resultPath = pdfProcessingService.processJob(job);
+      // Processa o job usando o PdfProcessingService com callback de progresso
+      String resultPath = pdfProcessingService.processJob(job, progressNotificationService);
 
       LOGGER.info("Arquivo resultado gerado em: {}", resultPath);
 

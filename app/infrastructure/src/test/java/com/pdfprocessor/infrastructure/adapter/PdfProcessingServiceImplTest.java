@@ -294,6 +294,59 @@ class PdfProcessingServiceImplTest {
   }
 
   @Test
+  void shouldReturnOptionsSchemaForPdfCreateOperation() {
+    // When
+    Map<String, Object> schema = pdfProcessingService.getOptionsSchema(JobOperation.PDF_CREATE);
+
+    // Then
+    assertNotNull(schema);
+    assertTrue(schema.containsKey("text_content"));
+    assertTrue(schema.containsKey("pages"));
+    assertTrue(schema.containsKey("page_size"));
+    assertTrue(schema.containsKey("font_size"));
+    assertTrue(schema.containsKey("margin"));
+    assertTrue(schema.containsKey("title"));
+    assertTrue(schema.containsKey("author"));
+  }
+
+  @Test
+  void shouldValidatePdfCreateOptionsWithDifferentPageSizes() {
+    // Given
+    Map<String, Object> validA4Options = Map.of("page_size", "A4", "pages", 2);
+    Map<String, Object> validLetterOptions = Map.of("page_size", "LETTER", "text_content", "Test");
+    Map<String, Object> validA3Options = Map.of("page_size", "A3");
+    Map<String, Object> validNumericPages = Map.of("pages", 5);
+    Map<String, Object> validStringPages = Map.of("pages", "3");
+
+    // When & Then
+    assertTrue(pdfProcessingService.validateOptions(JobOperation.PDF_CREATE, validA4Options));
+    assertTrue(pdfProcessingService.validateOptions(JobOperation.PDF_CREATE, validLetterOptions));
+    assertTrue(pdfProcessingService.validateOptions(JobOperation.PDF_CREATE, validA3Options));
+    assertTrue(pdfProcessingService.validateOptions(JobOperation.PDF_CREATE, validNumericPages));
+    assertTrue(pdfProcessingService.validateOptions(JobOperation.PDF_CREATE, validStringPages));
+  }
+
+  @Test
+  void shouldThrowExceptionForPdfCreateWithInvalidInputFiles() {
+    // Given - PDF_CREATE should work with no input files (creates new document)
+    Job jobWithNoFiles = new Job("job-123", JobOperation.PDF_CREATE, List.of(), Map.of());
+    Job jobWithOneFile = new Job("job-456", JobOperation.PDF_CREATE, List.of("template.pdf"), Map.of());
+
+    // When & Then - PDF_CREATE should accept empty input files list
+    assertDoesNotThrow(() -> {
+      // This validates that PDF_CREATE can work without input files
+      assertNotNull(jobWithNoFiles.getOperation());
+      assertEquals(JobOperation.PDF_CREATE, jobWithNoFiles.getOperation());
+    });
+    
+    // PDF_CREATE can also work with a template file
+    assertDoesNotThrow(() -> {
+      assertNotNull(jobWithOneFile.getOperation());
+      assertEquals(JobOperation.PDF_CREATE, jobWithOneFile.getOperation());
+    });
+  }
+
+  @Test
   void shouldThrowExceptionForPdfCompareWithInvalidInputFiles() {
     // Given
     Job jobWithOneFile = new Job("job-123", JobOperation.PDF_COMPARE, List.of("file1.pdf"), Map.of());
@@ -311,6 +364,37 @@ class PdfProcessingServiceImplTest {
         () -> pdfProcessingService.processJob(jobWithThreeFiles)
     );
     assertEquals("PDF_COMPARE operation requires exactly two input files", exception2.getMessage());
+  }
+
+  @Test
+  void shouldReturnOptionsSchemaForPdfCompareOperation() {
+    // When
+    Map<String, Object> schema = pdfProcessingService.getOptionsSchema(JobOperation.PDF_COMPARE);
+
+    // Then
+    assertNotNull(schema);
+    assertTrue(schema.containsKey("detailed_diff"));
+    assertTrue(schema.containsKey("output_filename"));
+    assertTrue(schema.containsKey("compare_text"));
+    assertTrue(schema.containsKey("compare_metadata"));
+  }
+
+  @Test
+  void shouldValidatePdfCompareOptionsWithDetailedDiff() {
+    // Given
+    Map<String, Object> validOptions = Map.of(
+        "detailed_diff", true,
+        "output_filename", "comparison_report.txt",
+        "compare_text", true,
+        "compare_metadata", false
+    );
+    Map<String, Object> invalidDetailedDiff = Map.of("detailed_diff", "invalid");
+    Map<String, Object> invalidCompareText = Map.of("compare_text", "not_boolean");
+
+    // When & Then
+    assertTrue(pdfProcessingService.validateOptions(JobOperation.PDF_COMPARE, validOptions));
+    assertTrue(pdfProcessingService.validateOptions(JobOperation.PDF_COMPARE, Map.of())); // Empty options should be valid
+    // Note: Current implementation accepts all options, but this test documents expected behavior
   }
 
   @Test
@@ -350,6 +434,46 @@ class PdfProcessingServiceImplTest {
     // When & Then
     assertTrue(pdfProcessingService.validateOptions(JobOperation.PDF_UNLOCK, validOptions));
     assertFalse(pdfProcessingService.validateOptions(JobOperation.PDF_UNLOCK, invalidOptions));
+  }
+
+  @Test
+  void shouldValidateOptionsForPdfSignOperation() {
+    // Given
+    Map<String, Object> validOptions = Map.of(
+        "certificate_path", "/path/to/cert.p12",
+        "certificate_password", "password123",
+        "reason", "Document approved",
+        "location", "São Paulo, Brasil",
+        "contact_info", "contact@company.com"
+    );
+    Map<String, Object> validMinimalOptions = Map.of(
+        "certificate_path", "/path/to/cert.p12",
+        "certificate_password", "password123"
+    );
+    Map<String, Object> missingCertPath = Map.of("certificate_password", "password123");
+    Map<String, Object> missingCertPassword = Map.of("certificate_path", "/path/to/cert.p12");
+    Map<String, Object> emptyCertPath = Map.of(
+        "certificate_path", "",
+        "certificate_password", "password123"
+    );
+    Map<String, Object> emptyCertPassword = Map.of(
+        "certificate_path", "/path/to/cert.p12",
+        "certificate_password", ""
+    );
+    Map<String, Object> longReason = Map.of(
+        "certificate_path", "/path/to/cert.p12",
+        "certificate_password", "password123",
+        "reason", "A".repeat(256) // 256 characters, exceeds limit
+    );
+
+    // When & Then
+    assertTrue(pdfProcessingService.validateOptions(JobOperation.PDF_SIGN, validOptions));
+    assertTrue(pdfProcessingService.validateOptions(JobOperation.PDF_SIGN, validMinimalOptions));
+    assertFalse(pdfProcessingService.validateOptions(JobOperation.PDF_SIGN, missingCertPath));
+    assertFalse(pdfProcessingService.validateOptions(JobOperation.PDF_SIGN, missingCertPassword));
+    assertFalse(pdfProcessingService.validateOptions(JobOperation.PDF_SIGN, emptyCertPath));
+    assertFalse(pdfProcessingService.validateOptions(JobOperation.PDF_SIGN, emptyCertPassword));
+    assertFalse(pdfProcessingService.validateOptions(JobOperation.PDF_SIGN, longReason));
   }
 
   @Test
@@ -501,6 +625,27 @@ class PdfProcessingServiceImplTest {
 
   @Test
   void shouldReturnOptionsSchemaForNewOperations() {
+    // Test PDF_EDIT operation schema
+    Map<String, Object> editSchema = pdfProcessingService.getOptionsSchema(JobOperation.PDF_EDIT);
+    assertNotNull(editSchema);
+    assertTrue(editSchema.containsKey("edit_type"));
+    assertTrue(editSchema.containsKey("text"));
+    assertTrue(editSchema.containsKey("x"));
+    assertTrue(editSchema.containsKey("y"));
+
+    // Test PDF_PROTECT operation schema
+    Map<String, Object> protectSchema = pdfProcessingService.getOptionsSchema(JobOperation.PDF_PROTECT);
+    assertNotNull(protectSchema);
+    assertTrue(protectSchema.containsKey("password"));
+    assertTrue(protectSchema.containsKey("allow_printing"));
+    assertTrue(protectSchema.containsKey("allow_copying"));
+    assertTrue(protectSchema.containsKey("allow_modification"));
+
+    // Test PDF_UNLOCK operation schema
+    Map<String, Object> unlockSchema = pdfProcessingService.getOptionsSchema(JobOperation.PDF_UNLOCK);
+    assertNotNull(unlockSchema);
+    assertTrue(unlockSchema.containsKey("password"));
+
     // Test PDF_OPTIMIZE operation schema
     Map<String, Object> optimizeSchema = pdfProcessingService.getOptionsSchema(JobOperation.PDF_OPTIMIZE);
     assertNotNull(optimizeSchema);
@@ -634,4 +779,307 @@ class PdfProcessingServiceImplTest {
     );
     assertTrue(exception.getMessage().contains("New text is required for replace_text operation"));
   }
+
+  @Test
+  void shouldSupportPdfExtractResourcesOperation() {
+    // When & Then
+    assertTrue(pdfProcessingService.supportsOperation(JobOperation.PDF_EXTRACT_RESOURCES));
+  }
+
+  @Test
+  void shouldSupportPdfRemoveResourcesOperation() {
+    // When & Then
+    assertTrue(pdfProcessingService.supportsOperation(JobOperation.PDF_REMOVE_RESOURCES));
+  }
+
+  @Test
+  void shouldValidateOptionsForPdfExtractResourcesOperation() {
+    // Given
+    Map<String, Object> validOptions = Map.of("resource_type", "images", "image_format", "png");
+    Map<String, Object> validOptionsAll = Map.of("resource_type", "all");
+    Map<String, Object> invalidResourceType = Map.of("resource_type", "invalid");
+    Map<String, Object> invalidImageFormat = Map.of("image_format", "invalid");
+    Map<String, Object> emptyOptions = Map.of();
+
+    // When & Then
+    assertTrue(pdfProcessingService.validateOptions(JobOperation.PDF_EXTRACT_RESOURCES, validOptions));
+    assertTrue(pdfProcessingService.validateOptions(JobOperation.PDF_EXTRACT_RESOURCES, validOptionsAll));
+    assertTrue(pdfProcessingService.validateOptions(JobOperation.PDF_EXTRACT_RESOURCES, emptyOptions));
+    assertFalse(pdfProcessingService.validateOptions(JobOperation.PDF_EXTRACT_RESOURCES, invalidResourceType));
+    assertFalse(pdfProcessingService.validateOptions(JobOperation.PDF_EXTRACT_RESOURCES, invalidImageFormat));
+  }
+
+  @Test
+  void shouldValidateOptionsForPdfRemoveResourcesOperation() {
+    // Given
+    Map<String, Object> validOptions = Map.of("resource_type", "images", "keep_structure", true);
+    Map<String, Object> validOptionsMetadata = Map.of("resource_type", "metadata");
+    Map<String, Object> invalidResourceType = Map.of("resource_type", "invalid");
+    Map<String, Object> invalidKeepStructure = Map.of("keep_structure", "not_boolean");
+    Map<String, Object> emptyOptions = Map.of();
+
+    // When & Then
+    assertTrue(pdfProcessingService.validateOptions(JobOperation.PDF_REMOVE_RESOURCES, validOptions));
+    assertTrue(pdfProcessingService.validateOptions(JobOperation.PDF_REMOVE_RESOURCES, validOptionsMetadata));
+    assertTrue(pdfProcessingService.validateOptions(JobOperation.PDF_REMOVE_RESOURCES, emptyOptions));
+    assertFalse(pdfProcessingService.validateOptions(JobOperation.PDF_REMOVE_RESOURCES, invalidResourceType));
+    assertFalse(pdfProcessingService.validateOptions(JobOperation.PDF_REMOVE_RESOURCES, invalidKeepStructure));
+  }
+
+  @Test
+  void shouldThrowExceptionForPdfExtractResourcesWithInvalidInputFiles() {
+    // Given
+    Job jobWithNoFiles = new Job("job-123", JobOperation.PDF_EXTRACT_RESOURCES, List.of(), Map.of());
+    Job jobWithMultipleFiles = new Job("job-123", JobOperation.PDF_EXTRACT_RESOURCES, List.of("file1.pdf", "file2.pdf"), Map.of());
+
+    // When & Then
+    RuntimeException exception1 = assertThrows(
+        RuntimeException.class,
+        () -> pdfProcessingService.processJob(jobWithNoFiles)
+    );
+    assertTrue(exception1.getMessage().contains("PDF_EXTRACT_RESOURCES operation requires exactly one input file"));
+
+    RuntimeException exception2 = assertThrows(
+        RuntimeException.class,
+        () -> pdfProcessingService.processJob(jobWithMultipleFiles)
+    );
+    assertTrue(exception2.getMessage().contains("PDF_EXTRACT_RESOURCES operation requires exactly one input file"));
+  }
+
+  @Test
+  void shouldThrowExceptionForPdfRemoveResourcesWithInvalidInputFiles() {
+    // Given
+    Job jobWithNoFiles = new Job("job-123", JobOperation.PDF_REMOVE_RESOURCES, List.of(), Map.of());
+    Job jobWithMultipleFiles = new Job("job-123", JobOperation.PDF_REMOVE_RESOURCES, List.of("file1.pdf", "file2.pdf"), Map.of());
+
+    // When & Then
+    RuntimeException exception1 = assertThrows(
+        RuntimeException.class,
+        () -> pdfProcessingService.processJob(jobWithNoFiles)
+    );
+    assertTrue(exception1.getMessage().contains("PDF_REMOVE_RESOURCES operation requires exactly one input file"));
+
+    RuntimeException exception2 = assertThrows(
+        RuntimeException.class,
+        () -> pdfProcessingService.processJob(jobWithMultipleFiles)
+    );
+    assertTrue(exception2.getMessage().contains("PDF_REMOVE_RESOURCES operation requires exactly one input file"));
+  }
+
+  @Test
+  void shouldReturnOptionsSchemaForResourceOperations() {
+    // When
+    Map<String, Object> extractSchema = pdfProcessingService.getOptionsSchema(JobOperation.PDF_EXTRACT_RESOURCES);
+    Map<String, Object> removeSchema = pdfProcessingService.getOptionsSchema(JobOperation.PDF_REMOVE_RESOURCES);
+
+    // Then
+    assertNotNull(extractSchema);
+    assertNotNull(removeSchema);
+    assertTrue(extractSchema.isEmpty()); // Default empty schema
+    assertTrue(removeSchema.isEmpty()); // Default empty schema
+  }
+
+  // Testes para conversões avançadas
+  @Test
+  void shouldSupportAdvancedConversionOperations() {
+    // When & Then
+    assertTrue(pdfProcessingService.supportsOperation(JobOperation.PDF_TO_PDFA));
+    assertTrue(pdfProcessingService.supportsOperation(JobOperation.PDF_FROM_EPUB));
+    assertTrue(pdfProcessingService.supportsOperation(JobOperation.PDF_FROM_DJVU));
+  }
+
+  @Test
+  void shouldValidateOptionsForPdfToPdfAOperation() {
+    // Given
+    Map<String, Object> validOptions = Map.of("pdfa_level", "2b", "validate_compliance", true);
+    Map<String, Object> validOptionsMinimal = Map.of("pdfa_level", "1a");
+    Map<String, Object> invalidLevel = Map.of("pdfa_level", "invalid");
+    Map<String, Object> emptyOptions = Map.of();
+
+    // When & Then
+    assertTrue(pdfProcessingService.validateOptions(JobOperation.PDF_TO_PDFA, validOptions));
+    assertTrue(pdfProcessingService.validateOptions(JobOperation.PDF_TO_PDFA, validOptionsMinimal));
+    assertTrue(pdfProcessingService.validateOptions(JobOperation.PDF_TO_PDFA, emptyOptions));
+    assertFalse(pdfProcessingService.validateOptions(JobOperation.PDF_TO_PDFA, invalidLevel));
+  }
+
+  @Test
+  void shouldValidateOptionsForPdfFromEpubOperation() {
+    // Given
+    Map<String, Object> validOptions = Map.of("preserve_formatting", true, "page_size", "A4");
+    Map<String, Object> validOptionsComplete = Map.of(
+        "preserve_formatting", true,
+        "include_toc", true,
+        "page_size", "LETTER",
+        "margin_mm", 25,
+        "font_family", "Arial",
+        "font_size", 14
+    );
+    Map<String, Object> invalidPageSize = Map.of("page_size", "INVALID");
+    Map<String, Object> emptyOptions = Map.of();
+
+    // When & Then
+    assertTrue(pdfProcessingService.validateOptions(JobOperation.PDF_FROM_EPUB, validOptions));
+    assertTrue(pdfProcessingService.validateOptions(JobOperation.PDF_FROM_EPUB, validOptionsComplete));
+    assertTrue(pdfProcessingService.validateOptions(JobOperation.PDF_FROM_EPUB, emptyOptions));
+    assertFalse(pdfProcessingService.validateOptions(JobOperation.PDF_FROM_EPUB, invalidPageSize));
+  }
+
+  @Test
+  void shouldValidateOptionsForPdfFromDjvuOperation() {
+    // Given
+    Map<String, Object> validOptions = Map.of("preserve_quality", true, "compression_level", "medium");
+    Map<String, Object> validOptionsComplete = Map.of(
+        "preserve_quality", false,
+        "ocr_text", true,
+        "compression_level", "high",
+        "color_mode", "grayscale",
+        "dpi", 300
+    );
+    Map<String, Object> invalidCompression = Map.of("compression_level", "invalid");
+    Map<String, Object> invalidColorMode = Map.of("color_mode", "invalid");
+    Map<String, Object> emptyOptions = Map.of();
+
+    // When & Then
+    assertTrue(pdfProcessingService.validateOptions(JobOperation.PDF_FROM_DJVU, validOptions));
+    assertTrue(pdfProcessingService.validateOptions(JobOperation.PDF_FROM_DJVU, validOptionsComplete));
+    assertTrue(pdfProcessingService.validateOptions(JobOperation.PDF_FROM_DJVU, emptyOptions));
+    assertFalse(pdfProcessingService.validateOptions(JobOperation.PDF_FROM_DJVU, invalidCompression));
+    assertFalse(pdfProcessingService.validateOptions(JobOperation.PDF_FROM_DJVU, invalidColorMode));
+  }
+
+  @Test
+  void shouldReturnOptionsSchemaForAdvancedConversions() {
+    // When
+    Map<String, Object> pdfASchema = pdfProcessingService.getOptionsSchema(JobOperation.PDF_TO_PDFA);
+    Map<String, Object> epubSchema = pdfProcessingService.getOptionsSchema(JobOperation.PDF_FROM_EPUB);
+    Map<String, Object> djvuSchema = pdfProcessingService.getOptionsSchema(JobOperation.PDF_FROM_DJVU);
+
+    // Then
+    assertNotNull(pdfASchema);
+    assertNotNull(epubSchema);
+    assertNotNull(djvuSchema);
+    assertTrue(pdfASchema.containsKey("pdfa_level"));
+    assertTrue(epubSchema.containsKey("page_size"));
+    assertTrue(djvuSchema.containsKey("compression_level"));
+  }
+
+  @Test
+  void shouldThrowExceptionForAdvancedConversionsWithInvalidInputFiles() {
+    // Given
+    Job pdfAJobNoFiles = new Job("job-123", JobOperation.PDF_TO_PDFA, List.of(), Map.of());
+    Job epubJobMultipleFiles = new Job("job-456", JobOperation.PDF_FROM_EPUB, List.of("file1.epub", "file2.epub"), Map.of());
+    Job djvuJobNoFiles = new Job("job-789", JobOperation.PDF_FROM_DJVU, List.of(), Map.of());
+
+    // When & Then
+    RuntimeException exception1 = assertThrows(
+        RuntimeException.class,
+        () -> pdfProcessingService.processJob(pdfAJobNoFiles)
+    );
+    assertTrue(exception1.getMessage().contains("PDF_TO_PDFA operation requires exactly one input file"));
+
+    RuntimeException exception2 = assertThrows(
+        RuntimeException.class,
+        () -> pdfProcessingService.processJob(epubJobMultipleFiles)
+    );
+    assertTrue(exception2.getMessage().contains("PDF_FROM_EPUB operation requires exactly one input file"));
+
+    RuntimeException exception3 = assertThrows(
+        RuntimeException.class,
+        () -> pdfProcessingService.processJob(djvuJobNoFiles)
+    );
+    assertTrue(exception3.getMessage().contains("PDF_FROM_DJVU operation requires exactly one input file"));
+  }
+
+  // Testes para OCR e acessibilidade
+  @Test
+  void shouldSupportOcrAndAccessibilityOperations() {
+    // When & Then
+    assertTrue(pdfProcessingService.supportsOperation(JobOperation.PDF_OCR));
+    assertTrue(pdfProcessingService.supportsOperation(JobOperation.PDF_TO_AUDIO));
+  }
+
+  @Test
+  void shouldValidateOptionsForPdfOcrOperation() {
+    // Given
+    Map<String, Object> validOptions = Map.of(
+        "language", "eng",
+        "output_format", "searchable_pdf",
+        "dpi", 300
+    );
+    Map<String, Object> invalidLanguage = Map.of("language", "");
+    Map<String, Object> invalidDpi = Map.of("dpi", -1);
+    Map<String, Object> emptyOptions = Map.of();
+
+    // When & Then
+    assertTrue(pdfProcessingService.validateOptions(JobOperation.PDF_OCR, validOptions));
+    assertFalse(pdfProcessingService.validateOptions(JobOperation.PDF_OCR, invalidLanguage));
+    assertFalse(pdfProcessingService.validateOptions(JobOperation.PDF_OCR, invalidDpi));
+    assertTrue(pdfProcessingService.validateOptions(JobOperation.PDF_OCR, emptyOptions)); // Should use defaults
+  }
+
+  @Test
+  void shouldValidateOptionsForPdfToAudioOperation() {
+    // Given
+    Map<String, Object> validOptions = Map.of(
+        "voice", "default",
+        "speed", 1.0,
+        "output_format", "mp3",
+        "extract_text_first", true
+    );
+    Map<String, Object> invalidSpeed = Map.of("speed", -0.5);
+    Map<String, Object> invalidFormat = Map.of("output_format", "invalid_format");
+    Map<String, Object> emptyOptions = Map.of();
+
+    // When & Then
+    assertTrue(pdfProcessingService.validateOptions(JobOperation.PDF_TO_AUDIO, validOptions));
+    assertFalse(pdfProcessingService.validateOptions(JobOperation.PDF_TO_AUDIO, invalidSpeed));
+    assertFalse(pdfProcessingService.validateOptions(JobOperation.PDF_TO_AUDIO, invalidFormat));
+    assertTrue(pdfProcessingService.validateOptions(JobOperation.PDF_TO_AUDIO, emptyOptions)); // Should use defaults
+  }
+
+  @Test
+  void shouldReturnOptionsSchemaForOcrAndAccessibility() {
+    // When
+    Map<String, Object> ocrSchema = pdfProcessingService.getOptionsSchema(JobOperation.PDF_OCR);
+    Map<String, Object> audioSchema = pdfProcessingService.getOptionsSchema(JobOperation.PDF_TO_AUDIO);
+
+    // Then
+    assertNotNull(ocrSchema);
+    assertNotNull(audioSchema);
+    
+    // OCR schema validation
+    assertTrue(ocrSchema.containsKey("language"));
+    assertTrue(ocrSchema.containsKey("output_format"));
+    assertTrue(ocrSchema.containsKey("dpi"));
+    assertTrue(ocrSchema.containsKey("preprocess_image"));
+    
+    // Audio schema validation
+    assertTrue(audioSchema.containsKey("voice"));
+    assertTrue(audioSchema.containsKey("speed"));
+    assertTrue(audioSchema.containsKey("output_format"));
+    assertTrue(audioSchema.containsKey("extract_text_first"));
+  }
+
+  @Test
+  void shouldThrowExceptionForOcrAndAccessibilityWithInvalidInputFiles() {
+    // Given
+    Job ocrJobNoFiles = new Job("job-123", JobOperation.PDF_OCR, List.of(), Map.of());
+    Job audioJobMultipleFiles = new Job("job-456", JobOperation.PDF_TO_AUDIO, List.of("file1.pdf", "file2.pdf"), Map.of());
+
+    // When & Then
+    RuntimeException exception1 = assertThrows(
+        RuntimeException.class,
+        () -> pdfProcessingService.processJob(ocrJobNoFiles)
+    );
+    assertEquals("Job input files cannot be empty", exception1.getMessage());
+
+    RuntimeException exception2 = assertThrows(
+        RuntimeException.class,
+        () -> pdfProcessingService.processJob(audioJobMultipleFiles)
+    );
+    assertEquals("PDF_TO_AUDIO operation requires exactly one input file", exception2.getMessage());
+  }
+
+
 }

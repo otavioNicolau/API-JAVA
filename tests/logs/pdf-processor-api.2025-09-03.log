@@ -1,0 +1,99 @@
+2025-09-03 20:56:43 - INFO  [main] c.p.i.EndToEndIntegrationTest - Starting EndToEndIntegrationTest using Java 21.0.8 with PID 745235 (started by otavio in /home/otavio/API-JAVA/tests)
+2025-09-03 20:56:43 - INFO  [main] c.p.i.EndToEndIntegrationTest - The following 1 profile is active: "test"
+2025-09-03 20:56:45 - WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: 3fcbd5d5-de0b-45f4-9f62-69f8b18468fa
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-09-03 20:56:46 - INFO  [main] c.p.i.EndToEndIntegrationTest - Started EndToEndIntegrationTest in 4.263 seconds (process running for 5.635)
+2025-09-03 20:56:48 - INFO  [http-nio-auto-1-exec-1] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 20:56:48 - INFO  [http-nio-auto-1-exec-1] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 20:56:48 - WARN  [http-nio-auto-1-exec-1] c.p.a.c.ApiKeyAuthenticationFilter - Invalid X-API-Key for endpoint: /api/v1/jobs
+2025-09-03 20:56:48 - INFO  [http-nio-auto-1-exec-1] c.p.a.c.ApiKeyAuthenticationFilter - Sending unauthorized response: Invalid X-API-Key
+2025-09-03 20:56:49 - INFO  [http-nio-auto-1-exec-2] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 20:56:49 - INFO  [http-nio-auto-1-exec-2] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [MISSING]
+2025-09-03 20:56:49 - WARN  [http-nio-auto-1-exec-2] c.p.a.c.ApiKeyAuthenticationFilter - Missing X-API-Key header for endpoint: /api/v1/jobs
+2025-09-03 20:56:49 - INFO  [http-nio-auto-1-exec-2] c.p.a.c.ApiKeyAuthenticationFilter - Sending unauthorized response: Missing X-API-Key header
+2025-09-03 20:56:49 - INFO  [http-nio-auto-1-exec-3] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 20:56:49 - INFO  [http-nio-auto-1-exec-3] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 20:56:49 - WARN  [http-nio-auto-1-exec-3] c.p.a.c.ApiKeyAuthenticationFilter - Invalid X-API-Key for endpoint: /api/v1/jobs
+2025-09-03 20:56:49 - INFO  [http-nio-auto-1-exec-3] c.p.a.c.ApiKeyAuthenticationFilter - Sending unauthorized response: Invalid X-API-Key
+2025-09-03 20:56:49 - INFO  [http-nio-auto-1-exec-4] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 20:56:49 - INFO  [http-nio-auto-1-exec-4] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 20:56:49 - WARN  [http-nio-auto-1-exec-4] c.p.a.c.ApiKeyAuthenticationFilter - Invalid X-API-Key for endpoint: /api/v1/jobs
+2025-09-03 20:56:49 - INFO  [http-nio-auto-1-exec-4] c.p.a.c.ApiKeyAuthenticationFilter - Sending unauthorized response: Invalid X-API-Key
+2025-09-03 20:56:49 - INFO  [http-nio-auto-1-exec-5] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 20:56:49 - INFO  [http-nio-auto-1-exec-5] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 20:56:49 - WARN  [http-nio-auto-1-exec-5] c.p.a.c.ApiKeyAuthenticationFilter - Invalid X-API-Key for endpoint: /api/v1/jobs
+2025-09-03 20:56:49 - INFO  [http-nio-auto-1-exec-5] c.p.a.c.ApiKeyAuthenticationFilter - Sending unauthorized response: Invalid X-API-Key
+2025-09-03 20:56:49 - INFO  [http-nio-auto-1-exec-6] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 20:56:49 - INFO  [http-nio-auto-1-exec-6] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 20:56:49 - WARN  [http-nio-auto-1-exec-6] c.p.a.c.ApiKeyAuthenticationFilter - Invalid X-API-Key for endpoint: /api/v1/jobs
+2025-09-03 20:56:49 - INFO  [http-nio-auto-1-exec-6] c.p.a.c.ApiKeyAuthenticationFilter - Sending unauthorized response: Invalid X-API-Key
+2025-09-03 22:11:21 - INFO  [main] c.p.i.EndToEndIntegrationTest - Starting EndToEndIntegrationTest using Java 21.0.8 with PID 861117 (started by otavio in /home/otavio/API-JAVA/tests)
+2025-09-03 22:11:21 - INFO  [main] c.p.i.EndToEndIntegrationTest - The following 1 profile is active: "test"
+2025-09-03 22:11:24 - WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: f7c20558-ab72-4c3d-8d90-e41df6b1c326
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-09-03 22:11:25 - INFO  [main] c.p.i.EndToEndIntegrationTest - Started EndToEndIntegrationTest in 4.291 seconds (process running for 5.691)
+2025-09-03 22:11:27 - INFO  [http-nio-auto-1-exec-1] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 22:11:27 - INFO  [http-nio-auto-1-exec-1] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 22:11:27 - WARN  [http-nio-auto-1-exec-1] c.p.a.c.ApiKeyAuthenticationFilter - Invalid X-API-Key for endpoint: /api/v1/jobs
+2025-09-03 22:11:27 - INFO  [http-nio-auto-1-exec-1] c.p.a.c.ApiKeyAuthenticationFilter - Sending unauthorized response: Invalid X-API-Key
+2025-09-03 22:11:27 - INFO  [http-nio-auto-1-exec-2] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 22:11:27 - INFO  [http-nio-auto-1-exec-2] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [MISSING]
+2025-09-03 22:11:27 - WARN  [http-nio-auto-1-exec-2] c.p.a.c.ApiKeyAuthenticationFilter - Missing X-API-Key header for endpoint: /api/v1/jobs
+2025-09-03 22:11:27 - INFO  [http-nio-auto-1-exec-2] c.p.a.c.ApiKeyAuthenticationFilter - Sending unauthorized response: Missing X-API-Key header
+2025-09-03 22:11:27 - INFO  [http-nio-auto-1-exec-3] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 22:11:27 - INFO  [http-nio-auto-1-exec-3] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 22:11:27 - WARN  [http-nio-auto-1-exec-3] c.p.a.c.ApiKeyAuthenticationFilter - Invalid X-API-Key for endpoint: /api/v1/jobs
+2025-09-03 22:11:27 - INFO  [http-nio-auto-1-exec-3] c.p.a.c.ApiKeyAuthenticationFilter - Sending unauthorized response: Invalid X-API-Key
+2025-09-03 22:11:27 - INFO  [http-nio-auto-1-exec-4] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 22:11:27 - INFO  [http-nio-auto-1-exec-4] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 22:11:27 - WARN  [http-nio-auto-1-exec-4] c.p.a.c.ApiKeyAuthenticationFilter - Invalid X-API-Key for endpoint: /api/v1/jobs
+2025-09-03 22:11:27 - INFO  [http-nio-auto-1-exec-4] c.p.a.c.ApiKeyAuthenticationFilter - Sending unauthorized response: Invalid X-API-Key
+2025-09-03 22:11:27 - INFO  [http-nio-auto-1-exec-5] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 22:11:27 - INFO  [http-nio-auto-1-exec-5] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 22:11:27 - WARN  [http-nio-auto-1-exec-5] c.p.a.c.ApiKeyAuthenticationFilter - Invalid X-API-Key for endpoint: /api/v1/jobs
+2025-09-03 22:11:27 - INFO  [http-nio-auto-1-exec-5] c.p.a.c.ApiKeyAuthenticationFilter - Sending unauthorized response: Invalid X-API-Key
+2025-09-03 22:11:27 - INFO  [http-nio-auto-1-exec-6] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 22:11:27 - INFO  [http-nio-auto-1-exec-6] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 22:11:27 - WARN  [http-nio-auto-1-exec-6] c.p.a.c.ApiKeyAuthenticationFilter - Invalid X-API-Key for endpoint: /api/v1/jobs
+2025-09-03 22:11:27 - INFO  [http-nio-auto-1-exec-6] c.p.a.c.ApiKeyAuthenticationFilter - Sending unauthorized response: Invalid X-API-Key
+2025-09-03 23:05:04 - INFO  [main] c.p.i.EndToEndIntegrationTest - Starting EndToEndIntegrationTest using Java 21.0.8 with PID 941641 (started by otavio in /home/otavio/API-JAVA/tests)
+2025-09-03 23:05:04 - INFO  [main] c.p.i.EndToEndIntegrationTest - The following 1 profile is active: "test"
+2025-09-03 23:05:07 - WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: 7fd94eb1-52eb-4e6c-8093-ea9dc42f560b
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-09-03 23:05:08 - INFO  [main] c.p.i.EndToEndIntegrationTest - Started EndToEndIntegrationTest in 4.026 seconds (process running for 5.203)
+2025-09-03 23:05:10 - INFO  [http-nio-auto-1-exec-1] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 23:05:10 - INFO  [http-nio-auto-1-exec-1] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 23:05:10 - WARN  [http-nio-auto-1-exec-1] c.p.a.c.ApiKeyAuthenticationFilter - Invalid X-API-Key for endpoint: /api/v1/jobs
+2025-09-03 23:05:10 - INFO  [http-nio-auto-1-exec-1] c.p.a.c.ApiKeyAuthenticationFilter - Sending unauthorized response: Invalid X-API-Key
+2025-09-03 23:05:10 - INFO  [http-nio-auto-1-exec-2] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 23:05:10 - INFO  [http-nio-auto-1-exec-2] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [MISSING]
+2025-09-03 23:05:10 - WARN  [http-nio-auto-1-exec-2] c.p.a.c.ApiKeyAuthenticationFilter - Missing X-API-Key header for endpoint: /api/v1/jobs
+2025-09-03 23:05:10 - INFO  [http-nio-auto-1-exec-2] c.p.a.c.ApiKeyAuthenticationFilter - Sending unauthorized response: Missing X-API-Key header
+2025-09-03 23:05:10 - INFO  [http-nio-auto-1-exec-3] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 23:05:10 - INFO  [http-nio-auto-1-exec-3] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 23:05:10 - WARN  [http-nio-auto-1-exec-3] c.p.a.c.ApiKeyAuthenticationFilter - Invalid X-API-Key for endpoint: /api/v1/jobs
+2025-09-03 23:05:10 - INFO  [http-nio-auto-1-exec-3] c.p.a.c.ApiKeyAuthenticationFilter - Sending unauthorized response: Invalid X-API-Key
+2025-09-03 23:05:10 - INFO  [http-nio-auto-1-exec-4] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 23:05:10 - INFO  [http-nio-auto-1-exec-4] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 23:05:10 - WARN  [http-nio-auto-1-exec-4] c.p.a.c.ApiKeyAuthenticationFilter - Invalid X-API-Key for endpoint: /api/v1/jobs
+2025-09-03 23:05:10 - INFO  [http-nio-auto-1-exec-4] c.p.a.c.ApiKeyAuthenticationFilter - Sending unauthorized response: Invalid X-API-Key
+2025-09-03 23:05:10 - INFO  [http-nio-auto-1-exec-5] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 23:05:10 - INFO  [http-nio-auto-1-exec-5] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 23:05:10 - WARN  [http-nio-auto-1-exec-5] c.p.a.c.ApiKeyAuthenticationFilter - Invalid X-API-Key for endpoint: /api/v1/jobs
+2025-09-03 23:05:10 - INFO  [http-nio-auto-1-exec-5] c.p.a.c.ApiKeyAuthenticationFilter - Sending unauthorized response: Invalid X-API-Key
+2025-09-03 23:05:10 - INFO  [http-nio-auto-1-exec-6] c.p.a.c.ApiKeyAuthenticationFilter - Processing request: POST /api/v1/jobs
+2025-09-03 23:05:10 - INFO  [http-nio-auto-1-exec-6] c.p.a.c.ApiKeyAuthenticationFilter - API endpoint detected: /api/v1/jobs, X-API-Key: [PRESENT]
+2025-09-03 23:05:10 - WARN  [http-nio-auto-1-exec-6] c.p.a.c.ApiKeyAuthenticationFilter - Invalid X-API-Key for endpoint: /api/v1/jobs
+2025-09-03 23:05:10 - INFO  [http-nio-auto-1-exec-6] c.p.a.c.ApiKeyAuthenticationFilter - Sending unauthorized response: Invalid X-API-Key

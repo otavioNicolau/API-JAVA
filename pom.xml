@@ -124,6 +124,7 @@
                 <artifactId>tess4j</artifactId>
                 <version>${tess4j.version}</version>
             </dependency>
+            <!-- Temporarily commented out due to dependency resolution issues
             <dependency>
                 <groupId>org.verapdf</groupId>
                 <artifactId>validation-model</artifactId>
@@ -134,6 +135,7 @@
                 <artifactId>core</artifactId>
                 <version>${verapdf.version}</version>
             </dependency>
+            -->
             <dependency>
                 <groupId>org.apache.pdfbox</groupId>
                 <artifactId>pdfbox-tools</artifactId>

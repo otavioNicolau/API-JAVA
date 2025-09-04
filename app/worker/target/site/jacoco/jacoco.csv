@@ -1,6 +1,0 @@
-GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
-PDF Processor Worker,com.pdfprocessor.worker.consumer,JobConsumer,27,88,2,2,10,25,2,5,0,5
-PDF Processor Worker,com.pdfprocessor.worker,WorkerApplication,5,0,0,0,2,0,1,0,1,0
-PDF Processor Worker,com.pdfprocessor.worker.config,WorkerConfig.WorkerProperties,33,0,0,0,13,0,7,0,7,0
-PDF Processor Worker,com.pdfprocessor.worker.config,WorkerConfig,33,0,0,0,11,0,3,0,3,0
-PDF Processor Worker,com.pdfprocessor.worker.processor,JobProcessor,0,91,0,0,0,22,0,3,0,3
