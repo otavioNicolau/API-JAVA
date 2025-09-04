@@ -1,0 +1,8 @@
+/home/otavio/API-JAVA/app/api/src/test/java/com/pdfprocessor/api/controller/JobControllerTest.java
+/home/otavio/API-JAVA/app/api/src/test/java/com/pdfprocessor/api/controller/TestSecurityConfig.java
+/home/otavio/API-JAVA/app/api/src/test/java/com/pdfprocessor/api/service/InputValidationServiceTest.java
+/home/otavio/API-JAVA/app/api/src/test/java/com/pdfprocessor/api/controller/RateLimitIntegrationTest.java
+/home/otavio/API-JAVA/app/api/src/test/java/com/pdfprocessor/api/service/RateLimitServiceTest.java
+/home/otavio/API-JAVA/app/api/src/test/java/com/pdfprocessor/api/controller/SecurityValidationTest.java
+/home/otavio/API-JAVA/app/api/src/test/java/com/pdfprocessor/api/security/SecurityHeadersFilterTest.java
+/home/otavio/API-JAVA/app/api/src/test/java/com/pdfprocessor/api/security/SecurityHeadersIntegrationTest.java

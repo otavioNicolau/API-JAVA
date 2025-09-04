@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CreateJobUseCase.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PDF Processor Application</a> &gt; <a href="index.source.html" class="el_package">com.pdfprocessor.application.usecase</a> &gt; <span class="el_source">CreateJobUseCase.java</span></div><h1>CreateJobUseCase.java</h1><pre class="source lang-java linenums">package com.pdfprocessor.application.usecase;
+
+import com.pdfprocessor.application.dto.CreateJobRequest;
+import com.pdfprocessor.application.dto.JobResponse;
+import com.pdfprocessor.domain.model.Job;
+import com.pdfprocessor.domain.port.JobQueue;
+import com.pdfprocessor.domain.port.JobRepository;
+import com.pdfprocessor.domain.port.PdfProcessingService;
+import java.util.Objects;
+import java.util.UUID;
+import org.springframework.stereotype.Service;
+
+/** Caso de uso para criar um novo job de processamento. */
+@Service
+public class CreateJobUseCase {
+
+  private final JobRepository jobRepository;
+  private final JobQueue jobQueue;
+  private final PdfProcessingService pdfProcessingService;
+
+<span class="fc" id="L21">  public CreateJobUseCase(</span>
+      JobRepository jobRepository, JobQueue jobQueue, PdfProcessingService pdfProcessingService) {
+<span class="fc" id="L23">    this.jobRepository = Objects.requireNonNull(jobRepository);</span>
+<span class="fc" id="L24">    this.jobQueue = Objects.requireNonNull(jobQueue);</span>
+<span class="fc" id="L25">    this.pdfProcessingService = Objects.requireNonNull(pdfProcessingService);</span>
+<span class="fc" id="L26">  }</span>
+
+  /**
+   * Executa o caso de uso de criação de job.
+   *
+   * @param request dados do job a ser criado
+   * @return resposta com dados do job criado
+   */
+  public JobResponse execute(CreateJobRequest request) {
+<span class="fc" id="L35">    validateRequest(request);</span>
+
+    // Usa o jobId fornecido pelo request (já gerado no controller)
+<span class="fc bfc" id="L38" title="All 2 branches covered.">    String jobId = request.getJobId() != null ? request.getJobId() : UUID.randomUUID().toString();</span>
+
+    // Cria o job
+<span class="fc" id="L41">    Job job = new Job(jobId, request.getOperation(), request.getInputFiles(), request.getOptions());</span>
+
+    // Salva o job
+<span class="fc" id="L44">    Job savedJob = jobRepository.save(job);</span>
+
+    // Publica na fila para processamento assíncrono
+<span class="fc" id="L47">    jobQueue.publish(savedJob);</span>
+
+<span class="fc" id="L49">    return JobResponse.fromJob(savedJob);</span>
+  }
+
+  private void validateRequest(CreateJobRequest request) {
+<span class="fc bfc" id="L53" title="All 2 branches covered.">    if (request == null) {</span>
+<span class="fc" id="L54">      throw new IllegalArgumentException(&quot;Request cannot be null&quot;);</span>
+    }
+
+<span class="fc bfc" id="L57" title="All 2 branches covered.">    if (request.getOperation() == null) {</span>
+<span class="fc" id="L58">      throw new IllegalArgumentException(&quot;Operation is required&quot;);</span>
+    }
+
+<span class="fc bfc" id="L61" title="All 4 branches covered.">    if (request.getInputFiles() == null || request.getInputFiles().isEmpty()) {</span>
+<span class="fc" id="L62">      throw new IllegalArgumentException(&quot;At least one input file is required&quot;);</span>
+    }
+
+    // Debug: verificar instância do serviço e operações suportadas
+<span class="fc" id="L66">    System.out.println(</span>
+<span class="fc" id="L67">        &quot;DEBUG: PdfProcessingService instance: &quot; + pdfProcessingService.getClass().getName());</span>
+<span class="fc" id="L68">    System.out.println(</span>
+<span class="fc" id="L69">        &quot;DEBUG: Supported operations: &quot; + pdfProcessingService.getSupportedOperations());</span>
+<span class="fc" id="L70">    System.out.println(&quot;DEBUG: Checking operation: &quot; + request.getOperation());</span>
+<span class="fc" id="L71">    System.out.println(</span>
+<span class="fc" id="L72">        &quot;DEBUG: Operation supported: &quot;</span>
+<span class="fc" id="L73">            + pdfProcessingService.supportsOperation(request.getOperation()));</span>
+
+    // Valida se a operação é suportada
+<span class="fc bfc" id="L76" title="All 2 branches covered.">    if (!pdfProcessingService.supportsOperation(request.getOperation())) {</span>
+<span class="fc" id="L77">      throw new IllegalArgumentException(&quot;Operation not supported: &quot; + request.getOperation());</span>
+    }
+
+    // Valida as opções
+<span class="fc bfc" id="L81" title="All 2 branches covered.">    if (!pdfProcessingService.validateOptions(request.getOperation(), request.getOptions())) {</span>
+<span class="fc" id="L82">      throw new IllegalArgumentException(</span>
+<span class="fc" id="L83">          &quot;Invalid options for operation: &quot; + request.getOperation());</span>
+    }
+<span class="fc" id="L85">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

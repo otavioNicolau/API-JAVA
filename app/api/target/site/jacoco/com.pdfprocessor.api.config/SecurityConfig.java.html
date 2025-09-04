@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SecurityConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PDF Processor API</a> &gt; <a href="index.source.html" class="el_package">com.pdfprocessor.api.config</a> &gt; <span class="el_source">SecurityConfig.java</span></div><h1>SecurityConfig.java</h1><pre class="source lang-java linenums">package com.pdfprocessor.api.config;
+
+import java.util.List;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+/** Configuração de segurança da API. Implementa autenticação via X-API-Key header. */
+@Configuration
+@EnableWebSecurity
+@ConfigurationProperties(prefix = &quot;app.security&quot;)
+<span class="fc" id="L17">public class SecurityConfig {</span>
+
+  private List&lt;String&gt; apiKeys;
+
+  public List&lt;String&gt; getApiKeys() {
+<span class="fc" id="L22">    return apiKeys;</span>
+  }
+
+  public void setApiKeys(List&lt;String&gt; apiKeys) {
+<span class="fc" id="L26">    this.apiKeys = apiKeys;</span>
+<span class="fc" id="L27">  }</span>
+
+  @Bean
+  public ApiKeyAuthenticationFilter apiKeyAuthenticationFilter() {
+<span class="fc" id="L31">    return new ApiKeyAuthenticationFilter(apiKeys.toArray(new String[0]));</span>
+  }
+
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+<span class="fc" id="L36">    http.csrf(csrf -&gt; csrf.disable())</span>
+<span class="fc" id="L37">        .sessionManagement(</span>
+<span class="fc" id="L38">            session -&gt; session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))</span>
+<span class="fc" id="L39">        .httpBasic(httpBasic -&gt; httpBasic.disable())</span>
+<span class="fc" id="L40">        .formLogin(formLogin -&gt; formLogin.disable())</span>
+<span class="fc" id="L41">        .authorizeHttpRequests(authz -&gt; authz.anyRequest().permitAll())</span>
+<span class="fc" id="L42">        .addFilterBefore(apiKeyAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);</span>
+
+<span class="fc" id="L44">    return http.build();</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

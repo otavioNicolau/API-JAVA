@@ -1,0 +1,1196 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PdfProcessingServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PDF Processor Infrastructure</a> &gt; <a href="index.source.html" class="el_package">com.pdfprocessor.infrastructure.adapter</a> &gt; <span class="el_source">PdfProcessingServiceImpl.java</span></div><h1>PdfProcessingServiceImpl.java</h1><pre class="source lang-java linenums">package com.pdfprocessor.infrastructure.adapter;
+
+import com.pdfprocessor.domain.model.Job;
+import com.pdfprocessor.domain.model.JobOperation;
+import com.pdfprocessor.domain.port.PdfProcessingService;
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.imageio.ImageIO;
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.multipdf.PDFMergerUtility;
+import org.apache.pdfbox.multipdf.Splitter;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDDocumentInformation;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.encryption.AccessPermission;
+import org.apache.pdfbox.pdmodel.encryption.StandardProtectionPolicy;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.apache.pdfbox.pdmodel.graphics.state.PDExtendedGraphicsState;
+import org.apache.pdfbox.rendering.ImageType;
+import org.apache.pdfbox.rendering.PDFRenderer;
+import org.apache.pdfbox.text.PDFTextStripper;
+import org.springframework.stereotype.Component;
+
+/**
+ * Implementação do serviço de processamento de PDF usando PDFBox. TODO: Implementar operações reais
+ * de PDF.
+ */
+@Component
+<span class="fc" id="L43">public class PdfProcessingServiceImpl implements PdfProcessingService {</span>
+
+  private static final List&lt;JobOperation&gt; SUPPORTED_OPERATIONS;
+
+  static {
+<span class="fc" id="L48">    SUPPORTED_OPERATIONS =</span>
+<span class="fc" id="L49">        List.of(</span>
+<span class="fc" id="L50">            JobOperation.MERGE,</span>
+<span class="fc" id="L51">            JobOperation.SPLIT,</span>
+<span class="fc" id="L52">            JobOperation.ROTATE,</span>
+<span class="fc" id="L53">            JobOperation.WATERMARK,</span>
+<span class="fc" id="L54">            JobOperation.ENCRYPT,</span>
+<span class="fc" id="L55">            JobOperation.DECRYPT,</span>
+<span class="fc" id="L56">            JobOperation.EXTRACT_TEXT,</span>
+<span class="fc" id="L57">            JobOperation.EXTRACT_METADATA,</span>
+            // Operações avançadas
+<span class="fc" id="L59">            JobOperation.PDF_CROP,</span>
+<span class="fc" id="L60">            JobOperation.PDF_REORDER,</span>
+<span class="fc" id="L61">            JobOperation.PDF_RESIZE,</span>
+<span class="fc" id="L62">            JobOperation.COMPRESS,</span>
+<span class="fc" id="L63">            JobOperation.PDF_TO_IMAGES,</span>
+<span class="fc" id="L64">            JobOperation.IMAGES_TO_PDF);</span>
+<span class="fc" id="L65">  }</span>
+
+  @Override
+  public String processJob(Job job) {
+<span class="fc bfc" id="L69" title="All 2 branches covered.">    if (job == null) {</span>
+<span class="fc" id="L70">      throw new IllegalArgumentException(&quot;Job cannot be null&quot;);</span>
+    }
+<span class="pc bpc" id="L72" title="1 of 2 branches missed.">    if (job.getOperation() == null) {</span>
+<span class="nc" id="L73">      throw new IllegalArgumentException(&quot;Job operation cannot be null&quot;);</span>
+    }
+
+<span class="fc" id="L76">    System.out.println(&quot;Processing job: &quot; + job.getId() + &quot; with operation: &quot; + job.getOperation());</span>
+
+    // Debug: verificar se job e seus campos não são null
+<span class="fc" id="L79">    System.out.println(&quot;DEBUG: Job ID: &quot; + job.getId());</span>
+<span class="fc" id="L80">    System.out.println(&quot;DEBUG: Job Operation: &quot; + job.getOperation());</span>
+<span class="fc" id="L81">    System.out.println(&quot;DEBUG: Job InputFiles: &quot; + job.getInputFiles());</span>
+<span class="fc" id="L82">    System.out.println(&quot;DEBUG: Job Options: &quot; + job.getOptions());</span>
+
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">    if (job.getInputFiles() == null) {</span>
+<span class="nc" id="L85">      throw new IllegalArgumentException(&quot;Job input files cannot be null&quot;);</span>
+    }
+
+<span class="fc bfc" id="L88" title="All 2 branches covered.">    if (job.getInputFiles().isEmpty()) {</span>
+<span class="fc" id="L89">      throw new IllegalArgumentException(&quot;Job input files cannot be empty&quot;);</span>
+    }
+
+    try {
+<span class="nc bnc" id="L93" title="All 15 branches missed.">      return switch (job.getOperation()) {</span>
+<span class="nc" id="L94">        case MERGE -&gt; processMerge(job);</span>
+<span class="nc" id="L95">        case SPLIT -&gt; processSplit(job);</span>
+<span class="nc" id="L96">        case ROTATE -&gt; processRotate(job);</span>
+<span class="nc" id="L97">        case WATERMARK -&gt; processWatermark(job);</span>
+<span class="nc" id="L98">        case ENCRYPT -&gt; processEncrypt(job);</span>
+<span class="nc" id="L99">        case DECRYPT -&gt; processDecrypt(job);</span>
+<span class="nc" id="L100">        case EXTRACT_TEXT -&gt; processExtractText(job);</span>
+<span class="nc" id="L101">        case EXTRACT_METADATA -&gt; processExtractMetadata(job);</span>
+          // Operações avançadas
+<span class="nc" id="L103">        case PDF_CROP -&gt; processPdfCrop(job);</span>
+<span class="nc" id="L104">        case PDF_REORDER -&gt; processPdfReorder(job);</span>
+<span class="nc" id="L105">        case PDF_RESIZE -&gt; processPdfResize(job);</span>
+<span class="nc" id="L106">        case COMPRESS -&gt; processCompress(job);</span>
+<span class="nc" id="L107">        case PDF_TO_IMAGES -&gt; processPdfToImages(job);</span>
+<span class="nc" id="L108">        case IMAGES_TO_PDF -&gt; processImagesToPdf(job);</span>
+        default -&gt;
+<span class="nc" id="L110">            throw new UnsupportedOperationException(</span>
+<span class="nc" id="L111">                &quot;Operation not supported: &quot; + job.getOperation());</span>
+      };
+<span class="fc" id="L113">    } catch (Exception e) {</span>
+<span class="fc" id="L114">      throw new RuntimeException(&quot;Error processing job: &quot; + job.getId(), e);</span>
+    }
+  }
+
+  private String processMerge(Job job) throws IOException {
+<span class="fc" id="L119">    List&lt;String&gt; inputFiles = job.getInputFiles();</span>
+<span class="fc" id="L120">    System.out.println(&quot;DEBUG: Input files for merge: &quot; + inputFiles);</span>
+
+<span class="pc bpc" id="L122" title="2 of 4 branches missed.">    if (inputFiles == null || inputFiles.size() &lt; 2) {</span>
+<span class="nc" id="L123">      throw new IllegalArgumentException(&quot;MERGE operation requires at least 2 input files&quot;);</span>
+    }
+
+    // Criar diretório de resultado
+<span class="fc" id="L127">    Path resultDir = Paths.get(&quot;./storage/&quot; + job.getId());</span>
+<span class="fc" id="L128">    Files.createDirectories(resultDir);</span>
+
+<span class="fc" id="L130">    String resultPath = resultDir.resolve(&quot;result_&quot; + job.getId() + &quot;.pdf&quot;).toString();</span>
+<span class="fc" id="L131">    System.out.println(&quot;DEBUG: Result path: &quot; + resultPath);</span>
+
+<span class="fc" id="L133">    PDFMergerUtility merger = new PDFMergerUtility();</span>
+<span class="fc" id="L134">    merger.setDestinationFileName(resultPath);</span>
+
+    // Adicionar todos os arquivos de entrada
+<span class="pc bpc" id="L137" title="1 of 2 branches missed.">    for (String inputFile : inputFiles) {</span>
+<span class="fc" id="L138">      File file = new File(inputFile);</span>
+<span class="fc" id="L139">      System.out.println(</span>
+<span class="fc" id="L140">          &quot;DEBUG: Checking file: &quot;</span>
+<span class="fc" id="L141">              + inputFile</span>
+              + &quot;, exists: &quot;
+<span class="fc" id="L143">              + file.exists()</span>
+              + &quot;, size: &quot;
+<span class="fc" id="L145">              + file.length());</span>
+<span class="pc bpc" id="L146" title="1 of 2 branches missed.">      if (!file.exists()) {</span>
+<span class="fc" id="L147">        throw new IllegalArgumentException(&quot;Input file not found: &quot; + inputFile);</span>
+      }
+<span class="nc" id="L149">      merger.addSource(file);</span>
+<span class="nc" id="L150">      System.out.println(&quot;DEBUG: Added source file: &quot; + inputFile);</span>
+    }
+
+<span class="nc" id="L153">    System.out.println(&quot;DEBUG: Starting merge operation...&quot;);</span>
+<span class="nc" id="L154">    merger.mergeDocuments(null);</span>
+<span class="nc" id="L155">    System.out.println(&quot;DEBUG: Merge completed&quot;);</span>
+
+    // Verificar se o arquivo de resultado foi criado
+<span class="nc" id="L158">    File resultFile = new File(resultPath);</span>
+<span class="nc" id="L159">    System.out.println(</span>
+<span class="nc" id="L160">        &quot;DEBUG: Result file exists: &quot; + resultFile.exists() + &quot;, size: &quot; + resultFile.length());</span>
+
+<span class="nc" id="L162">    System.out.println(&quot;Merged &quot; + inputFiles.size() + &quot; files into: &quot; + resultPath);</span>
+<span class="nc" id="L163">    return resultPath;</span>
+  }
+
+  private String processSplit(Job job) throws IOException {
+<span class="nc" id="L167">    List&lt;String&gt; inputFiles = job.getInputFiles();</span>
+<span class="nc bnc" id="L168" title="All 4 branches missed.">    if (inputFiles == null || inputFiles.isEmpty()) {</span>
+<span class="nc" id="L169">      throw new IllegalArgumentException(&quot;SPLIT operation requires at least 1 input file&quot;);</span>
+    }
+
+<span class="nc" id="L172">    String inputFile = inputFiles.get(0); // SPLIT trabalha com apenas um arquivo</span>
+<span class="nc" id="L173">    File file = new File(inputFile);</span>
+<span class="nc bnc" id="L174" title="All 2 branches missed.">    if (!file.exists()) {</span>
+<span class="nc" id="L175">      throw new IllegalArgumentException(&quot;Input file not found: &quot; + inputFile);</span>
+    }
+
+    // Criar diretório de resultado
+<span class="nc" id="L179">    Path resultDir = Paths.get(&quot;./storage/&quot; + job.getId());</span>
+<span class="nc" id="L180">    Files.createDirectories(resultDir);</span>
+
+    // Obter opções de split
+<span class="nc" id="L183">    Map&lt;String, Object&gt; options = job.getOptions();</span>
+<span class="nc bnc" id="L184" title="All 2 branches missed.">    String pages = options != null ? (String) options.get(&quot;pages&quot;) : &quot;all&quot;;</span>
+
+<span class="nc" id="L186">    try (PDDocument document = Loader.loadPDF(file)) {</span>
+<span class="nc" id="L187">      int totalPages = document.getNumberOfPages();</span>
+
+<span class="nc bnc" id="L189" title="All 2 branches missed.">      if (&quot;all&quot;.equals(pages)) {</span>
+        // Dividir em páginas individuais
+<span class="nc" id="L191">        return splitAllPages(document, resultDir, totalPages);</span>
+      } else {
+        // Dividir por intervalo específico (ex: &quot;1-3&quot;, &quot;5&quot;, &quot;1,3,5-7&quot;)
+<span class="nc" id="L194">        return splitByRange(document, resultDir, pages, totalPages);</span>
+      }
+    }
+  }
+
+  private String splitAllPages(PDDocument document, Path resultDir, int totalPages)
+      throws IOException {
+<span class="nc" id="L201">    Splitter splitter = new Splitter();</span>
+<span class="nc" id="L202">    List&lt;PDDocument&gt; pages = splitter.split(document);</span>
+
+<span class="nc" id="L204">    List&lt;String&gt; resultFiles = new ArrayList&lt;&gt;();</span>
+
+<span class="nc bnc" id="L206" title="All 2 branches missed.">    for (int i = 0; i &lt; pages.size(); i++) {</span>
+<span class="nc" id="L207">      String fileName = String.format(&quot;page_%03d.pdf&quot;, i + 1);</span>
+<span class="nc" id="L208">      Path filePath = resultDir.resolve(fileName);</span>
+
+<span class="nc" id="L210">      try (PDDocument pageDoc = pages.get(i)) {</span>
+<span class="nc" id="L211">        pageDoc.save(filePath.toFile());</span>
+<span class="nc" id="L212">        resultFiles.add(filePath.toString());</span>
+      }
+    }
+
+<span class="nc" id="L216">    System.out.println(&quot;Split &quot; + totalPages + &quot; pages into individual files in: &quot; + resultDir);</span>
+
+    // Retorna o diretório contendo todos os arquivos
+<span class="nc" id="L219">    return resultDir.toString();</span>
+  }
+
+  private String splitByRange(PDDocument document, Path resultDir, String pages, int totalPages)
+      throws IOException {
+<span class="nc" id="L224">    List&lt;Integer&gt; pageNumbers = parsePageRange(pages, totalPages);</span>
+
+<span class="nc bnc" id="L226" title="All 2 branches missed.">    if (pageNumbers.isEmpty()) {</span>
+<span class="nc" id="L227">      throw new IllegalArgumentException(&quot;No valid pages specified in range: &quot; + pages);</span>
+    }
+
+    // Criar um novo documento com as páginas especificadas
+<span class="nc" id="L231">    try (PDDocument resultDoc = new PDDocument()) {</span>
+<span class="nc bnc" id="L232" title="All 2 branches missed.">      for (Integer pageNum : pageNumbers) {</span>
+<span class="nc bnc" id="L233" title="All 4 branches missed.">        if (pageNum &gt;= 1 &amp;&amp; pageNum &lt;= totalPages) {</span>
+<span class="nc" id="L234">          PDPage page = document.getPage(pageNum - 1); // PDFBox usa índice 0</span>
+<span class="nc" id="L235">          resultDoc.addPage(page);</span>
+        }
+      }
+
+<span class="nc" id="L239">      String fileName = &quot;pages_&quot; + pages.replaceAll(&quot;[^0-9,-]&quot;, &quot;_&quot;) + &quot;.pdf&quot;;</span>
+<span class="nc" id="L240">      Path filePath = resultDir.resolve(fileName);</span>
+<span class="nc" id="L241">      resultDoc.save(filePath.toFile());</span>
+
+<span class="nc" id="L243">      System.out.println(&quot;Split pages &quot; + pages + &quot; into: &quot; + filePath);</span>
+<span class="nc" id="L244">      return filePath.toString();</span>
+    }
+  }
+
+  private List&lt;Integer&gt; parsePageRange(String pages, int totalPages) {
+<span class="nc" id="L249">    List&lt;Integer&gt; pageNumbers = new ArrayList&lt;&gt;();</span>
+
+<span class="nc bnc" id="L251" title="All 4 branches missed.">    if (pages == null || pages.trim().isEmpty()) {</span>
+<span class="nc" id="L252">      return pageNumbers;</span>
+    }
+
+<span class="nc" id="L255">    String[] parts = pages.split(&quot;,&quot;);</span>
+<span class="nc bnc" id="L256" title="All 2 branches missed.">    for (String part : parts) {</span>
+<span class="nc" id="L257">      part = part.trim();</span>
+<span class="nc bnc" id="L258" title="All 2 branches missed.">      if (part.contains(&quot;-&quot;)) {</span>
+        // Intervalo (ex: &quot;1-3&quot;, &quot;5-10&quot;)
+<span class="nc" id="L260">        String[] range = part.split(&quot;-&quot;);</span>
+<span class="nc bnc" id="L261" title="All 2 branches missed.">        if (range.length == 2) {</span>
+          try {
+<span class="nc" id="L263">            int start = Integer.parseInt(range[0].trim());</span>
+<span class="nc" id="L264">            int end = Integer.parseInt(range[1].trim());</span>
+<span class="nc bnc" id="L265" title="All 4 branches missed.">            for (int i = start; i &lt;= end &amp;&amp; i &lt;= totalPages; i++) {</span>
+<span class="nc bnc" id="L266" title="All 2 branches missed.">              if (i &gt;= 1) {</span>
+<span class="nc" id="L267">                pageNumbers.add(i);</span>
+              }
+            }
+<span class="nc" id="L270">          } catch (NumberFormatException e) {</span>
+<span class="nc" id="L271">            System.err.println(&quot;Invalid page range: &quot; + part);</span>
+          }
+        }
+<span class="nc" id="L274">      } else {</span>
+        // Página individual (ex: &quot;5&quot;)
+        try {
+<span class="nc" id="L277">          int pageNum = Integer.parseInt(part);</span>
+<span class="nc bnc" id="L278" title="All 4 branches missed.">          if (pageNum &gt;= 1 &amp;&amp; pageNum &lt;= totalPages) {</span>
+<span class="nc" id="L279">            pageNumbers.add(pageNum);</span>
+          }
+<span class="nc" id="L281">        } catch (NumberFormatException e) {</span>
+<span class="nc" id="L282">          System.err.println(&quot;Invalid page number: &quot; + part);</span>
+        }
+      }
+    }
+
+<span class="nc" id="L287">    return pageNumbers;</span>
+  }
+
+  private String processRotate(Job job) throws IOException {
+<span class="nc" id="L291">    List&lt;String&gt; inputFiles = job.getInputFiles();</span>
+<span class="nc bnc" id="L292" title="All 4 branches missed.">    if (inputFiles == null || inputFiles.isEmpty()) {</span>
+<span class="nc" id="L293">      throw new IllegalArgumentException(&quot;ROTATE operation requires at least 1 input file&quot;);</span>
+    }
+
+<span class="nc" id="L296">    String inputFile = inputFiles.get(0); // ROTATE trabalha com apenas um arquivo</span>
+<span class="nc" id="L297">    File file = new File(inputFile);</span>
+<span class="nc bnc" id="L298" title="All 2 branches missed.">    if (!file.exists()) {</span>
+<span class="nc" id="L299">      throw new IllegalArgumentException(&quot;Input file not found: &quot; + inputFile);</span>
+    }
+
+    // Criar diretório de resultado
+<span class="nc" id="L303">    Path resultDir = Paths.get(&quot;./storage/&quot; + job.getId());</span>
+<span class="nc" id="L304">    Files.createDirectories(resultDir);</span>
+
+    // Obter opções de rotação
+<span class="nc" id="L307">    Map&lt;String, Object&gt; options = job.getOptions();</span>
+<span class="nc bnc" id="L308" title="All 2 branches missed.">    if (options == null) {</span>
+<span class="nc" id="L309">      throw new IllegalArgumentException(</span>
+<span class="nc" id="L310">          &quot;ROTATE operation requires options with 'degrees' parameter&quot;);</span>
+    }
+
+<span class="nc" id="L313">    Object degreesObj = options.get(&quot;degrees&quot;);</span>
+<span class="nc bnc" id="L314" title="All 2 branches missed.">    if (degreesObj == null) {</span>
+<span class="nc" id="L315">      throw new IllegalArgumentException(</span>
+<span class="nc" id="L316">          &quot;ROTATE operation requires 'degrees' parameter (90, 180, 270)&quot;);</span>
+    }
+
+    int degrees;
+    try {
+<span class="nc" id="L321">      degrees = Integer.parseInt(degreesObj.toString());</span>
+<span class="nc" id="L322">    } catch (NumberFormatException e) {</span>
+<span class="nc" id="L323">      throw new IllegalArgumentException(</span>
+<span class="nc" id="L324">          &quot;Invalid degrees value: &quot; + degreesObj + &quot;. Must be 90, 180, or 270&quot;);</span>
+    }
+
+<span class="nc bnc" id="L327" title="All 6 branches missed.">    if (degrees != 90 &amp;&amp; degrees != 180 &amp;&amp; degrees != 270) {</span>
+<span class="nc" id="L328">      throw new IllegalArgumentException(&quot;Degrees must be 90, 180, or 270. Got: &quot; + degrees);</span>
+    }
+
+<span class="nc bnc" id="L331" title="All 2 branches missed.">    String pages = options.get(&quot;pages&quot;) != null ? options.get(&quot;pages&quot;).toString() : &quot;all&quot;;</span>
+
+<span class="nc" id="L333">    String resultPath = resultDir.resolve(&quot;rotated.pdf&quot;).toString();</span>
+
+<span class="nc" id="L335">    try (PDDocument document = Loader.loadPDF(file)) {</span>
+<span class="nc" id="L336">      int totalPages = document.getNumberOfPages();</span>
+
+<span class="nc bnc" id="L338" title="All 2 branches missed.">      if (&quot;all&quot;.equals(pages)) {</span>
+        // Rotacionar todas as páginas
+<span class="nc bnc" id="L340" title="All 2 branches missed.">        for (int i = 0; i &lt; totalPages; i++) {</span>
+<span class="nc" id="L341">          rotatePage(document.getPage(i), degrees);</span>
+        }
+<span class="nc" id="L343">        System.out.println(&quot;Rotated all &quot; + totalPages + &quot; pages by &quot; + degrees + &quot; degrees&quot;);</span>
+<span class="nc" id="L344">      } else {</span>
+        // Rotacionar páginas específicas
+<span class="nc" id="L346">        List&lt;Integer&gt; pageNumbers = parsePageRange(pages, totalPages);</span>
+<span class="nc bnc" id="L347" title="All 2 branches missed.">        for (Integer pageNum : pageNumbers) {</span>
+<span class="nc bnc" id="L348" title="All 4 branches missed.">          if (pageNum &gt;= 1 &amp;&amp; pageNum &lt;= totalPages) {</span>
+<span class="nc" id="L349">            rotatePage(document.getPage(pageNum - 1), degrees);</span>
+          }
+        }
+<span class="nc" id="L352">        System.out.println(&quot;Rotated pages &quot; + pages + &quot; by &quot; + degrees + &quot; degrees&quot;);</span>
+      }
+
+<span class="nc" id="L355">      document.save(resultPath);</span>
+    }
+
+<span class="nc" id="L358">    System.out.println(&quot;Rotation completed. Result saved to: &quot; + resultPath);</span>
+<span class="nc" id="L359">    return resultPath;</span>
+  }
+
+  private void rotatePage(PDPage page, int degrees) {
+<span class="nc" id="L363">    int currentRotation = page.getRotation();</span>
+<span class="nc" id="L364">    int newRotation = (currentRotation + degrees) % 360;</span>
+<span class="nc" id="L365">    page.setRotation(newRotation);</span>
+<span class="nc" id="L366">  }</span>
+
+  private String processWatermark(Job job) throws IOException {
+<span class="nc" id="L369">    List&lt;String&gt; inputFiles = job.getInputFiles();</span>
+<span class="nc bnc" id="L370" title="All 4 branches missed.">    if (inputFiles == null || inputFiles.isEmpty()) {</span>
+<span class="nc" id="L371">      throw new IllegalArgumentException(&quot;WATERMARK operation requires at least 1 input file&quot;);</span>
+    }
+
+<span class="nc" id="L374">    String inputFile = inputFiles.get(0); // WATERMARK trabalha com apenas um arquivo</span>
+<span class="nc" id="L375">    File file = new File(inputFile);</span>
+<span class="nc bnc" id="L376" title="All 2 branches missed.">    if (!file.exists()) {</span>
+<span class="nc" id="L377">      throw new IllegalArgumentException(&quot;Input file not found: &quot; + inputFile);</span>
+    }
+
+    // Criar diretório de resultado
+<span class="nc" id="L381">    Path resultDir = Paths.get(&quot;./storage/&quot; + job.getId());</span>
+<span class="nc" id="L382">    Files.createDirectories(resultDir);</span>
+
+    // Obter opções de watermark
+<span class="nc" id="L385">    Map&lt;String, Object&gt; options = job.getOptions();</span>
+<span class="nc bnc" id="L386" title="All 2 branches missed.">    if (options == null) {</span>
+<span class="nc" id="L387">      throw new IllegalArgumentException(</span>
+<span class="nc" id="L388">          &quot;WATERMARK operation requires options with 'text' parameter&quot;);</span>
+    }
+
+<span class="nc" id="L391">    String watermarkText = (String) options.get(&quot;text&quot;);</span>
+<span class="nc bnc" id="L392" title="All 4 branches missed.">    if (watermarkText == null || watermarkText.trim().isEmpty()) {</span>
+<span class="nc" id="L393">      throw new IllegalArgumentException(&quot;WATERMARK operation requires 'text' parameter&quot;);</span>
+    }
+
+    // Opções opcionais
+<span class="nc" id="L397">    float opacity =</span>
+<span class="nc bnc" id="L398" title="All 2 branches missed.">        options.get(&quot;opacity&quot;) != null ? Float.parseFloat(options.get(&quot;opacity&quot;).toString()) : 0.3f;</span>
+<span class="nc" id="L399">    int fontSize =</span>
+<span class="nc bnc" id="L400" title="All 2 branches missed.">        options.get(&quot;fontSize&quot;) != null ? Integer.parseInt(options.get(&quot;fontSize&quot;).toString()) : 36;</span>
+<span class="nc" id="L401">    String position =</span>
+<span class="nc bnc" id="L402" title="All 2 branches missed.">        options.get(&quot;position&quot;) != null ? options.get(&quot;position&quot;).toString() : &quot;center&quot;;</span>
+
+<span class="nc" id="L404">    String resultPath = resultDir.resolve(&quot;watermarked.pdf&quot;).toString();</span>
+
+<span class="nc" id="L406">    try (PDDocument document = Loader.loadPDF(file)) {</span>
+<span class="nc bnc" id="L407" title="All 2 branches missed.">      for (PDPage page : document.getPages()) {</span>
+<span class="nc" id="L408">        addWatermarkToPage(document, page, watermarkText, opacity, fontSize, position);</span>
+      }
+
+<span class="nc" id="L411">      document.save(resultPath);</span>
+    }
+
+<span class="nc" id="L414">    System.out.println(&quot;Watermark added to PDF. Result saved to: &quot; + resultPath);</span>
+<span class="nc" id="L415">    return resultPath;</span>
+  }
+
+  private void addWatermarkToPage(
+      PDDocument document, PDPage page, String text, float opacity, int fontSize, String position)
+      throws IOException {
+<span class="nc" id="L421">    try (PDPageContentStream contentStream =</span>
+<span class="nc" id="L422">        new PDPageContentStream(</span>
+<span class="nc" id="L423">            document, page, PDPageContentStream.AppendMode.APPEND, true, true)) {</span>
+
+      // Configurar transparência
+<span class="nc" id="L426">      PDExtendedGraphicsState graphicsState = new PDExtendedGraphicsState();</span>
+<span class="nc" id="L427">      graphicsState.setNonStrokingAlphaConstant(opacity);</span>
+<span class="nc" id="L428">      contentStream.setGraphicsStateParameters(graphicsState);</span>
+
+      // Configurar fonte e cor
+<span class="nc" id="L431">      PDType1Font font = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);</span>
+<span class="nc" id="L432">      contentStream.setFont(font, fontSize);</span>
+<span class="nc" id="L433">      contentStream.setNonStrokingColor(Color.GRAY);</span>
+
+      // Calcular posição
+<span class="nc" id="L436">      float pageWidth = page.getMediaBox().getWidth();</span>
+<span class="nc" id="L437">      float pageHeight = page.getMediaBox().getHeight();</span>
+<span class="nc" id="L438">      float textWidth = font.getStringWidth(text) / 1000 * fontSize;</span>
+
+      float x, y;
+<span class="nc bnc" id="L441" title="All 5 branches missed.">      switch (position.toLowerCase()) {</span>
+        case &quot;top-left&quot; -&gt; {
+<span class="nc" id="L443">          x = 50;</span>
+<span class="nc" id="L444">          y = pageHeight - 50;</span>
+        }
+        case &quot;top-right&quot; -&gt; {
+<span class="nc" id="L447">          x = pageWidth - textWidth - 50;</span>
+<span class="nc" id="L448">          y = pageHeight - 50;</span>
+        }
+        case &quot;bottom-left&quot; -&gt; {
+<span class="nc" id="L451">          x = 50;</span>
+<span class="nc" id="L452">          y = 50;</span>
+        }
+        case &quot;bottom-right&quot; -&gt; {
+<span class="nc" id="L455">          x = pageWidth - textWidth - 50;</span>
+<span class="nc" id="L456">          y = 50;</span>
+        }
+        default -&gt; { // center
+<span class="nc" id="L459">          x = (pageWidth - textWidth) / 2;</span>
+<span class="nc" id="L460">          y = pageHeight / 2;</span>
+        }
+      }
+
+      // Adicionar texto
+<span class="nc" id="L465">      contentStream.beginText();</span>
+<span class="nc" id="L466">      contentStream.newLineAtOffset(x, y);</span>
+<span class="nc" id="L467">      contentStream.showText(text);</span>
+<span class="nc" id="L468">      contentStream.endText();</span>
+    }
+<span class="nc" id="L470">  }</span>
+
+  private String processEncrypt(Job job) throws IOException {
+<span class="nc" id="L473">    List&lt;String&gt; inputFiles = job.getInputFiles();</span>
+<span class="nc bnc" id="L474" title="All 4 branches missed.">    if (inputFiles == null || inputFiles.isEmpty()) {</span>
+<span class="nc" id="L475">      throw new IllegalArgumentException(&quot;ENCRYPT operation requires at least 1 input file&quot;);</span>
+    }
+
+<span class="nc" id="L478">    String inputFile = inputFiles.get(0); // ENCRYPT trabalha com apenas um arquivo</span>
+<span class="nc" id="L479">    File file = new File(inputFile);</span>
+<span class="nc bnc" id="L480" title="All 2 branches missed.">    if (!file.exists()) {</span>
+<span class="nc" id="L481">      throw new IllegalArgumentException(&quot;Input file not found: &quot; + inputFile);</span>
+    }
+
+    // Criar diretório de resultado
+<span class="nc" id="L485">    Path resultDir = Paths.get(&quot;./storage/&quot; + job.getId());</span>
+<span class="nc" id="L486">    Files.createDirectories(resultDir);</span>
+
+    // Obter opções de criptografia
+<span class="nc" id="L489">    Map&lt;String, Object&gt; options = job.getOptions();</span>
+<span class="nc bnc" id="L490" title="All 2 branches missed.">    if (options == null) {</span>
+<span class="nc" id="L491">      throw new IllegalArgumentException(</span>
+<span class="nc" id="L492">          &quot;ENCRYPT operation requires options with 'password' parameter&quot;);</span>
+    }
+
+<span class="nc" id="L495">    String userPassword = (String) options.get(&quot;password&quot;);</span>
+<span class="nc bnc" id="L496" title="All 4 branches missed.">    if (userPassword == null || userPassword.trim().isEmpty()) {</span>
+<span class="nc" id="L497">      throw new IllegalArgumentException(&quot;ENCRYPT operation requires 'password' parameter&quot;);</span>
+    }
+
+<span class="nc" id="L500">    String ownerPassword = (String) options.get(&quot;ownerPassword&quot;);</span>
+<span class="nc bnc" id="L501" title="All 4 branches missed.">    if (ownerPassword == null || ownerPassword.trim().isEmpty()) {</span>
+<span class="nc" id="L502">      ownerPassword = userPassword; // Usar a mesma senha se não especificada</span>
+    }
+
+<span class="nc" id="L505">    String resultPath = resultDir.resolve(&quot;encrypted.pdf&quot;).toString();</span>
+
+<span class="nc" id="L507">    try (PDDocument document = Loader.loadPDF(file)) {</span>
+      // Configurar permissões
+<span class="nc" id="L509">      AccessPermission accessPermission = new AccessPermission();</span>
+
+      // Opções de permissão (padrão: permitir tudo)
+<span class="nc" id="L512">      boolean allowPrint =</span>
+<span class="nc bnc" id="L513" title="All 2 branches missed.">          options.get(&quot;allowPrint&quot;) != null</span>
+<span class="nc" id="L514">              ? Boolean.parseBoolean(options.get(&quot;allowPrint&quot;).toString())</span>
+<span class="nc" id="L515">              : true;</span>
+<span class="nc" id="L516">      boolean allowCopy =</span>
+<span class="nc bnc" id="L517" title="All 2 branches missed.">          options.get(&quot;allowCopy&quot;) != null</span>
+<span class="nc" id="L518">              ? Boolean.parseBoolean(options.get(&quot;allowCopy&quot;).toString())</span>
+<span class="nc" id="L519">              : true;</span>
+<span class="nc" id="L520">      boolean allowModify =</span>
+<span class="nc bnc" id="L521" title="All 2 branches missed.">          options.get(&quot;allowModify&quot;) != null</span>
+<span class="nc" id="L522">              ? Boolean.parseBoolean(options.get(&quot;allowModify&quot;).toString())</span>
+<span class="nc" id="L523">              : true;</span>
+
+<span class="nc" id="L525">      accessPermission.setCanPrint(allowPrint);</span>
+<span class="nc" id="L526">      accessPermission.setCanExtractContent(allowCopy);</span>
+<span class="nc" id="L527">      accessPermission.setCanModify(allowModify);</span>
+
+      // Criar política de proteção
+<span class="nc" id="L530">      StandardProtectionPolicy protectionPolicy =</span>
+<span class="nc" id="L531">          new StandardProtectionPolicy(ownerPassword, userPassword, accessPermission);</span>
+<span class="nc" id="L532">      protectionPolicy.setEncryptionKeyLength(128);</span>
+
+      // Aplicar criptografia
+<span class="nc" id="L535">      document.protect(protectionPolicy);</span>
+<span class="nc" id="L536">      document.save(resultPath);</span>
+    }
+
+<span class="nc" id="L539">    System.out.println(&quot;PDF encrypted successfully. Result saved to: &quot; + resultPath);</span>
+<span class="nc" id="L540">    return resultPath;</span>
+  }
+
+  private String processDecrypt(Job job) throws IOException {
+<span class="nc" id="L544">    List&lt;String&gt; inputFiles = job.getInputFiles();</span>
+<span class="nc bnc" id="L545" title="All 4 branches missed.">    if (inputFiles == null || inputFiles.isEmpty()) {</span>
+<span class="nc" id="L546">      throw new IllegalArgumentException(&quot;DECRYPT operation requires at least 1 input file&quot;);</span>
+    }
+
+<span class="nc" id="L549">    String inputFile = inputFiles.get(0); // DECRYPT trabalha com apenas um arquivo</span>
+<span class="nc" id="L550">    File file = new File(inputFile);</span>
+<span class="nc bnc" id="L551" title="All 2 branches missed.">    if (!file.exists()) {</span>
+<span class="nc" id="L552">      throw new IllegalArgumentException(&quot;Input file not found: &quot; + inputFile);</span>
+    }
+
+    // Criar diretório de resultado
+<span class="nc" id="L556">    Path resultDir = Paths.get(&quot;./storage/&quot; + job.getId());</span>
+<span class="nc" id="L557">    Files.createDirectories(resultDir);</span>
+
+    // Obter opções de descriptografia
+<span class="nc" id="L560">    Map&lt;String, Object&gt; options = job.getOptions();</span>
+<span class="nc bnc" id="L561" title="All 2 branches missed.">    if (options == null) {</span>
+<span class="nc" id="L562">      throw new IllegalArgumentException(</span>
+<span class="nc" id="L563">          &quot;DECRYPT operation requires options with 'password' parameter&quot;);</span>
+    }
+
+<span class="nc" id="L566">    String password = (String) options.get(&quot;password&quot;);</span>
+<span class="nc bnc" id="L567" title="All 4 branches missed.">    if (password == null || password.trim().isEmpty()) {</span>
+<span class="nc" id="L568">      throw new IllegalArgumentException(&quot;DECRYPT operation requires 'password' parameter&quot;);</span>
+    }
+
+<span class="nc" id="L571">    String resultPath = resultDir.resolve(&quot;decrypted.pdf&quot;).toString();</span>
+
+<span class="nc" id="L573">    try (PDDocument document = Loader.loadPDF(file, password)) {</span>
+<span class="nc bnc" id="L574" title="All 2 branches missed.">      if (document.isEncrypted()) {</span>
+        // Remover proteção
+<span class="nc" id="L576">        document.setAllSecurityToBeRemoved(true);</span>
+      }
+
+<span class="nc" id="L579">      document.save(resultPath);</span>
+<span class="nc" id="L580">    } catch (Exception e) {</span>
+<span class="nc" id="L581">      throw new RuntimeException(&quot;Failed to decrypt PDF. Invalid password or corrupted file.&quot;, e);</span>
+    }
+
+<span class="nc" id="L584">    System.out.println(&quot;PDF decrypted successfully. Result saved to: &quot; + resultPath);</span>
+<span class="nc" id="L585">    return resultPath;</span>
+  }
+
+  private String processExtractText(Job job) throws IOException {
+<span class="nc bnc" id="L589" title="All 2 branches missed.">    if (job.getInputFiles().isEmpty()) {</span>
+<span class="nc" id="L590">      throw new IllegalArgumentException(&quot;No input files provided for text extraction&quot;);</span>
+    }
+
+<span class="nc" id="L593">    String inputPath = job.getInputFiles().get(0);</span>
+<span class="nc" id="L594">    Path resultDir = Paths.get(&quot;storage/jobs&quot;, job.getId(), &quot;results&quot;);</span>
+<span class="nc" id="L595">    Files.createDirectories(resultDir);</span>
+
+<span class="nc" id="L597">    String resultFileName = &quot;extracted_text.txt&quot;;</span>
+<span class="nc" id="L598">    Path resultPath = resultDir.resolve(resultFileName);</span>
+
+<span class="nc" id="L600">    try (PDDocument document = Loader.loadPDF(new File(inputPath))) {</span>
+<span class="nc" id="L601">      PDFTextStripper textStripper = new PDFTextStripper();</span>
+
+      // Configurar opções se fornecidas
+<span class="nc" id="L604">      Map&lt;String, Object&gt; options = job.getOptions();</span>
+<span class="nc bnc" id="L605" title="All 2 branches missed.">      if (options.containsKey(&quot;startPage&quot;)) {</span>
+<span class="nc" id="L606">        textStripper.setStartPage(((Number) options.get(&quot;startPage&quot;)).intValue());</span>
+      }
+<span class="nc bnc" id="L608" title="All 2 branches missed.">      if (options.containsKey(&quot;endPage&quot;)) {</span>
+<span class="nc" id="L609">        textStripper.setEndPage(((Number) options.get(&quot;endPage&quot;)).intValue());</span>
+      }
+<span class="nc bnc" id="L611" title="All 2 branches missed.">      if (options.containsKey(&quot;sortByPosition&quot;)) {</span>
+<span class="nc" id="L612">        textStripper.setSortByPosition((Boolean) options.get(&quot;sortByPosition&quot;));</span>
+      }
+
+<span class="nc" id="L615">      String extractedText = textStripper.getText(document);</span>
+<span class="nc" id="L616">      Files.write(resultPath, extractedText.getBytes(StandardCharsets.UTF_8));</span>
+    }
+
+<span class="nc" id="L619">    return resultPath.toString();</span>
+  }
+
+  private String processExtractMetadata(Job job) throws IOException {
+<span class="nc bnc" id="L623" title="All 2 branches missed.">    if (job.getInputFiles().isEmpty()) {</span>
+<span class="nc" id="L624">      throw new IllegalArgumentException(&quot;No input files provided for metadata extraction&quot;);</span>
+    }
+
+<span class="nc" id="L627">    String inputPath = job.getInputFiles().get(0);</span>
+<span class="nc" id="L628">    Path resultDir = Paths.get(&quot;storage/jobs&quot;, job.getId(), &quot;results&quot;);</span>
+<span class="nc" id="L629">    Files.createDirectories(resultDir);</span>
+
+<span class="nc" id="L631">    String resultFileName = &quot;metadata.json&quot;;</span>
+<span class="nc" id="L632">    Path resultPath = resultDir.resolve(resultFileName);</span>
+
+<span class="nc" id="L634">    try (PDDocument document = Loader.loadPDF(new File(inputPath))) {</span>
+<span class="nc" id="L635">      PDDocumentInformation info = document.getDocumentInformation();</span>
+<span class="nc" id="L636">      Map&lt;String, Object&gt; metadata = new HashMap&lt;&gt;();</span>
+
+      // Informações básicas do documento
+<span class="nc" id="L639">      metadata.put(&quot;title&quot;, info.getTitle());</span>
+<span class="nc" id="L640">      metadata.put(&quot;author&quot;, info.getAuthor());</span>
+<span class="nc" id="L641">      metadata.put(&quot;subject&quot;, info.getSubject());</span>
+<span class="nc" id="L642">      metadata.put(&quot;keywords&quot;, info.getKeywords());</span>
+<span class="nc" id="L643">      metadata.put(&quot;creator&quot;, info.getCreator());</span>
+<span class="nc" id="L644">      metadata.put(&quot;producer&quot;, info.getProducer());</span>
+
+      // Datas
+<span class="nc bnc" id="L647" title="All 2 branches missed.">      if (info.getCreationDate() != null) {</span>
+<span class="nc" id="L648">        metadata.put(&quot;creationDate&quot;, info.getCreationDate().getTime().toString());</span>
+      }
+<span class="nc bnc" id="L650" title="All 2 branches missed.">      if (info.getModificationDate() != null) {</span>
+<span class="nc" id="L651">        metadata.put(&quot;modificationDate&quot;, info.getModificationDate().getTime().toString());</span>
+      }
+
+      // Informações do documento
+<span class="nc" id="L655">      metadata.put(&quot;numberOfPages&quot;, document.getNumberOfPages());</span>
+<span class="nc" id="L656">      metadata.put(&quot;version&quot;, document.getVersion());</span>
+<span class="nc" id="L657">      metadata.put(&quot;isEncrypted&quot;, document.isEncrypted());</span>
+
+      // Converter para JSON
+<span class="nc" id="L660">      StringBuilder jsonBuilder = new StringBuilder();</span>
+<span class="nc" id="L661">      jsonBuilder.append(&quot;{\n&quot;);</span>
+<span class="nc" id="L662">      boolean first = true;</span>
+<span class="nc bnc" id="L663" title="All 2 branches missed.">      for (Map.Entry&lt;String, Object&gt; entry : metadata.entrySet()) {</span>
+<span class="nc bnc" id="L664" title="All 2 branches missed.">        if (!first) {</span>
+<span class="nc" id="L665">          jsonBuilder.append(&quot;,\n&quot;);</span>
+        }
+<span class="nc" id="L667">        jsonBuilder.append(&quot;  \&quot;&quot;).append(entry.getKey()).append(&quot;\&quot;: &quot;);</span>
+<span class="nc bnc" id="L668" title="All 2 branches missed.">        if (entry.getValue() == null) {</span>
+<span class="nc" id="L669">          jsonBuilder.append(&quot;null&quot;);</span>
+<span class="nc bnc" id="L670" title="All 2 branches missed.">        } else if (entry.getValue() instanceof String) {</span>
+<span class="nc" id="L671">          jsonBuilder</span>
+<span class="nc" id="L672">              .append(&quot;\&quot;&quot;)</span>
+<span class="nc" id="L673">              .append(entry.getValue().toString().replace(&quot;\&quot;&quot;, &quot;\\\&quot;&quot;))</span>
+<span class="nc" id="L674">              .append(&quot;\&quot;&quot;);</span>
+<span class="nc" id="L675">        } else {</span>
+<span class="nc" id="L676">          jsonBuilder.append(entry.getValue().toString());</span>
+        }
+<span class="nc" id="L678">        first = false;</span>
+      }
+<span class="nc" id="L680">      jsonBuilder.append(&quot;\n}&quot;);</span>
+
+<span class="nc" id="L682">      Files.write(resultPath, jsonBuilder.toString().getBytes(StandardCharsets.UTF_8));</span>
+    }
+
+<span class="nc" id="L685">    return resultPath.toString();</span>
+  }
+
+  // Operações avançadas de PDF
+
+  private String processPdfCrop(Job job) throws IOException {
+<span class="nc" id="L691">    List&lt;String&gt; inputFiles = job.getInputFiles();</span>
+<span class="nc bnc" id="L692" title="All 4 branches missed.">    if (inputFiles == null || inputFiles.isEmpty()) {</span>
+<span class="nc" id="L693">      throw new IllegalArgumentException(&quot;PDF_CROP operation requires at least 1 input file&quot;);</span>
+    }
+
+<span class="nc" id="L696">    String inputPath = inputFiles.get(0);</span>
+<span class="nc" id="L697">    File file = new File(inputPath);</span>
+<span class="nc bnc" id="L698" title="All 2 branches missed.">    if (!file.exists()) {</span>
+<span class="nc" id="L699">      throw new IllegalArgumentException(&quot;Input file not found: &quot; + inputPath);</span>
+    }
+
+<span class="nc" id="L702">    Map&lt;String, Object&gt; options = job.getOptions();</span>
+
+    // Parâmetros de crop
+<span class="nc" id="L705">    Number x = (Number) options.getOrDefault(&quot;x&quot;, 0);</span>
+<span class="nc" id="L706">    Number y = (Number) options.getOrDefault(&quot;y&quot;, 0);</span>
+<span class="nc" id="L707">    Number width = (Number) options.getOrDefault(&quot;width&quot;, 595); // A4 width</span>
+<span class="nc" id="L708">    Number height = (Number) options.getOrDefault(&quot;height&quot;, 842); // A4 height</span>
+<span class="nc" id="L709">    String pages = (String) options.getOrDefault(&quot;pages&quot;, &quot;all&quot;);</span>
+
+<span class="nc" id="L711">    Path resultPath = Paths.get(&quot;temp&quot;, &quot;result_&quot; + job.getId() + &quot;.pdf&quot;);</span>
+<span class="nc" id="L712">    Files.createDirectories(resultPath.getParent());</span>
+
+<span class="nc" id="L714">    try (PDDocument document = Loader.loadPDF(new File(inputPath))) {</span>
+<span class="nc" id="L715">      PDDocument resultDoc = new PDDocument();</span>
+
+<span class="nc" id="L717">      List&lt;Integer&gt; pageNumbers =</span>
+<span class="nc bnc" id="L718" title="All 2 branches missed.">          pages.equals(&quot;all&quot;)</span>
+<span class="nc" id="L719">              ? getAllPageNumbers(document.getNumberOfPages())</span>
+<span class="nc" id="L720">              : parsePageRange(pages, document.getNumberOfPages());</span>
+
+<span class="nc bnc" id="L722" title="All 2 branches missed.">      for (int pageNum : pageNumbers) {</span>
+<span class="nc" id="L723">        PDPage page = document.getPage(pageNum - 1);</span>
+<span class="nc" id="L724">        PDPage newPage = resultDoc.importPage(page);</span>
+
+        // Define a área de crop
+<span class="nc" id="L727">        newPage.setCropBox(</span>
+<span class="nc" id="L728">            new org.apache.pdfbox.pdmodel.common.PDRectangle(</span>
+<span class="nc" id="L729">                x.floatValue(), y.floatValue(), width.floatValue(), height.floatValue()));</span>
+      }
+
+<span class="nc" id="L732">      resultDoc.save(resultPath.toFile());</span>
+<span class="nc" id="L733">      resultDoc.close();</span>
+    }
+
+<span class="nc" id="L736">    return resultPath.toString();</span>
+  }
+
+  private String processPdfReorder(Job job) throws IOException {
+<span class="nc" id="L740">    List&lt;String&gt; inputFiles = job.getInputFiles();</span>
+<span class="nc bnc" id="L741" title="All 4 branches missed.">    if (inputFiles == null || inputFiles.isEmpty()) {</span>
+<span class="nc" id="L742">      throw new IllegalArgumentException(&quot;PDF_REORDER operation requires at least 1 input file&quot;);</span>
+    }
+
+<span class="nc" id="L745">    String inputPath = inputFiles.get(0);</span>
+<span class="nc" id="L746">    File file = new File(inputPath);</span>
+<span class="nc bnc" id="L747" title="All 2 branches missed.">    if (!file.exists()) {</span>
+<span class="nc" id="L748">      throw new IllegalArgumentException(&quot;Input file not found: &quot; + inputPath);</span>
+    }
+
+<span class="nc" id="L751">    Map&lt;String, Object&gt; options = job.getOptions();</span>
+<span class="nc" id="L752">    String pageOrder = (String) options.get(&quot;page_order&quot;); // Ex: &quot;3,1,2,4&quot;</span>
+
+<span class="nc bnc" id="L754" title="All 4 branches missed.">    if (pageOrder == null || pageOrder.trim().isEmpty()) {</span>
+<span class="nc" id="L755">      throw new IllegalArgumentException(&quot;page_order is required for reorder operation&quot;);</span>
+    }
+
+<span class="nc" id="L758">    Path resultPath = Paths.get(&quot;temp&quot;, &quot;result_&quot; + job.getId() + &quot;.pdf&quot;);</span>
+<span class="nc" id="L759">    Files.createDirectories(resultPath.getParent());</span>
+
+<span class="nc" id="L761">    try (PDDocument document = Loader.loadPDF(new File(inputPath))) {</span>
+<span class="nc" id="L762">      PDDocument resultDoc = new PDDocument();</span>
+
+<span class="nc" id="L764">      String[] orderArray = pageOrder.split(&quot;,&quot;);</span>
+<span class="nc bnc" id="L765" title="All 2 branches missed.">      for (String pageNumStr : orderArray) {</span>
+<span class="nc" id="L766">        int pageNum = Integer.parseInt(pageNumStr.trim());</span>
+<span class="nc bnc" id="L767" title="All 4 branches missed.">        if (pageNum &lt; 1 || pageNum &gt; document.getNumberOfPages()) {</span>
+<span class="nc" id="L768">          throw new IllegalArgumentException(&quot;Invalid page number: &quot; + pageNum);</span>
+        }
+
+<span class="nc" id="L771">        PDPage page = document.getPage(pageNum - 1);</span>
+<span class="nc" id="L772">        resultDoc.importPage(page);</span>
+      }
+
+<span class="nc" id="L775">      resultDoc.save(resultPath.toFile());</span>
+<span class="nc" id="L776">      resultDoc.close();</span>
+    }
+
+<span class="nc" id="L779">    return resultPath.toString();</span>
+  }
+
+  private String processPdfResize(Job job) throws IOException {
+<span class="nc" id="L783">    List&lt;String&gt; inputFiles = job.getInputFiles();</span>
+<span class="nc bnc" id="L784" title="All 4 branches missed.">    if (inputFiles == null || inputFiles.isEmpty()) {</span>
+<span class="nc" id="L785">      throw new IllegalArgumentException(&quot;PDF_RESIZE operation requires at least 1 input file&quot;);</span>
+    }
+
+<span class="nc" id="L788">    String inputPath = inputFiles.get(0);</span>
+<span class="nc" id="L789">    File file = new File(inputPath);</span>
+<span class="nc bnc" id="L790" title="All 2 branches missed.">    if (!file.exists()) {</span>
+<span class="nc" id="L791">      throw new IllegalArgumentException(&quot;Input file not found: &quot; + inputPath);</span>
+    }
+
+<span class="nc" id="L794">    Map&lt;String, Object&gt; options = job.getOptions();</span>
+<span class="nc" id="L795">    String pageSize = (String) options.getOrDefault(&quot;page_size&quot;, &quot;A4&quot;);</span>
+<span class="nc" id="L796">    String pages = (String) options.getOrDefault(&quot;pages&quot;, &quot;all&quot;);</span>
+
+<span class="nc" id="L798">    Path resultPath = Paths.get(&quot;temp&quot;, &quot;result_&quot; + job.getId() + &quot;.pdf&quot;);</span>
+<span class="nc" id="L799">    Files.createDirectories(resultPath.getParent());</span>
+
+    // Definir dimensões baseadas no tamanho da página
+<span class="nc" id="L802">    org.apache.pdfbox.pdmodel.common.PDRectangle newSize = getPageSize(pageSize);</span>
+
+<span class="nc" id="L804">    try (PDDocument document = Loader.loadPDF(new File(inputPath))) {</span>
+<span class="nc" id="L805">      List&lt;Integer&gt; pageNumbers =</span>
+<span class="nc bnc" id="L806" title="All 2 branches missed.">          pages.equals(&quot;all&quot;)</span>
+<span class="nc" id="L807">              ? getAllPageNumbers(document.getNumberOfPages())</span>
+<span class="nc" id="L808">              : parsePageRange(pages, document.getNumberOfPages());</span>
+
+<span class="nc bnc" id="L810" title="All 2 branches missed.">      for (int pageNum : pageNumbers) {</span>
+<span class="nc" id="L811">        PDPage page = document.getPage(pageNum - 1);</span>
+<span class="nc" id="L812">        page.setMediaBox(newSize);</span>
+<span class="nc" id="L813">        page.setCropBox(newSize);</span>
+      }
+
+<span class="nc" id="L816">      document.save(resultPath.toFile());</span>
+    }
+
+<span class="nc" id="L819">    return resultPath.toString();</span>
+  }
+
+  private String processCompress(Job job) throws IOException {
+<span class="nc" id="L823">    List&lt;String&gt; inputFiles = job.getInputFiles();</span>
+<span class="nc bnc" id="L824" title="All 4 branches missed.">    if (inputFiles == null || inputFiles.isEmpty()) {</span>
+<span class="nc" id="L825">      throw new IllegalArgumentException(&quot;COMPRESS operation requires at least 1 input file&quot;);</span>
+    }
+
+<span class="nc" id="L828">    String inputPath = inputFiles.get(0);</span>
+<span class="nc" id="L829">    File file = new File(inputPath);</span>
+<span class="nc bnc" id="L830" title="All 2 branches missed.">    if (!file.exists()) {</span>
+<span class="nc" id="L831">      throw new IllegalArgumentException(&quot;Input file not found: &quot; + inputPath);</span>
+    }
+
+<span class="nc" id="L834">    Map&lt;String, Object&gt; options = job.getOptions();</span>
+<span class="nc" id="L835">    String quality = (String) options.getOrDefault(&quot;quality&quot;, &quot;medium&quot;);</span>
+
+<span class="nc" id="L837">    Path resultPath = Paths.get(&quot;temp&quot;, &quot;result_&quot; + job.getId() + &quot;.pdf&quot;);</span>
+<span class="nc" id="L838">    Files.createDirectories(resultPath.getParent());</span>
+
+<span class="nc" id="L840">    try (PDDocument document = Loader.loadPDF(new File(inputPath))) {</span>
+      // Compressão básica - remove objetos não utilizados
+<span class="nc" id="L842">      document</span>
+<span class="nc" id="L843">          .getDocumentCatalog()</span>
+<span class="nc" id="L844">          .getPages()</span>
+<span class="nc" id="L845">          .forEach(</span>
+<span class="nc" id="L846">              page -&gt; {</span>
+                try {
+                  // Remove recursos não utilizados
+<span class="nc" id="L849">                  if (page.getResources() != null) {</span>
+                    // Implementação básica de compressão
+                    // Em uma implementação mais avançada, seria possível
+                    // comprimir imagens e otimizar fontes
+                  }
+<span class="nc" id="L854">                } catch (Exception e) {</span>
+                  // Log error but continue processing
+                }
+<span class="nc" id="L857">              });</span>
+
+<span class="nc" id="L859">      document.save(resultPath.toFile());</span>
+    }
+
+<span class="nc" id="L862">    return resultPath.toString();</span>
+  }
+
+  private String processPdfToImages(Job job) throws IOException {
+<span class="nc bnc" id="L866" title="All 2 branches missed.">    if (job.getInputFiles().isEmpty()) {</span>
+<span class="nc" id="L867">      throw new IllegalArgumentException(&quot;No input files provided&quot;);</span>
+    }
+
+<span class="nc" id="L870">    String inputFile = job.getInputFiles().get(0);</span>
+<span class="nc" id="L871">    File file = new File(inputFile);</span>
+<span class="nc bnc" id="L872" title="All 2 branches missed.">    if (!file.exists()) {</span>
+<span class="nc" id="L873">      throw new IllegalArgumentException(&quot;Input file does not exist: &quot; + inputFile);</span>
+    }
+
+    // Criar diretório de resultado
+<span class="nc" id="L877">    Path resultDir = Paths.get(&quot;results&quot;, job.getId());</span>
+<span class="nc" id="L878">    Files.createDirectories(resultDir);</span>
+
+<span class="nc" id="L880">    Map&lt;String, Object&gt; options = job.getOptions();</span>
+<span class="nc" id="L881">    String format = options.getOrDefault(&quot;format&quot;, &quot;PNG&quot;).toString().toUpperCase();</span>
+<span class="nc" id="L882">    float dpi = Float.parseFloat(options.getOrDefault(&quot;dpi&quot;, &quot;150&quot;).toString());</span>
+<span class="nc" id="L883">    String pages = options.getOrDefault(&quot;pages&quot;, &quot;all&quot;).toString();</span>
+
+<span class="nc" id="L885">    List&lt;String&gt; imageFiles = new ArrayList&lt;&gt;();</span>
+
+<span class="nc" id="L887">    try (PDDocument document = Loader.loadPDF(file)) {</span>
+<span class="nc" id="L888">      PDFRenderer pdfRenderer = new PDFRenderer(document);</span>
+<span class="nc" id="L889">      int totalPages = document.getNumberOfPages();</span>
+      
+<span class="nc" id="L891">      List&lt;Integer&gt; pagesToProcess = parsePageRange(pages, totalPages);</span>
+      
+<span class="nc bnc" id="L893" title="All 2 branches missed.">      for (int pageIndex : pagesToProcess) {</span>
+<span class="nc" id="L894">        BufferedImage image = pdfRenderer.renderImageWithDPI(pageIndex, dpi, ImageType.RGB);</span>
+        
+<span class="nc" id="L896">        String imageFileName = String.format(&quot;page_%03d.%s&quot;, pageIndex + 1, format.toLowerCase());</span>
+<span class="nc" id="L897">        Path imagePath = resultDir.resolve(imageFileName);</span>
+        
+<span class="nc" id="L899">        ImageIO.write(image, format, imagePath.toFile());</span>
+<span class="nc" id="L900">        imageFiles.add(imagePath.toString());</span>
+      }
+    }
+
+<span class="nc" id="L904">    System.out.println(&quot;PDF converted to &quot; + imageFiles.size() + &quot; images. Results saved to: &quot; + resultDir);</span>
+<span class="nc" id="L905">    return resultDir.toString();</span>
+  }
+
+  private String processImagesToPdf(Job job) throws IOException {
+<span class="nc bnc" id="L909" title="All 2 branches missed.">    if (job.getInputFiles().isEmpty()) {</span>
+<span class="nc" id="L910">      throw new IllegalArgumentException(&quot;No input files provided&quot;);</span>
+    }
+
+    // Criar diretório de resultado
+<span class="nc" id="L914">    Path resultDir = Paths.get(&quot;results&quot;, job.getId());</span>
+<span class="nc" id="L915">    Files.createDirectories(resultDir);</span>
+<span class="nc" id="L916">    String resultPath = resultDir.resolve(&quot;images_to_pdf.pdf&quot;).toString();</span>
+
+<span class="nc" id="L918">    Map&lt;String, Object&gt; options = job.getOptions();</span>
+<span class="nc" id="L919">    String pageSize = options.getOrDefault(&quot;page_size&quot;, &quot;A4&quot;).toString();</span>
+<span class="nc" id="L920">    boolean fitToPage = Boolean.parseBoolean(options.getOrDefault(&quot;fit_to_page&quot;, &quot;true&quot;).toString());</span>
+
+<span class="nc" id="L922">    try (PDDocument document = new PDDocument()) {</span>
+<span class="nc" id="L923">      PDRectangle pageRect = getPageSize(pageSize);</span>
+      
+<span class="nc bnc" id="L925" title="All 2 branches missed.">      for (String imageFile : job.getInputFiles()) {</span>
+<span class="nc" id="L926">        File file = new File(imageFile);</span>
+<span class="nc bnc" id="L927" title="All 2 branches missed.">        if (!file.exists()) {</span>
+<span class="nc" id="L928">          System.out.println(&quot;Warning: Image file does not exist, skipping: &quot; + imageFile);</span>
+<span class="nc" id="L929">          continue;</span>
+        }
+
+        try {
+<span class="nc" id="L933">          BufferedImage image = ImageIO.read(file);</span>
+<span class="nc bnc" id="L934" title="All 2 branches missed.">          if (image == null) {</span>
+<span class="nc" id="L935">            System.out.println(&quot;Warning: Could not read image file, skipping: &quot; + imageFile);</span>
+<span class="nc" id="L936">            continue;</span>
+          }
+
+<span class="nc" id="L939">          PDPage page = new PDPage(pageRect);</span>
+<span class="nc" id="L940">          document.addPage(page);</span>
+
+<span class="nc" id="L942">          PDImageXObject pdImage = PDImageXObject.createFromByteArray(</span>
+<span class="nc" id="L943">              document, Files.readAllBytes(file.toPath()), file.getName());</span>
+
+<span class="nc" id="L945">          try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {</span>
+<span class="nc bnc" id="L946" title="All 2 branches missed.">            if (fitToPage) {</span>
+              // Calcular escala para ajustar à página mantendo proporção
+<span class="nc" id="L948">              float imageWidth = pdImage.getWidth();</span>
+<span class="nc" id="L949">              float imageHeight = pdImage.getHeight();</span>
+<span class="nc" id="L950">              float pageWidth = pageRect.getWidth();</span>
+<span class="nc" id="L951">              float pageHeight = pageRect.getHeight();</span>
+              
+<span class="nc" id="L953">              float scaleX = pageWidth / imageWidth;</span>
+<span class="nc" id="L954">              float scaleY = pageHeight / imageHeight;</span>
+<span class="nc" id="L955">              float scale = Math.min(scaleX, scaleY);</span>
+              
+<span class="nc" id="L957">              float scaledWidth = imageWidth * scale;</span>
+<span class="nc" id="L958">              float scaledHeight = imageHeight * scale;</span>
+              
+              // Centralizar na página
+<span class="nc" id="L961">              float x = (pageWidth - scaledWidth) / 2;</span>
+<span class="nc" id="L962">              float y = (pageHeight - scaledHeight) / 2;</span>
+              
+<span class="nc" id="L964">              contentStream.drawImage(pdImage, x, y, scaledWidth, scaledHeight);</span>
+<span class="nc" id="L965">            } else {</span>
+              // Usar tamanho original da imagem
+<span class="nc" id="L967">              contentStream.drawImage(pdImage, 0, 0);</span>
+            }
+          }
+<span class="nc" id="L970">        } catch (Exception e) {</span>
+<span class="nc" id="L971">          System.out.println(&quot;Error processing image &quot; + imageFile + &quot;: &quot; + e.getMessage());</span>
+        }
+      }
+
+<span class="nc bnc" id="L975" title="All 2 branches missed.">      if (document.getNumberOfPages() == 0) {</span>
+<span class="nc" id="L976">        throw new IllegalArgumentException(&quot;No valid images were processed&quot;);</span>
+      }
+
+<span class="nc" id="L979">      document.save(resultPath);</span>
+    }
+
+<span class="nc" id="L982">    System.out.println(&quot;Images converted to PDF. Result saved to: &quot; + resultPath);</span>
+<span class="nc" id="L983">    return resultPath;</span>
+  }
+
+  // Métodos auxiliares para operações avançadas
+
+  private List&lt;Integer&gt; getAllPageNumbers(int totalPages) {
+<span class="nc" id="L989">    List&lt;Integer&gt; pages = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L990" title="All 2 branches missed.">    for (int i = 1; i &lt;= totalPages; i++) {</span>
+<span class="nc" id="L991">      pages.add(i);</span>
+    }
+<span class="nc" id="L993">    return pages;</span>
+  }
+
+  private org.apache.pdfbox.pdmodel.common.PDRectangle getPageSize(String pageSize) {
+<span class="nc bnc" id="L997" title="All 6 branches missed.">    return switch (pageSize.toUpperCase()) {</span>
+<span class="nc" id="L998">      case &quot;A4&quot; -&gt; org.apache.pdfbox.pdmodel.common.PDRectangle.A4;</span>
+<span class="nc" id="L999">      case &quot;A3&quot; -&gt; org.apache.pdfbox.pdmodel.common.PDRectangle.A3;</span>
+<span class="nc" id="L1000">      case &quot;A5&quot; -&gt; org.apache.pdfbox.pdmodel.common.PDRectangle.A5;</span>
+<span class="nc" id="L1001">      case &quot;LETTER&quot; -&gt; org.apache.pdfbox.pdmodel.common.PDRectangle.LETTER;</span>
+<span class="nc" id="L1002">      case &quot;LEGAL&quot; -&gt; org.apache.pdfbox.pdmodel.common.PDRectangle.LEGAL;</span>
+<span class="nc" id="L1003">      default -&gt; org.apache.pdfbox.pdmodel.common.PDRectangle.A4;</span>
+    };
+  }
+
+  @Override
+  public boolean supportsOperation(JobOperation operation) {
+<span class="fc" id="L1009">    return SUPPORTED_OPERATIONS.contains(operation);</span>
+  }
+
+  @Override
+  public List&lt;JobOperation&gt; getSupportedOperations() {
+<span class="fc" id="L1014">    return List.copyOf(SUPPORTED_OPERATIONS);</span>
+  }
+
+  @Override
+  public boolean validateOptions(JobOperation operation, Map&lt;String, Object&gt; options) {
+<span class="fc" id="L1019">    System.out.println(</span>
+<span class="fc" id="L1020">        &quot;DEBUG: validateOptions called with operation: &quot; + operation + &quot;, options: &quot; + options);</span>
+
+<span class="pc bpc" id="L1022" title="1 of 2 branches missed.">    if (options == null) {</span>
+<span class="nc" id="L1023">      System.out.println(&quot;DEBUG: options is null, returning false&quot;);</span>
+<span class="nc" id="L1024">      return false;</span>
+    }
+
+    try {
+<span class="fc" id="L1028">      boolean result =</span>
+<span class="pc bpc" id="L1029" title="3 of 10 branches missed.">          switch (operation) {</span>
+<span class="nc" id="L1030">            case PDF_REORDER -&gt; options.containsKey(&quot;page_order&quot;);</span>
+<span class="nc" id="L1031">            case PDF_CROP -&gt; validateCropOptions(options);</span>
+<span class="nc" id="L1032">            case PDF_RESIZE -&gt; validateResizeOptions(options);</span>
+<span class="fc" id="L1033">            case ROTATE -&gt; validateRotateOptions(options);</span>
+<span class="fc" id="L1034">            case ENCRYPT -&gt; options.containsKey(&quot;password&quot;);</span>
+<span class="fc" id="L1035">            case DECRYPT -&gt; options.containsKey(&quot;password&quot;);</span>
+<span class="fc" id="L1036">            case WATERMARK -&gt; options.containsKey(&quot;text&quot;);</span>
+<span class="fc" id="L1037">            case PDF_TO_IMAGES -&gt; validatePdfToImagesOptions(options);</span>
+<span class="fc" id="L1038">            case IMAGES_TO_PDF -&gt; validateImagesToPdfOptions(options);</span>
+<span class="fc" id="L1039">            default -&gt; true;</span>
+          };
+<span class="fc" id="L1041">      System.out.println(&quot;DEBUG: validateOptions result: &quot; + result);</span>
+<span class="fc" id="L1042">      return result;</span>
+<span class="nc" id="L1043">    } catch (Exception e) {</span>
+<span class="nc" id="L1044">      System.out.println(&quot;DEBUG: Exception in validateOptions: &quot; + e.getMessage());</span>
+<span class="nc" id="L1045">      e.printStackTrace();</span>
+<span class="nc" id="L1046">      return false;</span>
+    }
+  }
+
+  private boolean validateCropOptions(Map&lt;String, Object&gt; options) {
+    try {
+<span class="nc bnc" id="L1052" title="All 2 branches missed.">      if (options.containsKey(&quot;x&quot;)) ((Number) options.get(&quot;x&quot;)).floatValue();</span>
+<span class="nc bnc" id="L1053" title="All 2 branches missed.">      if (options.containsKey(&quot;y&quot;)) ((Number) options.get(&quot;y&quot;)).floatValue();</span>
+<span class="nc bnc" id="L1054" title="All 2 branches missed.">      if (options.containsKey(&quot;width&quot;)) ((Number) options.get(&quot;width&quot;)).floatValue();</span>
+<span class="nc bnc" id="L1055" title="All 2 branches missed.">      if (options.containsKey(&quot;height&quot;)) ((Number) options.get(&quot;height&quot;)).floatValue();</span>
+<span class="nc" id="L1056">      return true;</span>
+<span class="nc" id="L1057">    } catch (Exception e) {</span>
+<span class="nc" id="L1058">      return false;</span>
+    }
+  }
+
+  private boolean validateResizeOptions(Map&lt;String, Object&gt; options) {
+<span class="nc bnc" id="L1063" title="All 2 branches missed.">    if (options.containsKey(&quot;page_size&quot;)) {</span>
+<span class="nc" id="L1064">      String pageSize = (String) options.get(&quot;page_size&quot;);</span>
+<span class="nc" id="L1065">      return List.of(&quot;A4&quot;, &quot;A3&quot;, &quot;A5&quot;, &quot;LETTER&quot;, &quot;LEGAL&quot;).contains(pageSize.toUpperCase());</span>
+    }
+<span class="nc" id="L1067">    return true;</span>
+  }
+
+  private boolean validateRotateOptions(Map&lt;String, Object&gt; options) {
+<span class="pc bpc" id="L1071" title="1 of 2 branches missed.">    if (!options.containsKey(&quot;degrees&quot;)) {</span>
+<span class="nc" id="L1072">      return false;</span>
+    }
+    
+    try {
+<span class="fc" id="L1076">      int degrees = Integer.parseInt(options.get(&quot;degrees&quot;).toString());</span>
+<span class="pc bpc" id="L1077" title="2 of 6 branches missed.">      return degrees == 90 || degrees == 180 || degrees == 270;</span>
+<span class="nc" id="L1078">    } catch (NumberFormatException e) {</span>
+<span class="nc" id="L1079">      return false;</span>
+    }
+  }
+
+  private boolean validatePdfToImagesOptions(Map&lt;String, Object&gt; options) {
+    try {
+<span class="fc bfc" id="L1085" title="All 2 branches covered.">      if (options.containsKey(&quot;format&quot;)) {</span>
+<span class="fc" id="L1086">        String format = options.get(&quot;format&quot;).toString().toUpperCase();</span>
+<span class="fc bfc" id="L1087" title="All 2 branches covered.">        if (!List.of(&quot;PNG&quot;, &quot;JPG&quot;, &quot;JPEG&quot;, &quot;GIF&quot;, &quot;BMP&quot;).contains(format)) {</span>
+<span class="fc" id="L1088">          return false;</span>
+        }
+      }
+<span class="fc bfc" id="L1091" title="All 2 branches covered.">      if (options.containsKey(&quot;dpi&quot;)) {</span>
+<span class="fc" id="L1092">        Float.parseFloat(options.get(&quot;dpi&quot;).toString());</span>
+      }
+<span class="fc" id="L1094">      return true;</span>
+<span class="fc" id="L1095">    } catch (Exception e) {</span>
+<span class="fc" id="L1096">      return false;</span>
+    }
+  }
+
+  private boolean validateImagesToPdfOptions(Map&lt;String, Object&gt; options) {
+    try {
+<span class="fc bfc" id="L1102" title="All 2 branches covered.">      if (options.containsKey(&quot;page_size&quot;)) {</span>
+<span class="fc" id="L1103">        String pageSize = options.get(&quot;page_size&quot;).toString().toUpperCase();</span>
+<span class="fc bfc" id="L1104" title="All 2 branches covered.">        if (!List.of(&quot;A4&quot;, &quot;A3&quot;, &quot;A5&quot;, &quot;LETTER&quot;, &quot;LEGAL&quot;).contains(pageSize)) {</span>
+<span class="fc" id="L1105">          return false;</span>
+        }
+      }
+<span class="fc bfc" id="L1108" title="All 2 branches covered.">      if (options.containsKey(&quot;fit_to_page&quot;)) {</span>
+<span class="fc" id="L1109">        Boolean.parseBoolean(options.get(&quot;fit_to_page&quot;).toString());</span>
+      }
+<span class="fc" id="L1111">      return true;</span>
+<span class="nc" id="L1112">    } catch (Exception e) {</span>
+<span class="nc" id="L1113">      return false;</span>
+    }
+  }
+
+  @Override
+  public Map&lt;String, Object&gt; getOptionsSchema(JobOperation operation) {
+<span class="fc" id="L1119">    Map&lt;String, Object&gt; baseSchema = new HashMap&lt;&gt;();</span>
+
+<span class="pc bpc" id="L1121" title="6 of 13 branches missed.">    return switch (operation) {</span>
+      case PDF_CROP -&gt; {
+<span class="nc" id="L1123">        baseSchema.put(&quot;x&quot;, &quot;number (optional, default: 0)&quot;);</span>
+<span class="nc" id="L1124">        baseSchema.put(&quot;y&quot;, &quot;number (optional, default: 0)&quot;);</span>
+<span class="nc" id="L1125">        baseSchema.put(&quot;width&quot;, &quot;number (optional, default: 595)&quot;);</span>
+<span class="nc" id="L1126">        baseSchema.put(&quot;height&quot;, &quot;number (optional, default: 842)&quot;);</span>
+<span class="nc" id="L1127">        baseSchema.put(&quot;pages&quot;, &quot;string (optional, default: 'all')&quot;);</span>
+<span class="nc" id="L1128">        yield baseSchema;</span>
+      }
+      case PDF_REORDER -&gt; {
+<span class="nc" id="L1131">        baseSchema.put(&quot;page_order&quot;, &quot;string (required, ex: '3,1,2,4')&quot;);</span>
+<span class="nc" id="L1132">        yield baseSchema;</span>
+      }
+      case PDF_RESIZE -&gt; {
+<span class="nc" id="L1135">        baseSchema.put(</span>
+<span class="nc" id="L1136">            &quot;page_size&quot;, &quot;string (optional, default: 'A4', options: A4, A3, A5, LETTER, LEGAL)&quot;);</span>
+<span class="nc" id="L1137">        baseSchema.put(&quot;pages&quot;, &quot;string (optional, default: 'all')&quot;);</span>
+<span class="nc" id="L1138">        yield baseSchema;</span>
+      }
+      case COMPRESS -&gt; {
+<span class="nc" id="L1141">        baseSchema.put(</span>
+<span class="nc" id="L1142">            &quot;quality&quot;, &quot;string (optional, default: 'medium', options: low, medium, high)&quot;);</span>
+<span class="nc" id="L1143">        yield baseSchema;</span>
+      }
+      case ENCRYPT -&gt; {
+<span class="fc" id="L1146">        baseSchema.put(&quot;password&quot;, &quot;string (required)&quot;);</span>
+<span class="fc" id="L1147">        baseSchema.put(&quot;ownerPassword&quot;, &quot;string (optional)&quot;);</span>
+<span class="fc" id="L1148">        baseSchema.put(&quot;allowPrint&quot;, &quot;boolean (optional, default: true)&quot;);</span>
+<span class="fc" id="L1149">        baseSchema.put(&quot;allowCopy&quot;, &quot;boolean (optional, default: true)&quot;);</span>
+<span class="fc" id="L1150">        baseSchema.put(&quot;allowModify&quot;, &quot;boolean (optional, default: true)&quot;);</span>
+<span class="fc" id="L1151">        yield baseSchema;</span>
+      }
+      case DECRYPT -&gt; {
+<span class="nc" id="L1154">        baseSchema.put(&quot;password&quot;, &quot;string (required)&quot;);</span>
+<span class="nc" id="L1155">        yield baseSchema;</span>
+      }
+      case WATERMARK -&gt; {
+<span class="fc" id="L1158">        baseSchema.put(&quot;text&quot;, &quot;string (required)&quot;);</span>
+<span class="fc" id="L1159">        baseSchema.put(&quot;opacity&quot;, &quot;number (optional, default: 0.3)&quot;);</span>
+<span class="fc" id="L1160">        baseSchema.put(&quot;fontSize&quot;, &quot;number (optional, default: 36)&quot;);</span>
+<span class="fc" id="L1161">        baseSchema.put(</span>
+<span class="fc" id="L1162">            &quot;position&quot;,</span>
+<span class="fc" id="L1163">            &quot;string (optional, default: 'center', options: center, top-left, top-right, bottom-left, bottom-right)&quot;);</span>
+<span class="fc" id="L1164">        yield baseSchema;</span>
+      }
+      case ROTATE -&gt; {
+<span class="fc" id="L1167">        baseSchema.put(&quot;degrees&quot;, &quot;number (required, options: 90, 180, 270)&quot;);</span>
+<span class="fc" id="L1168">        baseSchema.put(&quot;pages&quot;, &quot;string (optional, default: 'all')&quot;);</span>
+<span class="fc" id="L1169">        yield baseSchema;</span>
+      }
+      case SPLIT -&gt; {
+<span class="fc" id="L1172">        baseSchema.put(&quot;pages&quot;, &quot;string (optional, default: 'all')&quot;);</span>
+<span class="fc" id="L1173">        yield baseSchema;</span>
+      }
+      case EXTRACT_TEXT -&gt; {
+<span class="nc" id="L1176">        baseSchema.put(&quot;startPage&quot;, &quot;number (optional)&quot;);</span>
+<span class="nc" id="L1177">        baseSchema.put(&quot;endPage&quot;, &quot;number (optional)&quot;);</span>
+<span class="nc" id="L1178">        baseSchema.put(&quot;sortByPosition&quot;, &quot;boolean (optional, default: false)&quot;);</span>
+<span class="nc" id="L1179">        yield baseSchema;</span>
+      }
+      case PDF_TO_IMAGES -&gt; {
+<span class="fc" id="L1182">        baseSchema.put(&quot;format&quot;, &quot;string (optional, default: 'PNG', options: PNG, JPG, JPEG, GIF, BMP)&quot;);</span>
+<span class="fc" id="L1183">        baseSchema.put(&quot;dpi&quot;, &quot;number (optional, default: 150)&quot;);</span>
+<span class="fc" id="L1184">        baseSchema.put(&quot;pages&quot;, &quot;string (optional, default: 'all')&quot;);</span>
+<span class="fc" id="L1185">        yield baseSchema;</span>
+      }
+      case IMAGES_TO_PDF -&gt; {
+<span class="fc" id="L1188">        baseSchema.put(&quot;page_size&quot;, &quot;string (optional, default: 'A4', options: A4, A3, A5, LETTER, LEGAL)&quot;);</span>
+<span class="fc" id="L1189">        baseSchema.put(&quot;fit_to_page&quot;, &quot;boolean (optional, default: true)&quot;);</span>
+<span class="fc" id="L1190">        yield baseSchema;</span>
+      }
+<span class="fc" id="L1192">      default -&gt; baseSchema;</span>
+    };
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

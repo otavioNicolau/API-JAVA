@@ -4,6 +4,7 @@ import com.pdfprocessor.domain.model.Job;
 import com.pdfprocessor.domain.model.JobOperation;
 import com.pdfprocessor.domain.port.PdfProcessingService;
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.imageio.ImageIO;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.pdfbox.multipdf.Splitter;
@@ -21,11 +23,15 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.encryption.AccessPermission;
 import org.apache.pdfbox.pdmodel.encryption.StandardProtectionPolicy;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.graphics.state.PDExtendedGraphicsState;
+import org.apache.pdfbox.rendering.ImageType;
+import org.apache.pdfbox.rendering.PDFRenderer;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.stereotype.Component;
 
@@ -857,17 +863,124 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
   }
 
   private String processPdfToImages(Job job) throws IOException {
-    // Esta operação requer bibliotecas adicionais como PDFRenderer
-    // Por enquanto, retorna uma implementação básica
-    throw new UnsupportedOperationException(
-        "PDF to images conversion requires additional dependencies. Please use external tools.");
+    if (job.getInputFiles().isEmpty()) {
+      throw new IllegalArgumentException("No input files provided");
+    }
+
+    String inputFile = job.getInputFiles().get(0);
+    File file = new File(inputFile);
+    if (!file.exists()) {
+      throw new IllegalArgumentException("Input file does not exist: " + inputFile);
+    }
+
+    // Criar diretório de resultado
+    Path resultDir = Paths.get("results", job.getId());
+    Files.createDirectories(resultDir);
+
+    Map<String, Object> options = job.getOptions();
+    String format = options.getOrDefault("format", "PNG").toString().toUpperCase();
+    float dpi = Float.parseFloat(options.getOrDefault("dpi", "150").toString());
+    String pages = options.getOrDefault("pages", "all").toString();
+
+    List<String> imageFiles = new ArrayList<>();
+
+    try (PDDocument document = Loader.loadPDF(file)) {
+      PDFRenderer pdfRenderer = new PDFRenderer(document);
+      int totalPages = document.getNumberOfPages();
+      
+      List<Integer> pagesToProcess = parsePageRange(pages, totalPages);
+      
+      for (int pageIndex : pagesToProcess) {
+        BufferedImage image = pdfRenderer.renderImageWithDPI(pageIndex, dpi, ImageType.RGB);
+        
+        String imageFileName = String.format("page_%03d.%s", pageIndex + 1, format.toLowerCase());
+        Path imagePath = resultDir.resolve(imageFileName);
+        
+        ImageIO.write(image, format, imagePath.toFile());
+        imageFiles.add(imagePath.toString());
+      }
+    }
+
+    System.out.println("PDF converted to " + imageFiles.size() + " images. Results saved to: " + resultDir);
+    return resultDir.toString();
   }
 
   private String processImagesToPdf(Job job) throws IOException {
-    // Esta operação requer processamento de imagens
-    // Por enquanto, retorna uma implementação básica
-    throw new UnsupportedOperationException(
-        "Images to PDF conversion requires additional dependencies. Please use external tools.");
+    if (job.getInputFiles().isEmpty()) {
+      throw new IllegalArgumentException("No input files provided");
+    }
+
+    // Criar diretório de resultado
+    Path resultDir = Paths.get("results", job.getId());
+    Files.createDirectories(resultDir);
+    String resultPath = resultDir.resolve("images_to_pdf.pdf").toString();
+
+    Map<String, Object> options = job.getOptions();
+    String pageSize = options.getOrDefault("page_size", "A4").toString();
+    boolean fitToPage = Boolean.parseBoolean(options.getOrDefault("fit_to_page", "true").toString());
+
+    try (PDDocument document = new PDDocument()) {
+      PDRectangle pageRect = getPageSize(pageSize);
+      
+      for (String imageFile : job.getInputFiles()) {
+        File file = new File(imageFile);
+        if (!file.exists()) {
+          System.out.println("Warning: Image file does not exist, skipping: " + imageFile);
+          continue;
+        }
+
+        try {
+          BufferedImage image = ImageIO.read(file);
+          if (image == null) {
+            System.out.println("Warning: Could not read image file, skipping: " + imageFile);
+            continue;
+          }
+
+          PDPage page = new PDPage(pageRect);
+          document.addPage(page);
+
+          PDImageXObject pdImage = PDImageXObject.createFromByteArray(
+              document, Files.readAllBytes(file.toPath()), file.getName());
+
+          try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
+            if (fitToPage) {
+              // Calcular escala para ajustar à página mantendo proporção
+              float imageWidth = pdImage.getWidth();
+              float imageHeight = pdImage.getHeight();
+              float pageWidth = pageRect.getWidth();
+              float pageHeight = pageRect.getHeight();
+              
+              float scaleX = pageWidth / imageWidth;
+              float scaleY = pageHeight / imageHeight;
+              float scale = Math.min(scaleX, scaleY);
+              
+              float scaledWidth = imageWidth * scale;
+              float scaledHeight = imageHeight * scale;
+              
+              // Centralizar na página
+              float x = (pageWidth - scaledWidth) / 2;
+              float y = (pageHeight - scaledHeight) / 2;
+              
+              contentStream.drawImage(pdImage, x, y, scaledWidth, scaledHeight);
+            } else {
+              // Usar tamanho original da imagem
+              contentStream.drawImage(pdImage, 0, 0);
+            }
+          }
+        } catch (Exception e) {
+          System.out.println("Error processing image " + imageFile + ": " + e.getMessage());
+        }
+      }
+
+      if (document.getNumberOfPages() == 0) {
+        throw new IllegalArgumentException("No valid images were processed");
+      }
+
+      document.save(resultPath);
+    }
+
+    System.out.println("Images converted to PDF. Result saved to: " + resultPath);
+    return resultPath;
   }
 
   // Métodos auxiliares para operações avançadas
@@ -917,9 +1030,12 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
             case PDF_REORDER -> options.containsKey("page_order");
             case PDF_CROP -> validateCropOptions(options);
             case PDF_RESIZE -> validateResizeOptions(options);
+            case ROTATE -> validateRotateOptions(options);
             case ENCRYPT -> options.containsKey("password");
             case DECRYPT -> options.containsKey("password");
             case WATERMARK -> options.containsKey("text");
+            case PDF_TO_IMAGES -> validatePdfToImagesOptions(options);
+            case IMAGES_TO_PDF -> validateImagesToPdfOptions(options);
             default -> true;
           };
       System.out.println("DEBUG: validateOptions result: " + result);
@@ -949,6 +1065,53 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
       return List.of("A4", "A3", "A5", "LETTER", "LEGAL").contains(pageSize.toUpperCase());
     }
     return true;
+  }
+
+  private boolean validateRotateOptions(Map<String, Object> options) {
+    if (!options.containsKey("degrees")) {
+      return false;
+    }
+    
+    try {
+      int degrees = Integer.parseInt(options.get("degrees").toString());
+      return degrees == 90 || degrees == 180 || degrees == 270;
+    } catch (NumberFormatException e) {
+      return false;
+    }
+  }
+
+  private boolean validatePdfToImagesOptions(Map<String, Object> options) {
+    try {
+      if (options.containsKey("format")) {
+        String format = options.get("format").toString().toUpperCase();
+        if (!List.of("PNG", "JPG", "JPEG", "GIF", "BMP").contains(format)) {
+          return false;
+        }
+      }
+      if (options.containsKey("dpi")) {
+        Float.parseFloat(options.get("dpi").toString());
+      }
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
+  private boolean validateImagesToPdfOptions(Map<String, Object> options) {
+    try {
+      if (options.containsKey("page_size")) {
+        String pageSize = options.get("page_size").toString().toUpperCase();
+        if (!List.of("A4", "A3", "A5", "LETTER", "LEGAL").contains(pageSize)) {
+          return false;
+        }
+      }
+      if (options.containsKey("fit_to_page")) {
+        Boolean.parseBoolean(options.get("fit_to_page").toString());
+      }
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
   }
 
   @Override
@@ -1013,6 +1176,17 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
         baseSchema.put("startPage", "number (optional)");
         baseSchema.put("endPage", "number (optional)");
         baseSchema.put("sortByPosition", "boolean (optional, default: false)");
+        yield baseSchema;
+      }
+      case PDF_TO_IMAGES -> {
+        baseSchema.put("format", "string (optional, default: 'PNG', options: PNG, JPG, JPEG, GIF, BMP)");
+        baseSchema.put("dpi", "number (optional, default: 150)");
+        baseSchema.put("pages", "string (optional, default: 'all')");
+        yield baseSchema;
+      }
+      case IMAGES_TO_PDF -> {
+        baseSchema.put("page_size", "string (optional, default: 'A4', options: A4, A3, A5, LETTER, LEGAL)");
+        baseSchema.put("fit_to_page", "boolean (optional, default: true)");
         yield baseSchema;
       }
       default -> baseSchema;

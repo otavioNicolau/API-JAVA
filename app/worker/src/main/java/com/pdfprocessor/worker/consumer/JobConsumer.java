@@ -46,17 +46,17 @@ public class JobConsumer implements CommandLineRunner {
         }
 
       } catch (InterruptedException e) {
-        logger.info("JobConsumer interrompido");
+        LOGGER.info("JobConsumer interrompido");
         Thread.currentThread().interrupt();
         break;
       } catch (Exception e) {
-        logger.error("Erro no JobConsumer: {}", e.getMessage(), e);
+        LOGGER.error("Erro no JobConsumer: {}", e.getMessage(), e);
         // Aguarda um pouco antes de tentar novamente em caso de erro
         Thread.sleep(TimeUnit.SECONDS.toMillis(POLLING_INTERVAL_SECONDS));
       }
     }
 
-    logger.info("JobConsumer finalizado");
+    LOGGER.info("JobConsumer finalizado");
   }
 
   private void processJob(Job job) {
@@ -71,7 +71,7 @@ public class JobConsumer implements CommandLineRunner {
 
   /** Para o consumer graciosamente. */
   public void stop() {
-    logger.info("Parando JobConsumer...");
+    LOGGER.info("Parando JobConsumer...");
     running = false;
   }
 }

@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JobController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PDF Processor API</a> &gt; <a href="index.source.html" class="el_package">com.pdfprocessor.api.controller</a> &gt; <span class="el_source">JobController.java</span></div><h1>JobController.java</h1><pre class="source lang-java linenums">package com.pdfprocessor.api.controller;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pdfprocessor.api.exception.SecurityValidationException;
+import com.pdfprocessor.api.service.InputValidationService;
+import com.pdfprocessor.api.service.RateLimitService;
+import com.pdfprocessor.application.dto.CreateJobRequest;
+import com.pdfprocessor.application.dto.JobResponse;
+import com.pdfprocessor.application.usecase.CancelJobUseCase;
+import com.pdfprocessor.application.usecase.CreateJobUseCase;
+import com.pdfprocessor.application.usecase.DownloadResultUseCase;
+import com.pdfprocessor.application.usecase.GetJobStatusUseCase;
+import com.pdfprocessor.application.usecase.ListAllJobsUseCase;
+import com.pdfprocessor.domain.model.JobOperation;
+import com.pdfprocessor.domain.port.StorageService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import jakarta.servlet.http.HttpServletRequest;
+
+/** Controller REST para operações de jobs de processamento de PDF. */
+@RestController
+@RequestMapping(&quot;/api/v1/jobs&quot;)
+@Tag(name = &quot;Jobs&quot;, description = &quot;Operações de jobs de processamento de PDF&quot;)
+public class JobController {
+
+  // Limites de segurança
+  private static final long MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024; // 50MB
+  private static final int MAX_FILES_PER_JOB = 10;
+
+  private final CreateJobUseCase createJobUseCase;
+  private final GetJobStatusUseCase getJobStatusUseCase;
+  private final DownloadResultUseCase downloadResultUseCase;
+  private final ListAllJobsUseCase listAllJobsUseCase;
+  private final CancelJobUseCase cancelJobUseCase;
+  private final StorageService storageService;
+  private final ObjectMapper objectMapper;
+  private final RateLimitService rateLimitService;
+  private final InputValidationService inputValidationService;
+
+  public JobController(
+      CreateJobUseCase createJobUseCase,
+      GetJobStatusUseCase getJobStatusUseCase,
+      DownloadResultUseCase downloadResultUseCase,
+      ListAllJobsUseCase listAllJobsUseCase,
+      CancelJobUseCase cancelJobUseCase,
+      StorageService storageService,
+      ObjectMapper objectMapper,
+      RateLimitService rateLimitService,
+<span class="fc" id="L67">      InputValidationService inputValidationService) {</span>
+<span class="fc" id="L68">    this.createJobUseCase = createJobUseCase;</span>
+<span class="fc" id="L69">    this.getJobStatusUseCase = getJobStatusUseCase;</span>
+<span class="fc" id="L70">    this.downloadResultUseCase = downloadResultUseCase;</span>
+<span class="fc" id="L71">    this.listAllJobsUseCase = listAllJobsUseCase;</span>
+<span class="fc" id="L72">    this.cancelJobUseCase = cancelJobUseCase;</span>
+<span class="fc" id="L73">    this.storageService = storageService;</span>
+<span class="fc" id="L74">    this.objectMapper = objectMapper;</span>
+<span class="fc" id="L75">    this.rateLimitService = rateLimitService;</span>
+<span class="fc" id="L76">    this.inputValidationService = inputValidationService;</span>
+<span class="fc" id="L77">  }</span>
+
+  @PostMapping
+  @Operation(
+      summary = &quot;Criar novo job de processamento&quot;,
+      description =
+          &quot;Cria um novo job de processamento de PDF. Você pode enviar arquivos via upload ou referenciar arquivos já existentes no sistema.&quot;)
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = &quot;200&quot;,
+            description = &quot;Job criado com sucesso&quot;,
+            content =
+                @Content(
+                    mediaType = &quot;application/json&quot;,
+                    schema = @Schema(implementation = JobResponse.class),
+                    examples =
+                        @ExampleObject(
+                            value =
+                                &quot;{\&quot;jobId\&quot;:\&quot;550e8400-e29b-41d4-a716-446655440000\&quot;,\&quot;operation\&quot;:\&quot;MERGE\&quot;,\&quot;status\&quot;:\&quot;PENDING\&quot;,\&quot;createdAt\&quot;:\&quot;2024-01-15T10:30:00Z\&quot;,\&quot;updatedAt\&quot;:\&quot;2024-01-15T10:30:00Z\&quot;,\&quot;inputFiles\&quot;:[\&quot;job-550e8400/input1.pdf\&quot;,\&quot;job-550e8400/input2.pdf\&quot;],\&quot;options\&quot;:{\&quot;output_filename\&quot;:\&quot;merged_document.pdf\&quot;},\&quot;progress\&quot;:0}&quot;))),
+        @ApiResponse(
+            responseCode = &quot;400&quot;,
+            description = &quot;Requisição inválida&quot;,
+            content =
+                @Content(
+                    mediaType = &quot;application/json&quot;,
+                    examples =
+                        @ExampleObject(
+                            value =
+                                &quot;{\&quot;error\&quot;:\&quot;Bad Request\&quot;,\&quot;message\&quot;:\&quot;Operation parameter is required\&quot;,\&quot;timestamp\&quot;:\&quot;2024-01-15T10:30:00Z\&quot;}&quot;))),
+        @ApiResponse(
+            responseCode = &quot;401&quot;,
+            description = &quot;Não autorizado - X-API-Key inválida ou ausente&quot;),
+        @ApiResponse(responseCode = &quot;413&quot;, description = &quot;Arquivo muito grande&quot;),
+        @ApiResponse(responseCode = &quot;422&quot;, description = &quot;Dados não processáveis&quot;)
+      })
+  public ResponseEntity&lt;JobResponse&gt; createJob(
+      @Parameter(
+              description = &quot;Tipo de operação a ser executada&quot;,
+              required = true,
+              examples = {
+                @ExampleObject(
+                    name = &quot;merge&quot;,
+                    value = &quot;merge&quot;,
+                    description = &quot;Combinar múltiplos PDFs&quot;),
+                @ExampleObject(
+                    name = &quot;split&quot;,
+                    value = &quot;split&quot;,
+                    description = &quot;Dividir PDF em múltiplos arquivos&quot;),
+                @ExampleObject(
+                    name = &quot;watermark&quot;,
+                    value = &quot;watermark&quot;,
+                    description = &quot;Adicionar marca d'água&quot;),
+                @ExampleObject(
+                    name = &quot;encrypt&quot;,
+                    value = &quot;encrypt&quot;,
+                    description = &quot;Criptografar PDF&quot;)
+              })
+          @RequestParam(&quot;operation&quot;)
+          String operation,
+      @Parameter(description = &quot;Arquivos PDF para upload (opcional se inputFiles for fornecido)&quot;)
+          @RequestParam(value = &quot;files&quot;, required = false)
+          List&lt;MultipartFile&gt; files,
+      @Parameter(
+              description = &quot;Lista de caminhos de arquivos já existentes no sistema&quot;,
+              examples = @ExampleObject(value = &quot;[\&quot;job-123/input1.pdf\&quot;, \&quot;job-456/input2.pdf\&quot;]&quot;))
+          @RequestParam(value = &quot;inputFiles&quot;, required = false)
+          List&lt;String&gt; inputFiles,
+      @Parameter(
+              description = &quot;Opções específicas da operação em formato JSON&quot;,
+              examples = {
+                @ExampleObject(
+                    name = &quot;merge_options&quot;,
+                    value = &quot;{\&quot;output_filename\&quot;:\&quot;merged.pdf\&quot;}&quot;,
+                    description = &quot;Opções para merge&quot;),
+                @ExampleObject(
+                    name = &quot;split_options&quot;,
+                    value = &quot;{\&quot;pages_per_file\&quot;:5,\&quot;output_prefix\&quot;:\&quot;page_\&quot;}&quot;,
+                    description = &quot;Opções para split&quot;),
+                @ExampleObject(
+                    name = &quot;watermark_options&quot;,
+                    value = &quot;{\&quot;text\&quot;:\&quot;CONFIDENCIAL\&quot;,\&quot;opacity\&quot;:0.5,\&quot;position\&quot;:\&quot;center\&quot;}&quot;,
+                    description = &quot;Opções para watermark&quot;),
+                @ExampleObject(
+                    name = &quot;encrypt_options&quot;,
+                    value =
+                        &quot;{\&quot;user_password\&quot;:\&quot;1234\&quot;,\&quot;owner_password\&quot;:\&quot;admin\&quot;,\&quot;permissions\&quot;:[\&quot;print\&quot;]}&quot;,
+                    description = &quot;Opções para encrypt&quot;)
+              })
+          @RequestParam(value = &quot;optionsJson&quot;, required = false)
+          String optionsJson,
+      HttpServletRequest httpRequest) {
+
+    try {
+      // Verificar rate limit por API key
+<span class="fc" id="L172">      String apiKey = httpRequest.getHeader(&quot;X-API-Key&quot;);</span>
+<span class="fc" id="L173">      rateLimitService.checkRateLimit(apiKey);</span>
+      
+      // Validações rigorosas de entrada
+<span class="fc" id="L176">      inputValidationService.validateOperation(operation);</span>
+<span class="fc" id="L177">      inputValidationService.validateUploadedFiles(files);</span>
+<span class="fc" id="L178">      inputValidationService.validateInputFiles(inputFiles);</span>
+<span class="fc" id="L179">      inputValidationService.validateOptionsJson(optionsJson);</span>
+<span class="fc" id="L180">      inputValidationService.validateInputProvided(files, inputFiles);</span>
+      
+      // Gerar ID único para o job
+<span class="fc" id="L183">      String jobId = UUID.randomUUID().toString();</span>
+
+      // Criar diretório do job
+<span class="fc" id="L186">      storageService.createJobDirectory(jobId);</span>
+
+      // Determinar lista de arquivos de entrada
+<span class="fc" id="L189">      List&lt;String&gt; finalInputFiles = new ArrayList&lt;&gt;();</span>
+
+<span class="pc bpc" id="L191" title="1 of 4 branches missed.">      if (files != null &amp;&amp; !files.isEmpty()) {</span>
+        // Caso 1: Upload de arquivos (já validados pelo InputValidationService)
+<span class="fc bfc" id="L193" title="All 2 branches covered.">        for (MultipartFile file : files) {</span>
+<span class="pc bpc" id="L194" title="1 of 2 branches missed.">          if (!file.isEmpty()) {</span>
+<span class="fc" id="L195">            String storedPath =</span>
+<span class="fc" id="L196">                storageService.store(jobId, file.getOriginalFilename(), file.getInputStream());</span>
+<span class="fc" id="L197">            finalInputFiles.add(storedPath);</span>
+          }
+<span class="fc" id="L199">        }</span>
+<span class="pc bpc" id="L200" title="1 of 4 branches missed.">      } else if (inputFiles != null &amp;&amp; !inputFiles.isEmpty()) {</span>
+        // Caso 2: Usar arquivos existentes (já validados pelo InputValidationService)
+<span class="fc" id="L202">        finalInputFiles.addAll(inputFiles);</span>
+      }
+
+      // Converter JSON string para Map
+<span class="fc" id="L206">      Map&lt;String, Object&gt; options = Map.of();</span>
+<span class="pc bpc" id="L207" title="3 of 4 branches missed.">      if (optionsJson != null &amp;&amp; !optionsJson.trim().isEmpty()) {</span>
+        try {
+<span class="nc" id="L209">          options =</span>
+<span class="nc" id="L210">              objectMapper.readValue(optionsJson, new TypeReference&lt;Map&lt;String, Object&gt;&gt;() {});</span>
+<span class="nc" id="L211">        } catch (Exception e) {</span>
+<span class="nc" id="L212">          throw new RuntimeException(&quot;Invalid options JSON format&quot;, e);</span>
+<span class="nc" id="L213">        }</span>
+      }
+
+<span class="fc" id="L216">      CreateJobRequest request = new CreateJobRequest();</span>
+<span class="fc" id="L217">      request.setOperation(JobOperation.valueOf(operation.toUpperCase()));</span>
+<span class="fc" id="L218">      request.setInputFiles(finalInputFiles);</span>
+<span class="fc" id="L219">      request.setOptions(options);</span>
+<span class="fc" id="L220">      request.setJobId(jobId); // Passar o jobId gerado</span>
+
+<span class="fc" id="L222">      JobResponse response = createJobUseCase.execute(request);</span>
+<span class="fc" id="L223">      return ResponseEntity.ok(response);</span>
+<span class="nc" id="L224">    } catch (IOException e) {</span>
+<span class="nc" id="L225">      throw new RuntimeException(&quot;Failed to store uploaded files&quot;, e);</span>
+    }
+  }
+
+  @GetMapping
+  @Operation(
+      summary = &quot;Listar todos os jobs&quot;,
+      description = &quot;Retorna uma lista paginada de todos os jobs&quot;)
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = &quot;200&quot;,
+            description = &quot;Lista de jobs retornada com sucesso&quot;,
+            content =
+                @Content(
+                    mediaType = &quot;application/json&quot;,
+                    schema = @Schema(implementation = JobResponse.class),
+                    examples =
+                        @ExampleObject(
+                            value =
+                                &quot;[{\&quot;jobId\&quot;:\&quot;550e8400-e29b-41d4-a716-446655440000\&quot;,\&quot;operation\&quot;:\&quot;MERGE\&quot;,\&quot;status\&quot;:\&quot;COMPLETED\&quot;,\&quot;createdAt\&quot;:\&quot;2024-01-15T10:30:00Z\&quot;,\&quot;updatedAt\&quot;:\&quot;2024-01-15T10:35:00Z\&quot;,\&quot;completedAt\&quot;:\&quot;2024-01-15T10:35:00Z\&quot;,\&quot;inputFiles\&quot;:[\&quot;job-550e8400/input1.pdf\&quot;,\&quot;job-550e8400/input2.pdf\&quot;],\&quot;outputFiles\&quot;:[\&quot;job-550e8400/merged_document.pdf\&quot;],\&quot;options\&quot;:{\&quot;output_filename\&quot;:\&quot;merged_document.pdf\&quot;},\&quot;progress\&quot;:100}]&quot;))),
+        @ApiResponse(responseCode = &quot;401&quot;, description = &quot;Não autorizado&quot;)
+      })
+  public ResponseEntity&lt;List&lt;JobResponse&gt;&gt; listAllJobs(
+      @Parameter(description = &quot;Número da página (começando em 0)&quot;, example = &quot;0&quot;)
+          @RequestParam(value = &quot;page&quot;, defaultValue = &quot;0&quot;)
+          int page,
+      @Parameter(description = &quot;Tamanho da página (1-100)&quot;, example = &quot;20&quot;)
+          @RequestParam(value = &quot;size&quot;, defaultValue = &quot;20&quot;)
+          int size) {
+    // Validar parâmetros de paginação
+<span class="fc" id="L256">    inputValidationService.validatePaginationParams(page, size);</span>
+    
+<span class="fc" id="L258">    List&lt;JobResponse&gt; response = listAllJobsUseCase.execute(page, size);</span>
+<span class="fc" id="L259">    return ResponseEntity.ok(response);</span>
+  }
+
+  @GetMapping(&quot;/{jobId}&quot;)
+  @Operation(
+      summary = &quot;Obter status do job&quot;,
+      description = &quot;Retorna o status atual e detalhes de um job específico&quot;)
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = &quot;200&quot;,
+            description = &quot;Status do job retornado com sucesso&quot;,
+            content =
+                @Content(
+                    mediaType = &quot;application/json&quot;,
+                    schema = @Schema(implementation = JobResponse.class),
+                    examples = {
+                      @ExampleObject(
+                          name = &quot;completed&quot;,
+                          value =
+                              &quot;{\&quot;jobId\&quot;:\&quot;550e8400-e29b-41d4-a716-446655440000\&quot;,\&quot;operation\&quot;:\&quot;MERGE\&quot;,\&quot;status\&quot;:\&quot;COMPLETED\&quot;,\&quot;createdAt\&quot;:\&quot;2024-01-15T10:30:00Z\&quot;,\&quot;updatedAt\&quot;:\&quot;2024-01-15T10:35:00Z\&quot;,\&quot;completedAt\&quot;:\&quot;2024-01-15T10:35:00Z\&quot;,\&quot;inputFiles\&quot;:[\&quot;job-550e8400/input1.pdf\&quot;,\&quot;job-550e8400/input2.pdf\&quot;],\&quot;outputFiles\&quot;:[\&quot;job-550e8400/merged_document.pdf\&quot;],\&quot;options\&quot;:{\&quot;output_filename\&quot;:\&quot;merged_document.pdf\&quot;},\&quot;progress\&quot;:100}&quot;,
+                          description = &quot;Job concluído&quot;),
+                      @ExampleObject(
+                          name = &quot;processing&quot;,
+                          value =
+                              &quot;{\&quot;jobId\&quot;:\&quot;660f9511-f3ac-52e5-b827-557766551111\&quot;,\&quot;operation\&quot;:\&quot;SPLIT\&quot;,\&quot;status\&quot;:\&quot;PROCESSING\&quot;,\&quot;createdAt\&quot;:\&quot;2024-01-15T10:32:00Z\&quot;,\&quot;updatedAt\&quot;:\&quot;2024-01-15T10:33:00Z\&quot;,\&quot;inputFiles\&quot;:[\&quot;job-660f9511/document.pdf\&quot;],\&quot;options\&quot;:{\&quot;pages_per_file\&quot;:5},\&quot;progress\&quot;:45}&quot;,
+                          description = &quot;Job em processamento&quot;),
+                      @ExampleObject(
+                          name = &quot;failed&quot;,
+                          value =
+                              &quot;{\&quot;jobId\&quot;:\&quot;770g0622-g4bd-63f6-c938-668877662222\&quot;,\&quot;operation\&quot;:\&quot;DECRYPT\&quot;,\&quot;status\&quot;:\&quot;FAILED\&quot;,\&quot;createdAt\&quot;:\&quot;2024-01-15T10:40:00Z\&quot;,\&quot;updatedAt\&quot;:\&quot;2024-01-15T10:41:00Z\&quot;,\&quot;inputFiles\&quot;:[\&quot;job-770g0622/encrypted.pdf\&quot;],\&quot;options\&quot;:{\&quot;password\&quot;:\&quot;wrong_password\&quot;},\&quot;progress\&quot;:0,\&quot;errorMessage\&quot;:\&quot;Invalid password for encrypted PDF\&quot;}&quot;,
+                          description = &quot;Job com erro&quot;)
+                    })),
+        @ApiResponse(
+            responseCode = &quot;404&quot;,
+            description = &quot;Job não encontrado&quot;,
+            content =
+                @Content(
+                    mediaType = &quot;application/json&quot;,
+                    examples =
+                        @ExampleObject(
+                            value =
+                                &quot;{\&quot;error\&quot;:\&quot;Not Found\&quot;,\&quot;message\&quot;:\&quot;Job with ID 550e8400-e29b-41d4-a716-446655440000 not found\&quot;,\&quot;timestamp\&quot;:\&quot;2024-01-15T10:30:00Z\&quot;}&quot;))),
+        @ApiResponse(responseCode = &quot;401&quot;, description = &quot;Não autorizado&quot;)
+      })
+  public ResponseEntity&lt;JobResponse&gt; getJobStatus(
+      @Parameter(description = &quot;ID único do job&quot;, example = &quot;550e8400-e29b-41d4-a716-446655440000&quot;)
+          @PathVariable
+          String jobId) {
+    // Validar ID do job
+<span class="fc" id="L309">    inputValidationService.validateJobId(jobId);</span>
+    
+<span class="fc" id="L311">    JobResponse response = getJobStatusUseCase.execute(jobId);</span>
+<span class="fc" id="L312">    return ResponseEntity.ok(response);</span>
+  }
+
+  @GetMapping(&quot;/{jobId}/download&quot;)
+  @Operation(
+      summary = &quot;Download do resultado do job&quot;,
+      description =
+          &quot;Faz o download do arquivo resultado de um job concluído. Para operações que geram múltiplos arquivos, retorna um ZIP.&quot;)
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = &quot;200&quot;,
+            description = &quot;Arquivo resultado retornado com sucesso&quot;,
+            content = {
+              @Content(
+                  mediaType = &quot;application/pdf&quot;,
+                  schema = @Schema(type = &quot;string&quot;, format = &quot;binary&quot;)),
+              @Content(
+                  mediaType = &quot;application/zip&quot;,
+                  schema = @Schema(type = &quot;string&quot;, format = &quot;binary&quot;)),
+              @Content(
+                  mediaType = &quot;image/png&quot;,
+                  schema = @Schema(type = &quot;string&quot;, format = &quot;binary&quot;)),
+              @Content(
+                  mediaType = &quot;image/jpeg&quot;,
+                  schema = @Schema(type = &quot;string&quot;, format = &quot;binary&quot;)),
+              @Content(mediaType = &quot;text/plain&quot;, schema = @Schema(type = &quot;string&quot;)),
+              @Content(mediaType = &quot;application/json&quot;, schema = @Schema(type = &quot;object&quot;))
+            }),
+        @ApiResponse(
+            responseCode = &quot;404&quot;,
+            description = &quot;Job não encontrado ou resultado não disponível&quot;,
+            content =
+                @Content(
+                    mediaType = &quot;application/json&quot;,
+                    examples = {
+                      @ExampleObject(
+                          name = &quot;job_not_found&quot;,
+                          value =
+                              &quot;{\&quot;error\&quot;:\&quot;Not Found\&quot;,\&quot;message\&quot;:\&quot;Job with ID 550e8400-e29b-41d4-a716-446655440000 not found\&quot;,\&quot;timestamp\&quot;:\&quot;2024-01-15T10:30:00Z\&quot;}&quot;,
+                          description = &quot;Job não encontrado&quot;),
+                      @ExampleObject(
+                          name = &quot;result_not_ready&quot;,
+                          value =
+                              &quot;{\&quot;error\&quot;:\&quot;Not Found\&quot;,\&quot;message\&quot;:\&quot;Job result not available. Current status: PROCESSING\&quot;,\&quot;timestamp\&quot;:\&quot;2024-01-15T10:30:00Z\&quot;}&quot;,
+                          description = &quot;Resultado não disponível&quot;)
+                    })),
+        @ApiResponse(responseCode = &quot;401&quot;, description = &quot;Não autorizado&quot;)
+      })
+  public ResponseEntity&lt;InputStreamResource&gt; downloadResult(
+      @Parameter(description = &quot;ID único do job&quot;, example = &quot;550e8400-e29b-41d4-a716-446655440000&quot;)
+          @PathVariable
+          String jobId) {
+    try {
+      // Validar ID do job
+<span class="nc" id="L367">      inputValidationService.validateJobId(jobId);</span>
+      
+<span class="nc" id="L369">      DownloadResultUseCase.DownloadResponse result = downloadResultUseCase.execute(jobId);</span>
+
+<span class="nc" id="L371">      return ResponseEntity.ok()</span>
+<span class="nc" id="L372">          .header(HttpHeaders.CONTENT_DISPOSITION, &quot;attachment; filename=&quot; + result.getFilename())</span>
+<span class="nc" id="L373">          .header(HttpHeaders.CONTENT_LENGTH, String.valueOf(result.getFileSize()))</span>
+<span class="nc" id="L374">          .contentType(MediaType.parseMediaType(result.getContentType()))</span>
+<span class="nc" id="L375">          .body(new InputStreamResource(result.getFileStream()));</span>
+<span class="nc" id="L376">    } catch (Exception e) {</span>
+<span class="nc" id="L377">      throw new RuntimeException(&quot;Error downloading job result&quot;, e);</span>
+    }
+  }
+
+  @DeleteMapping(&quot;/{jobId}&quot;)
+  @Operation(summary = &quot;Cancelar job&quot;, description = &quot;Cancela um job em execução ou pendente&quot;)
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = &quot;200&quot;,
+            description = &quot;Job cancelado com sucesso&quot;,
+            content =
+                @Content(
+                    mediaType = &quot;application/json&quot;,
+                    schema = @Schema(implementation = JobResponse.class),
+                    examples =
+                        @ExampleObject(
+                            value =
+                                &quot;{\&quot;jobId\&quot;:\&quot;550e8400-e29b-41d4-a716-446655440000\&quot;,\&quot;operation\&quot;:\&quot;MERGE\&quot;,\&quot;status\&quot;:\&quot;CANCELLED\&quot;,\&quot;createdAt\&quot;:\&quot;2024-01-15T10:30:00Z\&quot;,\&quot;updatedAt\&quot;:\&quot;2024-01-15T10:32:00Z\&quot;,\&quot;inputFiles\&quot;:[\&quot;job-550e8400/input1.pdf\&quot;,\&quot;job-550e8400/input2.pdf\&quot;],\&quot;options\&quot;:{\&quot;output_filename\&quot;:\&quot;merged_document.pdf\&quot;},\&quot;progress\&quot;:25}&quot;))),
+        @ApiResponse(responseCode = &quot;404&quot;, description = &quot;Job não encontrado&quot;),
+        @ApiResponse(
+            responseCode = &quot;409&quot;,
+            description = &quot;Job não pode ser cancelado (já concluído ou falhou)&quot;,
+            content =
+                @Content(
+                    mediaType = &quot;application/json&quot;,
+                    examples =
+                        @ExampleObject(
+                            value =
+                                &quot;{\&quot;error\&quot;:\&quot;Conflict\&quot;,\&quot;message\&quot;:\&quot;Cannot cancel job in COMPLETED status\&quot;,\&quot;timestamp\&quot;:\&quot;2024-01-15T10:30:00Z\&quot;}&quot;))),
+        @ApiResponse(responseCode = &quot;401&quot;, description = &quot;Não autorizado&quot;)
+      })
+  public ResponseEntity&lt;JobResponse&gt; cancelJob(
+      @Parameter(description = &quot;ID único do job&quot;, example = &quot;550e8400-e29b-41d4-a716-446655440000&quot;)
+          @PathVariable
+          String jobId) {
+    // Validar ID do job
+<span class="nc" id="L414">    inputValidationService.validateJobId(jobId);</span>
+    
+<span class="nc" id="L416">    JobResponse response = cancelJobUseCase.execute(jobId);</span>
+<span class="nc" id="L417">    return ResponseEntity.ok(response);</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

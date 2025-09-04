@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MonitoringController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PDF Processor API</a> &gt; <a href="index.source.html" class="el_package">com.pdfprocessor.api.controller</a> &gt; <span class="el_source">MonitoringController.java</span></div><h1>MonitoringController.java</h1><pre class="source lang-java linenums">package com.pdfprocessor.api.controller;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import java.io.File;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/** Controller para endpoints de monitoramento e health check. */
+@RestController
+@RequestMapping(&quot;/api/v1/monitoring&quot;)
+@Tag(name = &quot;Monitoring&quot;, description = &quot;Endpoints de monitoramento e health check&quot;)
+<span class="fc" id="L20">public class MonitoringController {</span>
+
+  @Autowired(required = false)
+  private RedisTemplate&lt;String, Object&gt; redisTemplate;
+
+  @GetMapping(&quot;/health&quot;)
+  @Operation(summary = &quot;Health check detalhado do sistema&quot;)
+  public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; healthCheck() {
+<span class="nc" id="L28">    Map&lt;String, Object&gt; health = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L29">    health.put(&quot;timestamp&quot;, LocalDateTime.now());</span>
+<span class="nc" id="L30">    health.put(&quot;status&quot;, &quot;UP&quot;);</span>
+<span class="nc" id="L31">    health.put(&quot;application&quot;, &quot;PDF Processor API&quot;);</span>
+<span class="nc" id="L32">    health.put(&quot;version&quot;, &quot;1.0.0&quot;);</span>
+
+    // Verificar componentes
+<span class="nc" id="L35">    Map&lt;String, Object&gt; components = new HashMap&lt;&gt;();</span>
+
+    // Redis health
+<span class="nc" id="L38">    components.put(&quot;redis&quot;, checkRedisHealth());</span>
+
+    // Storage health
+<span class="nc" id="L41">    components.put(&quot;storage&quot;, checkStorageHealth());</span>
+
+    // Memory info
+<span class="nc" id="L44">    components.put(&quot;memory&quot;, getMemoryInfo());</span>
+
+<span class="nc" id="L46">    health.put(&quot;components&quot;, components);</span>
+
+<span class="nc" id="L48">    return ResponseEntity.ok(health);</span>
+  }
+
+  @GetMapping(&quot;/metrics&quot;)
+  @Operation(summary = &quot;Métricas básicas do sistema&quot;)
+  public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; metrics() {
+<span class="nc" id="L54">    Map&lt;String, Object&gt; metrics = new HashMap&lt;&gt;();</span>
+
+<span class="nc" id="L56">    Runtime runtime = Runtime.getRuntime();</span>
+<span class="nc" id="L57">    metrics.put(&quot;memory&quot;, getMemoryInfo());</span>
+<span class="nc" id="L58">    metrics.put(&quot;processors&quot;, runtime.availableProcessors());</span>
+<span class="nc" id="L59">    metrics.put(&quot;timestamp&quot;, LocalDateTime.now());</span>
+
+<span class="nc" id="L61">    return ResponseEntity.ok(metrics);</span>
+  }
+
+  private Map&lt;String, Object&gt; checkRedisHealth() {
+<span class="nc" id="L65">    Map&lt;String, Object&gt; redisHealth = new HashMap&lt;&gt;();</span>
+    try {
+<span class="nc bnc" id="L67" title="All 2 branches missed.">      if (redisTemplate != null) {</span>
+<span class="nc" id="L68">        redisTemplate.opsForValue().set(&quot;health-check&quot;, &quot;test&quot;);</span>
+<span class="nc" id="L69">        String result = (String) redisTemplate.opsForValue().get(&quot;health-check&quot;);</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">        redisHealth.put(&quot;status&quot;, &quot;test&quot;.equals(result) ? &quot;UP&quot; : &quot;DOWN&quot;);</span>
+<span class="nc" id="L71">        redisTemplate.delete(&quot;health-check&quot;);</span>
+<span class="nc" id="L72">      } else {</span>
+<span class="nc" id="L73">        redisHealth.put(&quot;status&quot;, &quot;DOWN&quot;);</span>
+<span class="nc" id="L74">        redisHealth.put(&quot;error&quot;, &quot;Redis template not available&quot;);</span>
+      }
+<span class="nc" id="L76">    } catch (Exception e) {</span>
+<span class="nc" id="L77">      redisHealth.put(&quot;status&quot;, &quot;DOWN&quot;);</span>
+<span class="nc" id="L78">      redisHealth.put(&quot;error&quot;, e.getMessage());</span>
+<span class="nc" id="L79">    }</span>
+<span class="nc" id="L80">    return redisHealth;</span>
+  }
+
+  private Map&lt;String, Object&gt; checkStorageHealth() {
+<span class="nc" id="L84">    Map&lt;String, Object&gt; storageHealth = new HashMap&lt;&gt;();</span>
+    try {
+<span class="nc" id="L86">      File storageDir = new File(&quot;./storage&quot;);</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">      if (!storageDir.exists()) {</span>
+<span class="nc" id="L88">        storageDir.mkdirs();</span>
+      }
+
+<span class="nc bnc" id="L91" title="All 4 branches missed.">      storageHealth.put(&quot;status&quot;, storageDir.canRead() &amp;&amp; storageDir.canWrite() ? &quot;UP&quot; : &quot;DOWN&quot;);</span>
+<span class="nc" id="L92">      storageHealth.put(&quot;path&quot;, storageDir.getAbsolutePath());</span>
+<span class="nc" id="L93">      storageHealth.put(&quot;freeSpace&quot;, storageDir.getFreeSpace());</span>
+<span class="nc" id="L94">      storageHealth.put(&quot;totalSpace&quot;, storageDir.getTotalSpace());</span>
+<span class="nc" id="L95">    } catch (Exception e) {</span>
+<span class="nc" id="L96">      storageHealth.put(&quot;status&quot;, &quot;DOWN&quot;);</span>
+<span class="nc" id="L97">      storageHealth.put(&quot;error&quot;, e.getMessage());</span>
+<span class="nc" id="L98">    }</span>
+<span class="nc" id="L99">    return storageHealth;</span>
+  }
+
+  private Map&lt;String, Object&gt; getMemoryInfo() {
+<span class="nc" id="L103">    Runtime runtime = Runtime.getRuntime();</span>
+<span class="nc" id="L104">    Map&lt;String, Object&gt; memory = new HashMap&lt;&gt;();</span>
+
+<span class="nc" id="L106">    long maxMemory = runtime.maxMemory();</span>
+<span class="nc" id="L107">    long totalMemory = runtime.totalMemory();</span>
+<span class="nc" id="L108">    long freeMemory = runtime.freeMemory();</span>
+<span class="nc" id="L109">    long usedMemory = totalMemory - freeMemory;</span>
+
+<span class="nc" id="L111">    memory.put(&quot;max&quot;, maxMemory);</span>
+<span class="nc" id="L112">    memory.put(&quot;total&quot;, totalMemory);</span>
+<span class="nc" id="L113">    memory.put(&quot;used&quot;, usedMemory);</span>
+<span class="nc" id="L114">    memory.put(&quot;free&quot;, freeMemory);</span>
+<span class="nc" id="L115">    memory.put(&quot;usagePercent&quot;, Math.round((double) usedMemory / totalMemory * 100));</span>
+
+<span class="nc" id="L117">    return memory;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

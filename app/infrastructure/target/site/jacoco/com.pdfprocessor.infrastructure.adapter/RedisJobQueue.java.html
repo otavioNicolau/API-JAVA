@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RedisJobQueue.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PDF Processor Infrastructure</a> &gt; <a href="index.source.html" class="el_package">com.pdfprocessor.infrastructure.adapter</a> &gt; <span class="el_source">RedisJobQueue.java</span></div><h1>RedisJobQueue.java</h1><pre class="source lang-java linenums">package com.pdfprocessor.infrastructure.adapter;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.pdfprocessor.domain.model.Job;
+import com.pdfprocessor.domain.port.JobQueue;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
+
+/**
+ * Implementação da fila de jobs usando Redis Lists. Usa LPUSH para adicionar jobs e BRPOP para
+ * consumir com timeout.
+ */
+@Component
+public class RedisJobQueue implements JobQueue {
+
+  private static final String QUEUE_KEY = &quot;pdf:jobs:queue&quot;;
+  private static final String PROCESSING_KEY = &quot;pdf:jobs:processing&quot;;
+
+  private final RedisTemplate&lt;String, Object&gt; redisTemplate;
+  private final ObjectMapper objectMapper;
+
+  @Autowired
+<span class="fc" id="L28">  public RedisJobQueue(RedisTemplate&lt;String, Object&gt; redisTemplate) {</span>
+<span class="fc" id="L29">    this.redisTemplate = redisTemplate;</span>
+<span class="fc" id="L30">    this.objectMapper = new ObjectMapper();</span>
+<span class="fc" id="L31">    this.objectMapper.registerModule(new JavaTimeModule());</span>
+<span class="fc" id="L32">  }</span>
+
+  @Override
+  public void publish(Job job) {
+    try {
+<span class="fc" id="L37">      String jobJson = objectMapper.writeValueAsString(job);</span>
+<span class="fc" id="L38">      redisTemplate.opsForList().leftPush(QUEUE_KEY, jobJson);</span>
+<span class="fc" id="L39">      System.out.println(&quot;Published job to Redis queue: &quot; + job.getId());</span>
+<span class="pc" id="L40">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L41">      throw new RuntimeException(&quot;Failed to serialize job: &quot; + job.getId(), e);</span>
+    }
+<span class="fc" id="L43">  }</span>
+
+  @Override
+  public Optional&lt;Job&gt; consume() {
+<span class="fc" id="L47">    return consume(0); // Non-blocking</span>
+  }
+
+  @Override
+  public Optional&lt;Job&gt; consume(long timeoutSeconds) {
+    try {
+      Object result;
+<span class="fc bfc" id="L54" title="All 2 branches covered.">      if (timeoutSeconds &gt; 0) {</span>
+        // Blocking pop with timeout
+<span class="fc" id="L56">        result = redisTemplate.opsForList().rightPop(QUEUE_KEY, timeoutSeconds, TimeUnit.SECONDS);</span>
+<span class="fc" id="L57">      } else {</span>
+        // Non-blocking pop
+<span class="fc" id="L59">        result = redisTemplate.opsForList().rightPop(QUEUE_KEY);</span>
+      }
+
+<span class="fc bfc" id="L62" title="All 2 branches covered.">      if (result != null) {</span>
+<span class="fc" id="L63">        String jobJson = (String) result;</span>
+<span class="fc" id="L64">        Job job = objectMapper.readValue(jobJson, Job.class);</span>
+
+        // Move to processing set for tracking
+<span class="fc" id="L67">        redisTemplate.opsForSet().add(PROCESSING_KEY, jobJson);</span>
+
+<span class="fc" id="L69">        System.out.println(&quot;Consumed job from Redis queue: &quot; + job.getId());</span>
+<span class="fc" id="L70">        return Optional.of(job);</span>
+      }
+
+<span class="fc" id="L73">      return Optional.empty();</span>
+<span class="fc" id="L74">    } catch (Exception e) {</span>
+<span class="fc" id="L75">      System.err.println(&quot;Failed to consume job from queue: &quot; + e.getMessage());</span>
+<span class="fc" id="L76">      return Optional.empty();</span>
+    }
+  }
+
+  @Override
+  public void returnToQueue(Job job) {
+    try {
+<span class="fc" id="L83">      String jobJson = objectMapper.writeValueAsString(job);</span>
+      // Remove from processing and return to queue
+<span class="fc" id="L85">      redisTemplate.opsForSet().remove(PROCESSING_KEY, jobJson);</span>
+<span class="fc" id="L86">      redisTemplate.opsForList().leftPush(QUEUE_KEY, jobJson);</span>
+<span class="fc" id="L87">      System.out.println(&quot;Returned job to Redis queue: &quot; + job.getId());</span>
+<span class="pc" id="L88">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L89">      System.err.println(&quot;Failed to return job to queue: &quot; + job.getId() + &quot;, &quot; + e.getMessage());</span>
+    }
+<span class="fc" id="L91">  }</span>
+
+  @Override
+  public void acknowledge(Job job) {
+    try {
+<span class="fc" id="L96">      String jobJson = objectMapper.writeValueAsString(job);</span>
+      // Remove from processing set
+<span class="fc" id="L98">      redisTemplate.opsForSet().remove(PROCESSING_KEY, jobJson);</span>
+<span class="fc" id="L99">      System.out.println(&quot;Acknowledged job: &quot; + job.getId());</span>
+<span class="pc" id="L100">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L101">      System.err.println(&quot;Failed to acknowledge job: &quot; + job.getId() + &quot;, &quot; + e.getMessage());</span>
+    }
+<span class="fc" id="L103">  }</span>
+
+  @Override
+  public long getQueueSize() {
+<span class="fc" id="L107">    Long size = redisTemplate.opsForList().size(QUEUE_KEY);</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">    return size != null ? size : 0;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

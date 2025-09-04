@@ -1,0 +1,9 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+PDF Processor Application,com.pdfprocessor.application.usecase,DownloadResultUseCase.DownloadResponse,27,0,0,0,10,0,5,0,5,0
+PDF Processor Application,com.pdfprocessor.application.usecase,CancelJobUseCase,43,0,4,0,9,0,5,0,3,0
+PDF Processor Application,com.pdfprocessor.application.usecase,GetJobStatusUseCase,0,36,0,4,0,7,0,5,0,3
+PDF Processor Application,com.pdfprocessor.application.usecase,ListAllJobsUseCase,39,0,4,0,10,0,5,0,3,0
+PDF Processor Application,com.pdfprocessor.application.usecase,DownloadResultUseCase,156,0,24,0,36,0,22,0,6,0
+PDF Processor Application,com.pdfprocessor.application.usecase,CreateJobUseCase,0,139,0,14,0,31,0,10,0,3
+PDF Processor Application,com.pdfprocessor.application.dto,CreateJobRequest,2,109,3,9,0,29,3,16,0,13
+PDF Processor Application,com.pdfprocessor.application.dto,JobResponse,2,185,1,5,0,69,1,30,0,28

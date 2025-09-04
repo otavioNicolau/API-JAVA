@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DownloadResultUseCase.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PDF Processor Application</a> &gt; <a href="index.source.html" class="el_package">com.pdfprocessor.application.usecase</a> &gt; <span class="el_source">DownloadResultUseCase.java</span></div><h1>DownloadResultUseCase.java</h1><pre class="source lang-java linenums">package com.pdfprocessor.application.usecase;
+
+import com.pdfprocessor.domain.exception.JobNotCompletedException;
+import com.pdfprocessor.domain.exception.JobNotFoundException;
+import com.pdfprocessor.domain.exception.ResultNotFoundException;
+import com.pdfprocessor.domain.model.Job;
+import com.pdfprocessor.domain.model.JobStatus;
+import com.pdfprocessor.domain.port.JobRepository;
+import com.pdfprocessor.domain.port.StorageService;
+import java.io.InputStream;
+import java.util.Objects;
+import org.springframework.stereotype.Service;
+
+/** Caso de uso para download do resultado de um job. */
+@Service
+public class DownloadResultUseCase {
+
+  private final JobRepository jobRepository;
+  private final StorageService storageService;
+
+<span class="nc" id="L21">  public DownloadResultUseCase(JobRepository jobRepository, StorageService storageService) {</span>
+<span class="nc" id="L22">    this.jobRepository = Objects.requireNonNull(jobRepository);</span>
+<span class="nc" id="L23">    this.storageService = Objects.requireNonNull(storageService);</span>
+<span class="nc" id="L24">  }</span>
+
+  /**
+   * Executa o caso de uso de download do resultado.
+   *
+   * @param jobId ID do job
+   * @return resposta com dados do arquivo
+   * @throws JobNotFoundException se o job não for encontrado
+   * @throws JobNotCompletedException se o job não estiver completo
+   * @throws ResultNotFoundException se o arquivo resultado não for encontrado
+   */
+  public DownloadResponse execute(String jobId) {
+<span class="nc bnc" id="L36" title="All 4 branches missed.">    if (jobId == null || jobId.trim().isEmpty()) {</span>
+<span class="nc" id="L37">      throw new IllegalArgumentException(&quot;Job ID cannot be null or empty&quot;);</span>
+    }
+
+<span class="nc" id="L40">    Job job =</span>
+<span class="nc" id="L41">        jobRepository</span>
+<span class="nc" id="L42">            .findById(jobId)</span>
+<span class="nc" id="L43">            .orElseThrow(() -&gt; new JobNotFoundException(&quot;Job not found: &quot; + jobId));</span>
+
+<span class="nc bnc" id="L45" title="All 2 branches missed.">    if (job.getStatus() != JobStatus.COMPLETED) {</span>
+<span class="nc" id="L46">      throw new JobNotCompletedException(&quot;Job is not completed yet: &quot; + jobId);</span>
+    }
+
+<span class="nc bnc" id="L49" title="All 2 branches missed.">    if (job.getResultPath() == null) {</span>
+<span class="nc" id="L50">      throw new ResultNotFoundException(&quot;No result file found for job: &quot; + jobId);</span>
+    }
+
+<span class="nc bnc" id="L53" title="All 2 branches missed.">    if (!storageService.exists(job.getResultPath())) {</span>
+<span class="nc" id="L54">      throw new ResultNotFoundException(&quot;Result file not found: &quot; + job.getResultPath());</span>
+    }
+
+<span class="nc" id="L57">    InputStream fileStream = storageService.retrieve(job.getResultPath());</span>
+<span class="nc" id="L58">    long fileSize = storageService.getFileSize(job.getResultPath());</span>
+<span class="nc" id="L59">    String filename = extractFilename(job.getResultPath());</span>
+
+<span class="nc" id="L61">    return new DownloadResponse(fileStream, filename, fileSize, getContentType(filename));</span>
+  }
+
+  private String extractFilename(String filePath) {
+<span class="nc" id="L65">    int lastSlash = filePath.lastIndexOf('/');</span>
+<span class="nc bnc" id="L66" title="All 2 branches missed.">    return lastSlash &gt;= 0 ? filePath.substring(lastSlash + 1) : filePath;</span>
+  }
+
+  private String getContentType(String filename) {
+<span class="nc" id="L70">    String extension = getFileExtension(filename).toLowerCase();</span>
+<span class="nc bnc" id="L71" title="All 10 branches missed.">    return switch (extension) {</span>
+<span class="nc" id="L72">      case &quot;pdf&quot; -&gt; &quot;application/pdf&quot;;</span>
+<span class="nc" id="L73">      case &quot;zip&quot; -&gt; &quot;application/zip&quot;;</span>
+<span class="nc" id="L74">      case &quot;png&quot; -&gt; &quot;image/png&quot;;</span>
+<span class="nc" id="L75">      case &quot;jpg&quot;, &quot;jpeg&quot; -&gt; &quot;image/jpeg&quot;;</span>
+<span class="nc" id="L76">      case &quot;tiff&quot;, &quot;tif&quot; -&gt; &quot;image/tiff&quot;;</span>
+<span class="nc" id="L77">      case &quot;txt&quot; -&gt; &quot;text/plain&quot;;</span>
+<span class="nc" id="L78">      case &quot;json&quot; -&gt; &quot;application/json&quot;;</span>
+<span class="nc" id="L79">      case &quot;mp3&quot; -&gt; &quot;audio/mpeg&quot;;</span>
+<span class="nc" id="L80">      case &quot;wav&quot; -&gt; &quot;audio/wav&quot;;</span>
+<span class="nc" id="L81">      default -&gt; &quot;application/octet-stream&quot;;</span>
+    };
+  }
+
+  private String getFileExtension(String filename) {
+<span class="nc" id="L86">    int lastDot = filename.lastIndexOf('.');</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">    return lastDot &gt;= 0 ? filename.substring(lastDot + 1) : &quot;&quot;;</span>
+  }
+
+  /** Resposta do caso de uso de download. */
+  public static class DownloadResponse {
+    private final InputStream fileStream;
+    private final String filename;
+    private final long fileSize;
+    private final String contentType;
+
+<span class="nc" id="L97">    public DownloadResponse(</span>
+        InputStream fileStream, String filename, long fileSize, String contentType) {
+<span class="nc" id="L99">      this.fileStream = fileStream;</span>
+<span class="nc" id="L100">      this.filename = filename;</span>
+<span class="nc" id="L101">      this.fileSize = fileSize;</span>
+<span class="nc" id="L102">      this.contentType = contentType;</span>
+<span class="nc" id="L103">    }</span>
+
+    public InputStream getFileStream() {
+<span class="nc" id="L106">      return fileStream;</span>
+    }
+
+    public String getFilename() {
+<span class="nc" id="L110">      return filename;</span>
+    }
+
+    public long getFileSize() {
+<span class="nc" id="L114">      return fileSize;</span>
+    }
+
+    public String getContentType() {
+<span class="nc" id="L118">      return contentType;</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

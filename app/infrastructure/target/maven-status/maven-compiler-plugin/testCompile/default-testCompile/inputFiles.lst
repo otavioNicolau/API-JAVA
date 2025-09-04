@@ -1,0 +1,5 @@
+/home/otavio/API-JAVA/app/infrastructure/src/test/java/com/pdfprocessor/infrastructure/adapter/PdfProcessingServiceImplTest.java
+/home/otavio/API-JAVA/app/infrastructure/src/test/java/com/pdfprocessor/infrastructure/adapter/LocalStorageServiceTest.java
+/home/otavio/API-JAVA/app/infrastructure/src/test/java/com/pdfprocessor/infrastructure/adapter/RedisJobRepositoryTest.java
+/home/otavio/API-JAVA/app/infrastructure/src/test/java/com/pdfprocessor/infrastructure/config/RedisConfigTest.java
+/home/otavio/API-JAVA/app/infrastructure/src/test/java/com/pdfprocessor/infrastructure/adapter/RedisJobQueueTest.java

@@ -2,6 +2,9 @@ package com.pdfprocessor.api.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pdfprocessor.api.exception.SecurityValidationException;
+import com.pdfprocessor.api.service.InputValidationService;
+import com.pdfprocessor.api.service.RateLimitService;
 import com.pdfprocessor.application.dto.CreateJobRequest;
 import com.pdfprocessor.application.dto.JobResponse;
 import com.pdfprocessor.application.usecase.CancelJobUseCase;
@@ -30,12 +33,17 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import jakarta.servlet.http.HttpServletRequest;
 
 /** Controller REST para operações de jobs de processamento de PDF. */
 @RestController
 @RequestMapping("/api/v1/jobs")
 @Tag(name = "Jobs", description = "Operações de jobs de processamento de PDF")
 public class JobController {
+
+  // Limites de segurança
+  private static final long MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024; // 50MB
+  private static final int MAX_FILES_PER_JOB = 10;
 
   private final CreateJobUseCase createJobUseCase;
   private final GetJobStatusUseCase getJobStatusUseCase;
@@ -44,6 +52,8 @@ public class JobController {
   private final CancelJobUseCase cancelJobUseCase;
   private final StorageService storageService;
   private final ObjectMapper objectMapper;
+  private final RateLimitService rateLimitService;
+  private final InputValidationService inputValidationService;
 
   public JobController(
       CreateJobUseCase createJobUseCase,
@@ -52,7 +62,9 @@ public class JobController {
       ListAllJobsUseCase listAllJobsUseCase,
       CancelJobUseCase cancelJobUseCase,
       StorageService storageService,
-      ObjectMapper objectMapper) {
+      ObjectMapper objectMapper,
+      RateLimitService rateLimitService,
+      InputValidationService inputValidationService) {
     this.createJobUseCase = createJobUseCase;
     this.getJobStatusUseCase = getJobStatusUseCase;
     this.downloadResultUseCase = downloadResultUseCase;
@@ -60,6 +72,8 @@ public class JobController {
     this.cancelJobUseCase = cancelJobUseCase;
     this.storageService = storageService;
     this.objectMapper = objectMapper;
+    this.rateLimitService = rateLimitService;
+    this.inputValidationService = inputValidationService;
   }
 
   @PostMapping
@@ -150,9 +164,21 @@ public class JobController {
                     description = "Opções para encrypt")
               })
           @RequestParam(value = "optionsJson", required = false)
-          String optionsJson) {
+          String optionsJson,
+      HttpServletRequest httpRequest) {
 
     try {
+      // Verificar rate limit por API key
+      String apiKey = httpRequest.getHeader("X-API-Key");
+      rateLimitService.checkRateLimit(apiKey);
+      
+      // Validações rigorosas de entrada
+      inputValidationService.validateOperation(operation);
+      inputValidationService.validateUploadedFiles(files);
+      inputValidationService.validateInputFiles(inputFiles);
+      inputValidationService.validateOptionsJson(optionsJson);
+      inputValidationService.validateInputProvided(files, inputFiles);
+      
       // Gerar ID único para o job
       String jobId = UUID.randomUUID().toString();
 
@@ -163,7 +189,7 @@ public class JobController {
       List<String> finalInputFiles = new ArrayList<>();
 
       if (files != null && !files.isEmpty()) {
-        // Caso 1: Upload de arquivos
+        // Caso 1: Upload de arquivos (já validados pelo InputValidationService)
         for (MultipartFile file : files) {
           if (!file.isEmpty()) {
             String storedPath =
@@ -172,10 +198,8 @@ public class JobController {
           }
         }
       } else if (inputFiles != null && !inputFiles.isEmpty()) {
-        // Caso 2: Usar arquivos existentes
+        // Caso 2: Usar arquivos existentes (já validados pelo InputValidationService)
         finalInputFiles.addAll(inputFiles);
-      } else {
-        throw new IllegalArgumentException("Either files or inputFiles parameter is required");
       }
 
       // Converter JSON string para Map
@@ -228,6 +252,9 @@ public class JobController {
       @Parameter(description = "Tamanho da página (1-100)", example = "20")
           @RequestParam(value = "size", defaultValue = "20")
           int size) {
+    // Validar parâmetros de paginação
+    inputValidationService.validatePaginationParams(page, size);
+    
     List<JobResponse> response = listAllJobsUseCase.execute(page, size);
     return ResponseEntity.ok(response);
   }
@@ -278,6 +305,9 @@ public class JobController {
       @Parameter(description = "ID único do job", example = "550e8400-e29b-41d4-a716-446655440000")
           @PathVariable
           String jobId) {
+    // Validar ID do job
+    inputValidationService.validateJobId(jobId);
+    
     JobResponse response = getJobStatusUseCase.execute(jobId);
     return ResponseEntity.ok(response);
   }
@@ -332,13 +362,20 @@ public class JobController {
       @Parameter(description = "ID único do job", example = "550e8400-e29b-41d4-a716-446655440000")
           @PathVariable
           String jobId) {
-    DownloadResultUseCase.DownloadResponse response = downloadResultUseCase.execute(jobId);
+    try {
+      // Validar ID do job
+      inputValidationService.validateJobId(jobId);
+      
+      DownloadResultUseCase.DownloadResponse result = downloadResultUseCase.execute(jobId);
 
-    return ResponseEntity.ok()
-        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + response.getFilename())
-        .header(HttpHeaders.CONTENT_LENGTH, String.valueOf(response.getFileSize()))
-        .contentType(MediaType.parseMediaType(response.getContentType()))
-        .body(new InputStreamResource(response.getFileStream()));
+      return ResponseEntity.ok()
+          .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + result.getFilename())
+          .header(HttpHeaders.CONTENT_LENGTH, String.valueOf(result.getFileSize()))
+          .contentType(MediaType.parseMediaType(result.getContentType()))
+          .body(new InputStreamResource(result.getFileStream()));
+    } catch (Exception e) {
+      throw new RuntimeException("Error downloading job result", e);
+    }
   }
 
   @DeleteMapping("/{jobId}")
@@ -373,6 +410,9 @@ public class JobController {
       @Parameter(description = "ID único do job", example = "550e8400-e29b-41d4-a716-446655440000")
           @PathVariable
           String jobId) {
+    // Validar ID do job
+    inputValidationService.validateJobId(jobId);
+    
     JobResponse response = cancelJobUseCase.execute(jobId);
     return ResponseEntity.ok(response);
   }

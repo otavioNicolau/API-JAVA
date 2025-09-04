@@ -41,6 +41,22 @@ public class GlobalExceptionHandler {
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
   }
 
+  @ExceptionHandler(SecurityValidationException.class)
+  public ResponseEntity<ErrorResponse> handleSecurityValidationException(SecurityValidationException ex) {
+    LOGGER.warn("Security validation failed: {} - {}", ex.getErrorCode(), ex.getMessage());
+    ErrorResponse error =
+        new ErrorResponse(ex.getErrorCode(), ex.getMessage(), LocalDateTime.now());
+    
+    // Retornar status HTTP apropriado baseado no tipo de erro
+    HttpStatus status = switch (ex.getErrorCode()) {
+      case "FILE_SIZE_EXCEEDED", "MAX_FILES_EXCEEDED" -> HttpStatus.PAYLOAD_TOO_LARGE;
+      case "RATE_LIMIT_EXCEEDED" -> HttpStatus.TOO_MANY_REQUESTS;
+      default -> HttpStatus.BAD_REQUEST;
+    };
+    
+    return ResponseEntity.status(status).body(error);
+  }
+
   @ExceptionHandler(IllegalArgumentException.class)
   public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
     ErrorResponse error =

@@ -3,11 +3,15 @@
 /home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/config/WebConfig.java
 /home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/config/LoggingInterceptor.java
 /home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/controller/HealthController.java
+/home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/exception/SecurityValidationException.java
 /home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/config/ApiKeyAuthenticationFilter.java
 /home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/controller/OperationsController.java
 /home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/controller/JobController.java
 /home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/config/WebMvcConfig.java
 /home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/config/SecurityConfig.java
 /home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/ApiApplication.java
+/home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/service/RateLimitService.java
 /home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/controller/MonitoringController.java
+/home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/service/InputValidationService.java
+/home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/security/SecurityHeadersFilter.java
 /home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/config/OpenApiConfig.java

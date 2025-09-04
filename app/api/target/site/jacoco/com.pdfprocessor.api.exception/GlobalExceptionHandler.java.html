@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GlobalExceptionHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PDF Processor API</a> &gt; <a href="index.source.html" class="el_package">com.pdfprocessor.api.exception</a> &gt; <span class="el_source">GlobalExceptionHandler.java</span></div><h1>GlobalExceptionHandler.java</h1><pre class="source lang-java linenums">package com.pdfprocessor.api.exception;
+
+import com.pdfprocessor.domain.exception.JobNotCompletedException;
+import com.pdfprocessor.domain.exception.JobNotFoundException;
+import com.pdfprocessor.domain.exception.ResultNotFoundException;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+/** Handler global para tratamento de exceções da API. */
+@RestControllerAdvice
+<span class="fc" id="L20">public class GlobalExceptionHandler {</span>
+
+<span class="fc" id="L22">  private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);</span>
+
+  @ExceptionHandler(JobNotFoundException.class)
+  public ResponseEntity&lt;ErrorResponse&gt; handleJobNotFoundException(JobNotFoundException ex) {
+<span class="nc" id="L26">    ErrorResponse error = new ErrorResponse(&quot;JOB_NOT_FOUND&quot;, ex.getMessage(), LocalDateTime.now());</span>
+<span class="nc" id="L27">    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);</span>
+  }
+
+  @ExceptionHandler(JobNotCompletedException.class)
+  public ResponseEntity&lt;ErrorResponse&gt; handleJobNotCompletedException(JobNotCompletedException ex) {
+<span class="nc" id="L32">    ErrorResponse error =</span>
+<span class="nc" id="L33">        new ErrorResponse(&quot;JOB_NOT_COMPLETED&quot;, ex.getMessage(), LocalDateTime.now());</span>
+<span class="nc" id="L34">    return ResponseEntity.status(HttpStatus.CONFLICT).body(error);</span>
+  }
+
+  @ExceptionHandler(ResultNotFoundException.class)
+  public ResponseEntity&lt;ErrorResponse&gt; handleResultNotFoundException(ResultNotFoundException ex) {
+<span class="nc" id="L39">    ErrorResponse error =</span>
+<span class="nc" id="L40">        new ErrorResponse(&quot;RESULT_NOT_FOUND&quot;, ex.getMessage(), LocalDateTime.now());</span>
+<span class="nc" id="L41">    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);</span>
+  }
+
+  @ExceptionHandler(SecurityValidationException.class)
+  public ResponseEntity&lt;ErrorResponse&gt; handleSecurityValidationException(SecurityValidationException ex) {
+<span class="fc" id="L46">    LOGGER.warn(&quot;Security validation failed: {} - {}&quot;, ex.getErrorCode(), ex.getMessage());</span>
+<span class="fc" id="L47">    ErrorResponse error =</span>
+<span class="fc" id="L48">        new ErrorResponse(ex.getErrorCode(), ex.getMessage(), LocalDateTime.now());</span>
+    
+    // Retornar status HTTP apropriado baseado no tipo de erro
+<span class="fc bfc" id="L51" title="All 3 branches covered.">    HttpStatus status = switch (ex.getErrorCode()) {</span>
+<span class="fc" id="L52">      case &quot;FILE_SIZE_EXCEEDED&quot;, &quot;MAX_FILES_EXCEEDED&quot; -&gt; HttpStatus.PAYLOAD_TOO_LARGE;</span>
+<span class="fc" id="L53">      case &quot;RATE_LIMIT_EXCEEDED&quot; -&gt; HttpStatus.TOO_MANY_REQUESTS;</span>
+<span class="fc" id="L54">      default -&gt; HttpStatus.BAD_REQUEST;</span>
+    };
+    
+<span class="fc" id="L57">    return ResponseEntity.status(status).body(error);</span>
+  }
+
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ResponseEntity&lt;ErrorResponse&gt; handleIllegalArgumentException(IllegalArgumentException ex) {
+<span class="fc" id="L62">    ErrorResponse error =</span>
+<span class="fc" id="L63">        new ErrorResponse(&quot;INVALID_ARGUMENT&quot;, ex.getMessage(), LocalDateTime.now());</span>
+<span class="fc" id="L64">    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);</span>
+  }
+
+  @ExceptionHandler(UnsupportedOperationException.class)
+  public ResponseEntity&lt;ErrorResponse&gt; handleUnsupportedOperationException(
+      UnsupportedOperationException ex) {
+<span class="nc" id="L70">    ErrorResponse error =</span>
+<span class="nc" id="L71">        new ErrorResponse(&quot;UNSUPPORTED_OPERATION&quot;, ex.getMessage(), LocalDateTime.now());</span>
+<span class="nc" id="L72">    return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(error);</span>
+  }
+
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ResponseEntity&lt;ErrorResponse&gt; handleValidationException(
+      MethodArgumentNotValidException ex) {
+<span class="nc" id="L78">    Map&lt;String, String&gt; errors = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L79">    ex.getBindingResult()</span>
+<span class="nc" id="L80">        .getAllErrors()</span>
+<span class="nc" id="L81">        .forEach(</span>
+            error -&gt; {
+<span class="nc" id="L83">              String fieldName = ((FieldError) error).getField();</span>
+<span class="nc" id="L84">              String errorMessage = error.getDefaultMessage();</span>
+<span class="nc" id="L85">              errors.put(fieldName, errorMessage);</span>
+<span class="nc" id="L86">            });</span>
+
+<span class="nc" id="L88">    ErrorResponse error =</span>
+<span class="nc" id="L89">        new ErrorResponse(&quot;VALIDATION_ERROR&quot;, &quot;Erro de validação&quot;, LocalDateTime.now(), errors);</span>
+<span class="nc" id="L90">    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);</span>
+  }
+
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity&lt;ErrorResponse&gt; handleGenericException(Exception ex) {
+<span class="nc" id="L95">    LOGGER.error(&quot;Erro interno não tratado: {}&quot;, ex.getMessage(), ex);</span>
+<span class="nc" id="L96">    ErrorResponse error =</span>
+<span class="nc" id="L97">        new ErrorResponse(&quot;INTERNAL_ERROR&quot;, &quot;Erro interno do servidor&quot;, LocalDateTime.now());</span>
+<span class="nc" id="L98">    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);</span>
+  }
+
+  public static class ErrorResponse {
+    private String code;
+    private String message;
+    private LocalDateTime timestamp;
+    private Map&lt;String, String&gt; details;
+
+<span class="fc" id="L107">    public ErrorResponse(String code, String message, LocalDateTime timestamp) {</span>
+<span class="fc" id="L108">      this.code = code;</span>
+<span class="fc" id="L109">      this.message = message;</span>
+<span class="fc" id="L110">      this.timestamp = timestamp;</span>
+<span class="fc" id="L111">    }</span>
+
+    public ErrorResponse(
+<span class="nc" id="L114">        String code, String message, LocalDateTime timestamp, Map&lt;String, String&gt; details) {</span>
+<span class="nc" id="L115">      this.code = code;</span>
+<span class="nc" id="L116">      this.message = message;</span>
+<span class="nc" id="L117">      this.timestamp = timestamp;</span>
+<span class="nc" id="L118">      this.details = details;</span>
+<span class="nc" id="L119">    }</span>
+
+    // Getters
+    public String getCode() {
+<span class="fc" id="L123">      return code;</span>
+    }
+
+    public String getMessage() {
+<span class="fc" id="L127">      return message;</span>
+    }
+
+    public LocalDateTime getTimestamp() {
+<span class="fc" id="L131">      return timestamp;</span>
+    }
+
+    public Map&lt;String, String&gt; getDetails() {
+<span class="fc" id="L135">      return details;</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

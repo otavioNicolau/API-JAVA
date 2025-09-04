@@ -1,0 +1,4 @@
+/home/otavio/API-JAVA/app/application/src/test/java/com/pdfprocessor/application/dto/JobResponseTest.java
+/home/otavio/API-JAVA/app/application/src/test/java/com/pdfprocessor/application/usecase/CreateJobUseCaseTest.java
+/home/otavio/API-JAVA/app/application/src/test/java/com/pdfprocessor/application/dto/CreateJobRequestTest.java
+/home/otavio/API-JAVA/app/application/src/test/java/com/pdfprocessor/application/usecase/GetJobStatusUseCaseTest.java

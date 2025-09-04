@@ -47,6 +47,7 @@
         <module>app/application</module>
         <module>app/domain</module>
         <module>app/infrastructure</module>
+        <module>tests</module>
     </modules>
 
     <dependencyManagement>
@@ -135,6 +136,12 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${spring-boot.version}</version>
+                </plugin>
+                
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.2.2</version>
                 </plugin>
                 
                 <!-- Code Quality -->
