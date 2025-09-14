@@ -5,6 +5,9 @@ import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.servers.Server;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.Components;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +34,16 @@ public class OpenApiConfig {
                     .description("Servidor de desenvolvimento"),
                 new Server()
                     .url("https://api.pdfprocessor.com")
-                    .description("Servidor de produção")));
+                    .description("Servidor de produção")))
+        .addSecurityItem(new SecurityRequirement().addList("ApiKeyAuth"))
+        .components(
+            new Components()
+                .addSecuritySchemes(
+                    "ApiKeyAuth",
+                    new SecurityScheme()
+                        .type(SecurityScheme.Type.APIKEY)
+                        .in(SecurityScheme.In.HEADER)
+                        .name("X-API-Key")
+                        .description("Chave de API para autenticação. Use uma das chaves válidas: dev-key-12345, test-key-67890, prod-key-abcdef")));
   }
 }

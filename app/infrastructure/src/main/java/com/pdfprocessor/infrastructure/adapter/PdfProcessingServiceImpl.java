@@ -4,6 +4,7 @@ import com.pdfprocessor.domain.model.Job;
 import com.pdfprocessor.domain.model.JobOperation;
 import com.pdfprocessor.domain.port.PdfProcessingService;
 import com.pdfprocessor.domain.port.ProgressCallback;
+import com.pdfprocessor.domain.port.StorageService;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -43,6 +44,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class PdfProcessingServiceImpl implements PdfProcessingService {
 
+  private final StorageService storageService;
   private static final List<JobOperation> SUPPORTED_OPERATIONS;
 
   static {
@@ -84,6 +86,10 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
             // Operações de OCR e acessibilidade
             JobOperation.PDF_OCR,
             JobOperation.PDF_TO_AUDIO);
+  }
+
+  public PdfProcessingServiceImpl(StorageService storageService) {
+    this.storageService = storageService;
   }
 
   @Override
@@ -205,8 +211,8 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
       throw new IllegalArgumentException("MERGE operation requires at least 2 input files");
     }
 
-    // Criar diretório de resultado
-    Path resultDir = Paths.get("./storage/" + job.getId());
+    // Criar diretório de resultado usando StorageService
+    Path resultDir = storageService.getPhysicalPath(job.getId());
     Files.createDirectories(resultDir);
 
     String resultPath = resultDir.resolve("result_" + job.getId() + ".pdf").toString();
@@ -215,21 +221,28 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
     PDFMergerUtility merger = new PDFMergerUtility();
     merger.setDestinationFileName(resultPath);
 
-    // Adicionar todos os arquivos de entrada
+    // Adicionar todos os arquivos de entrada usando StorageService
     for (String inputFile : inputFiles) {
-      File file = new File(inputFile);
+      Path physicalPath = storageService.getPhysicalPath(inputFile);
+      File file = physicalPath.toFile();
+      System.out.println(
+          "DEBUG: Current working directory: " + System.getProperty("user.dir"));
       System.out.println(
           "DEBUG: Checking file: "
               + inputFile
+              + " -> "
+              + physicalPath
               + ", exists: "
               + file.exists()
               + ", size: "
               + file.length());
+      System.out.println(
+          "DEBUG: Absolute path: " + file.getAbsolutePath());
       if (!file.exists()) {
         throw new IllegalArgumentException("Input file not found: " + inputFile);
       }
       merger.addSource(file);
-      System.out.println("DEBUG: Added source file: " + inputFile);
+      System.out.println("DEBUG: Added source file: " + physicalPath);
     }
 
     System.out.println("DEBUG: Starting merge operation...");

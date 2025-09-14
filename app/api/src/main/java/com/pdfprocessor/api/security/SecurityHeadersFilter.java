@@ -37,7 +37,7 @@ public class SecurityHeadersFilter implements Filter {
     String requestURI = ((jakarta.servlet.http.HttpServletRequest) request).getRequestURI();
     if (requestURI.startsWith("/swagger-ui") || requestURI.startsWith("/v3/api-docs") || requestURI.startsWith("/webjars")) {
       httpResponse.setHeader("Content-Security-Policy", 
-          "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self';");
+          "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';");
     } else {
       httpResponse.setHeader("Content-Security-Policy", 
           "default-src 'none'; script-src 'none'; object-src 'none'; base-uri 'none';");

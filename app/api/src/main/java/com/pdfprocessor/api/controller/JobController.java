@@ -80,7 +80,7 @@ public class JobController {
     this.sseService = sseService;
   }
 
-  @PostMapping
+  @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   @Operation(
       summary = "Criar novo job de processamento",
       description =
@@ -117,35 +117,16 @@ public class JobController {
   public ResponseEntity<JobResponse> createJob(
       @Parameter(
               description = "Tipo de operação a ser executada",
-              required = true,
-              examples = {
-                @ExampleObject(
-                    name = "merge",
-                    value = "merge",
-                    description = "Combinar múltiplos PDFs"),
-                @ExampleObject(
-                    name = "split",
-                    value = "split",
-                    description = "Dividir PDF em múltiplos arquivos"),
-                @ExampleObject(
-                    name = "watermark",
-                    value = "watermark",
-                    description = "Adicionar marca d'água"),
-                @ExampleObject(
-                    name = "encrypt",
-                    value = "encrypt",
-                    description = "Criptografar PDF")
-              })
+              required = true)
           @RequestParam("operation")
-          String operation,
+          JobOperation operation,
       @Parameter(description = "Arquivos PDF para upload (opcional se inputFiles for fornecido)")
-          @RequestParam(value = "files", required = false)
+          @RequestPart(value = "files", required = false)
           List<MultipartFile> files,
       @Parameter(
-              description = "Lista de caminhos de arquivos já existentes no sistema",
-              examples = @ExampleObject(value = "[\"job-123/input1.pdf\", \"job-456/input2.pdf\"]"))
-          @RequestParam(value = "inputFiles", required = false)
-          List<String> inputFiles,
+              description = "Arquivos adicionais para upload (alternativa ao parâmetro files)")
+          @RequestPart(value = "inputFiles", required = false)
+          List<MultipartFile> inputFiles,
       @Parameter(
               description = "Opções específicas da operação em formato JSON",
               examples = {
@@ -182,11 +163,17 @@ public class JobController {
       System.out.println("DEBUG: InputFiles = " + (inputFiles != null ? inputFiles.size() : "null"));
       
       // Validações rigorosas de entrada
-      inputValidationService.validateOperation(operation);
+      inputValidationService.validateOperation(operation.name());
       inputValidationService.validateUploadedFiles(files);
-      inputValidationService.validateInputFiles(inputFiles);
+      if (inputFiles != null && !inputFiles.isEmpty()) {
+        inputValidationService.validateUploadedFiles(inputFiles);
+      }
       inputValidationService.validateOptionsJson(optionsJson);
-      inputValidationService.validateInputProvided(files, inputFiles);
+      
+      // Validar que pelo menos um tipo de entrada foi fornecido
+      if ((files == null || files.isEmpty()) && (inputFiles == null || inputFiles.isEmpty())) {
+        throw new IllegalArgumentException("Pelo menos um arquivo deve ser fornecido via 'files' ou 'inputFiles'");
+      }
       
       // Gerar ID único para o job
       String jobId = UUID.randomUUID().toString();
@@ -198,7 +185,7 @@ public class JobController {
       List<String> finalInputFiles = new ArrayList<>();
 
       if (files != null && !files.isEmpty()) {
-        // Caso 1: Upload de arquivos (já validados pelo InputValidationService)
+        // Caso 1: Upload de arquivos via parâmetro 'files'
         for (MultipartFile file : files) {
           if (!file.isEmpty()) {
             String storedPath =
@@ -206,9 +193,17 @@ public class JobController {
             finalInputFiles.add(storedPath);
           }
         }
-      } else if (inputFiles != null && !inputFiles.isEmpty()) {
-        // Caso 2: Usar arquivos existentes (já validados pelo InputValidationService)
-        finalInputFiles.addAll(inputFiles);
+      }
+      
+      if (inputFiles != null && !inputFiles.isEmpty()) {
+        // Caso 2: Upload de arquivos via parâmetro 'inputFiles'
+        for (MultipartFile file : inputFiles) {
+          if (!file.isEmpty()) {
+            String storedPath =
+                storageService.store(jobId, file.getOriginalFilename(), file.getInputStream());
+            finalInputFiles.add(storedPath);
+          }
+        }
       }
 
       // Converter JSON string para Map
@@ -223,7 +218,7 @@ public class JobController {
       }
 
       CreateJobRequest request = new CreateJobRequest();
-      request.setOperation(JobOperation.valueOf(operation.toUpperCase()));
+      request.setOperation(operation);
       request.setInputFiles(finalInputFiles);
       request.setOptions(options);
       request.setJobId(jobId); // Passar o jobId gerado

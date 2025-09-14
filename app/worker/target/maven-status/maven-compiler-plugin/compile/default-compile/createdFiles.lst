@@ -1,5 +1,6 @@
 com/pdfprocessor/worker/processor/JobProcessor.class
 com/pdfprocessor/worker/WorkerApplication.class
-com/pdfprocessor/worker/config/WorkerConfig.class
 com/pdfprocessor/worker/consumer/JobConsumer.class
 com/pdfprocessor/worker/config/WorkerConfig$WorkerProperties.class
+com/pdfprocessor/worker/service/WorkerProgressNotificationService.class
+com/pdfprocessor/worker/config/WorkerConfig.class

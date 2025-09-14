@@ -2,3 +2,4 @@
 /home/otavio/API-JAVA/app/worker/src/main/java/com/pdfprocessor/worker/WorkerApplication.java
 /home/otavio/API-JAVA/app/worker/src/main/java/com/pdfprocessor/worker/processor/JobProcessor.java
 /home/otavio/API-JAVA/app/worker/src/main/java/com/pdfprocessor/worker/consumer/JobConsumer.java
+/home/otavio/API-JAVA/app/worker/src/main/java/com/pdfprocessor/worker/service/WorkerProgressNotificationService.java

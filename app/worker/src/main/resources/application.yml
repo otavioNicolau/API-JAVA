@@ -22,9 +22,9 @@ worker:
   max-retries: 3
 
 # Storage configuration
-storage:
-  local:
-    base-path: ./storage
+app:
+  storage:
+    base-path: /home/otavio/API-JAVA/app/api/storage
 
 # Logging
 logging:

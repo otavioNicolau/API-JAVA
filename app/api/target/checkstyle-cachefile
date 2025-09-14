@@ -1,7 +1,6 @@
-#Thu Sep 04 20:45:37 BRT 2025
+#Sat Sep 06 13:37:28 BRT 2025
 /home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/config/JacksonConfig.java=1756927437653
 /home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/config/LoggingInterceptor.java=1756927774682
-/home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/config/OpenApiConfig.java=1756927437609
 /home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/config/WebConfig.java=1756927437594
 /home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/config/WebMvcConfig.java=1756927437697
 /home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/controller/MonitoringController.java=1756927437550

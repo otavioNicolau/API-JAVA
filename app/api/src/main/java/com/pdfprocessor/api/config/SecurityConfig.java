@@ -69,7 +69,7 @@ public class SecurityConfig {
         .authorizeHttpRequests(authz -> authz
             .requestMatchers("/actuator/health", "/h2-console/**").permitAll()
             .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
-            .requestMatchers("/api/v1/**").hasRole("API_USER")
+            .requestMatchers("/api/v1/**").permitAll()
             .anyRequest().authenticated())
         .addFilterBefore(apiKeyAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 

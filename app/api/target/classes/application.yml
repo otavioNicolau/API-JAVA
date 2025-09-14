@@ -49,7 +49,7 @@ logging:
 # Configurações específicas da aplicação
 app:
   storage:
-    base-path: ./storage
+    base-path: /home/otavio/API-JAVA/app/api/storage
   processing:
     max-concurrent-jobs: 10
     timeout-seconds: 300

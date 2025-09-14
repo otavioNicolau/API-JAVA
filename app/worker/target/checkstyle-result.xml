@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <checkstyle version="9.3">
-<file name="/home/otavio/API-JAVA/app/worker/src/main/java/com/pdfprocessor/worker/processor/JobProcessor.java">
-</file>
 <file name="/home/otavio/API-JAVA/app/worker/src/main/java/com/pdfprocessor/worker/WorkerApplication.java">
-</file>
-<file name="/home/otavio/API-JAVA/app/worker/src/main/java/com/pdfprocessor/worker/consumer/JobConsumer.java">
-</file>
-<file name="/home/otavio/API-JAVA/app/worker/src/main/java/com/pdfprocessor/worker/config/WorkerConfig.java">
+<error line="8" column="1" severity="warning" message="Utility classes should not have a public or default constructor." source="com.puppycrawl.tools.checkstyle.checks.design.HideUtilityClassConstructorCheck"/>
 </file>
 </checkstyle>
