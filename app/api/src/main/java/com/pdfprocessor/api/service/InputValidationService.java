@@ -3,14 +3,14 @@ package com.pdfprocessor.api.service;
 import com.pdfprocessor.api.exception.SecurityValidationException;
 import com.pdfprocessor.domain.model.JobOperation;
 import java.util.List;
-//import java.util.Map;
+// import java.util.Map;
 import java.util.regex.Pattern;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * Serviço para validação rigorosa de parâmetros de entrada.
- * Implementa validações de segurança para prevenir ataques e garantir integridade dos dados.
+ * Serviço para validação rigorosa de parâmetros de entrada. Implementa validações de segurança para
+ * prevenir ataques e garantir integridade dos dados.
  */
 @Service
 public class InputValidationService {
@@ -21,25 +21,21 @@ public class InputValidationService {
   private static final int MAX_OPTIONS_JSON_LENGTH = 10000;
   private static final int MAX_INPUT_FILES_COUNT = 10;
   private static final long MAX_FILE_SIZE_BYTES = 50L * 1024 * 1024; // 50MB
-  
+
   // Padrões de validação
   private static final Pattern SAFE_FILENAME_PATTERN = Pattern.compile("^[a-zA-Z0-9._-]+$");
   private static final Pattern SAFE_PATH_PATTERN = Pattern.compile("^[a-zA-Z0-9/._-]+$");
-  private static final Pattern UUID_PATTERN = Pattern.compile(
-      "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
-  
+  private static final Pattern UUID_PATTERN =
+      Pattern.compile(
+          "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
+
   // Lista de extensões permitidas
-  private static final List<String> ALLOWED_FILE_EXTENSIONS = List.of(
-      ".pdf", ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff", ".tif");
-  
+  private static final List<String> ALLOWED_FILE_EXTENSIONS =
+      List.of(".pdf", ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff", ".tif");
+
   // Lista de tipos MIME permitidos
-  private static final List<String> ALLOWED_MIME_TYPES = List.of(
-      "application/pdf",
-      "image/jpeg",
-      "image/png",
-      "image/gif",
-      "image/bmp",
-      "image/tiff");
+  private static final List<String> ALLOWED_MIME_TYPES =
+      List.of("application/pdf", "image/jpeg", "image/png", "image/gif", "image/bmp", "image/tiff");
 
   /**
    * Valida a operação fornecida.
@@ -49,23 +45,23 @@ public class InputValidationService {
    */
   public void validateOperation(String operation) {
     if (operation == null || operation.trim().isEmpty()) {
-      throw new SecurityValidationException(
-          "Operation parameter is required", "MISSING_OPERATION");
+      throw new SecurityValidationException("Operation parameter is required", "MISSING_OPERATION");
     }
-    
+
     if (operation.length() > MAX_OPERATION_NAME_LENGTH) {
       throw new SecurityValidationException(
-          String.format("Operation name too long. Maximum %d characters allowed", 
-              MAX_OPERATION_NAME_LENGTH), "OPERATION_NAME_TOO_LONG");
+          String.format(
+              "Operation name too long. Maximum %d characters allowed", MAX_OPERATION_NAME_LENGTH),
+          "OPERATION_NAME_TOO_LONG");
     }
-    
+
     // Verificar se contém apenas caracteres alfanuméricos e underscore
     if (!operation.matches("^[A-Z_]+$")) {
       throw new SecurityValidationException(
-          "Operation name contains invalid characters. Only uppercase letters and underscores allowed", 
+          "Operation name contains invalid characters. Only uppercase letters and underscores allowed",
           "INVALID_OPERATION_FORMAT");
     }
-    
+
     // Verificar se a operação existe no enum
     try {
       JobOperation.valueOf(operation.toUpperCase());
@@ -85,14 +81,15 @@ public class InputValidationService {
     if (files == null || files.isEmpty()) {
       return; // Pode ser válido se inputFiles for fornecido
     }
-    
+
     if (files.size() > MAX_INPUT_FILES_COUNT) {
       throw new SecurityValidationException(
-          String.format("Maximum %d files allowed per job, but %d files provided", 
+          String.format(
+              "Maximum %d files allowed per job, but %d files provided",
               MAX_INPUT_FILES_COUNT, files.size()),
           "MAX_FILES_EXCEEDED");
     }
-    
+
     for (MultipartFile file : files) {
       validateSingleFile(file);
     }
@@ -106,55 +103,56 @@ public class InputValidationService {
    */
   private void validateSingleFile(MultipartFile file) {
     if (file == null || file.isEmpty()) {
-      throw new SecurityValidationException(
-          "Empty file not allowed", "EMPTY_FILE");
+      throw new SecurityValidationException("Empty file not allowed", "EMPTY_FILE");
     }
-    
+
     // Validar tamanho do arquivo
     if (file.getSize() > MAX_FILE_SIZE_BYTES) {
       throw new SecurityValidationException(
-          String.format("File '%s' exceeds maximum size of %d MB. File size: %.2f MB",
+          String.format(
+              "File '%s' exceeds maximum size of %d MB. File size: %.2f MB",
               file.getOriginalFilename(),
               MAX_FILE_SIZE_BYTES / (1024 * 1024),
               file.getSize() / (1024.0 * 1024.0)),
           "FILE_SIZE_EXCEEDED");
     }
-    
+
     // Validar nome do arquivo
     String filename = file.getOriginalFilename();
     if (filename == null || filename.trim().isEmpty()) {
-      throw new SecurityValidationException(
-          "Filename is required", "MISSING_FILENAME");
+      throw new SecurityValidationException("Filename is required", "MISSING_FILENAME");
     }
-    
+
     if (filename.length() > MAX_FILENAME_LENGTH) {
       throw new SecurityValidationException(
-          String.format("Filename too long. Maximum %d characters allowed", 
-              MAX_FILENAME_LENGTH), "FILENAME_TOO_LONG");
+          String.format("Filename too long. Maximum %d characters allowed", MAX_FILENAME_LENGTH),
+          "FILENAME_TOO_LONG");
     }
-    
+
     // Validar caracteres do nome do arquivo
     if (!SAFE_FILENAME_PATTERN.matcher(filename).matches()) {
       throw new SecurityValidationException(
-          "Filename contains invalid characters. Only alphanumeric, dots, hyphens and underscores allowed", 
+          "Filename contains invalid characters. Only alphanumeric, dots, hyphens and underscores allowed",
           "INVALID_FILENAME_FORMAT");
     }
-    
+
     // Validar extensão do arquivo
     String extension = getFileExtension(filename).toLowerCase();
     if (!ALLOWED_FILE_EXTENSIONS.contains(extension)) {
       throw new SecurityValidationException(
-          String.format("File extension '%s' not allowed. Allowed extensions: %s", 
-              extension, String.join(", ", ALLOWED_FILE_EXTENSIONS)), 
+          String.format(
+              "File extension '%s' not allowed. Allowed extensions: %s",
+              extension, String.join(", ", ALLOWED_FILE_EXTENSIONS)),
           "INVALID_FILE_EXTENSION");
     }
-    
+
     // Validar tipo MIME
     String contentType = file.getContentType();
     if (contentType != null && !ALLOWED_MIME_TYPES.contains(contentType)) {
       throw new SecurityValidationException(
-          String.format("Content type '%s' not allowed. Allowed types: %s", 
-              contentType, String.join(", ", ALLOWED_MIME_TYPES)), 
+          String.format(
+              "Content type '%s' not allowed. Allowed types: %s",
+              contentType, String.join(", ", ALLOWED_MIME_TYPES)),
           "INVALID_CONTENT_TYPE");
     }
   }
@@ -169,14 +167,15 @@ public class InputValidationService {
     if (inputFiles == null || inputFiles.isEmpty()) {
       return; // Pode ser válido se files for fornecido
     }
-    
+
     if (inputFiles.size() > MAX_INPUT_FILES_COUNT) {
       throw new SecurityValidationException(
-          String.format("Maximum %d files allowed per job, but %d files provided", 
+          String.format(
+              "Maximum %d files allowed per job, but %d files provided",
               MAX_INPUT_FILES_COUNT, inputFiles.size()),
           "MAX_FILES_EXCEEDED");
     }
-    
+
     for (String filePath : inputFiles) {
       validateInputFilePath(filePath);
     }
@@ -190,28 +189,26 @@ public class InputValidationService {
    */
   private void validateInputFilePath(String filePath) {
     if (filePath == null || filePath.trim().isEmpty()) {
-      throw new SecurityValidationException(
-          "File path cannot be empty", "EMPTY_FILE_PATH");
+      throw new SecurityValidationException("File path cannot be empty", "EMPTY_FILE_PATH");
     }
-    
+
     // Prevenir path traversal attacks
     if (filePath.contains("..") || filePath.contains("~") || filePath.startsWith("/")) {
       throw new SecurityValidationException(
           "Invalid file path. Path traversal not allowed", "PATH_TRAVERSAL_DETECTED");
     }
-    
+
     // Validar formato do caminho
     if (!SAFE_PATH_PATTERN.matcher(filePath).matches()) {
       throw new SecurityValidationException(
           "File path contains invalid characters", "INVALID_PATH_FORMAT");
     }
-    
+
     // Validar extensão do arquivo no caminho
     String extension = getFileExtension(filePath).toLowerCase();
     if (!ALLOWED_FILE_EXTENSIONS.contains(extension)) {
       throw new SecurityValidationException(
-          String.format("File extension '%s' not allowed in path '%s'", 
-              extension, filePath), 
+          String.format("File extension '%s' not allowed in path '%s'", extension, filePath),
           "INVALID_FILE_EXTENSION");
     }
   }
@@ -226,13 +223,14 @@ public class InputValidationService {
     if (optionsJson == null || optionsJson.trim().isEmpty()) {
       return; // Opções são opcionais
     }
-    
+
     if (optionsJson.length() > MAX_OPTIONS_JSON_LENGTH) {
       throw new SecurityValidationException(
-          String.format("Options JSON too long. Maximum %d characters allowed", 
-              MAX_OPTIONS_JSON_LENGTH), "OPTIONS_JSON_TOO_LONG");
+          String.format(
+              "Options JSON too long. Maximum %d characters allowed", MAX_OPTIONS_JSON_LENGTH),
+          "OPTIONS_JSON_TOO_LONG");
     }
-    
+
     // Validar caracteres básicos do JSON
     String trimmed = optionsJson.trim();
     if (!trimmed.startsWith("{") || !trimmed.endsWith("}")) {
@@ -253,7 +251,7 @@ public class InputValidationService {
       throw new SecurityValidationException(
           "Page number must be non-negative", "INVALID_PAGE_NUMBER");
     }
-    
+
     if (size < 1 || size > 100) {
       throw new SecurityValidationException(
           "Page size must be between 1 and 100", "INVALID_PAGE_SIZE");
@@ -268,13 +266,11 @@ public class InputValidationService {
    */
   public void validateJobId(String jobId) {
     if (jobId == null || jobId.trim().isEmpty()) {
-      throw new SecurityValidationException(
-          "Job ID is required", "MISSING_JOB_ID");
+      throw new SecurityValidationException("Job ID is required", "MISSING_JOB_ID");
     }
-    
+
     if (!UUID_PATTERN.matcher(jobId).matches()) {
-      throw new SecurityValidationException(
-          "Job ID must be a valid UUID", "INVALID_JOB_ID_FORMAT");
+      throw new SecurityValidationException("Job ID must be a valid UUID", "INVALID_JOB_ID_FORMAT");
     }
   }
 
@@ -286,17 +282,18 @@ public class InputValidationService {
    * @throws SecurityValidationException se nenhuma entrada for fornecida
    */
   public void validateInputProvided(List<MultipartFile> files, List<String> inputFiles) {
-    boolean hasFiles = files != null && !files.isEmpty() && files.stream().anyMatch(f -> !f.isEmpty());
+    boolean hasFiles =
+        files != null && !files.isEmpty() && files.stream().anyMatch(f -> !f.isEmpty());
     boolean hasInputFiles = inputFiles != null && !inputFiles.isEmpty();
-    
+
     if (!hasFiles && !hasInputFiles) {
       throw new SecurityValidationException(
           "Either files or inputFiles parameter is required", "NO_INPUT_PROVIDED");
     }
-    
+
     if (hasFiles && hasInputFiles) {
       throw new SecurityValidationException(
-          "Cannot provide both files and inputFiles parameters simultaneously", 
+          "Cannot provide both files and inputFiles parameters simultaneously",
           "CONFLICTING_INPUT_TYPES");
     }
   }

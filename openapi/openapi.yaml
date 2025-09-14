@@ -17,7 +17,9 @@ info:
     
     ## Operações Disponíveis
     - **Básicas**: merge, split, compress, pdf_to_images, images_to_pdf, rotate, watermark, encrypt, decrypt, extract_metadata, extract_text
-    - **Avançadas**: pdf_crop, pdf_reorder, pdf_resize, pdf_compare, pdf_create, pdf_edit, pdf_protect, pdf_unlock, pdf_optimize, pdf_validate, pdf_repair, pdf_extract_resources, pdf_remove_resources, pdf_to_pdfa, pdf_ocr, pdf_to_audio, pdf_from_epub, pdf_from_djvu
+    - **Edição**: pdf_edit (adicionar/remover/substituir texto), pdf_protect (proteção avançada), pdf_unlock (remover proteções)
+    - **Recursos**: pdf_extract_resources (extrair imagens/fontes), pdf_remove_resources (remover recursos específicos)
+    - **Avançadas**: pdf_crop, pdf_reorder, pdf_resize, pdf_compare, pdf_create, pdf_optimize, pdf_validate, pdf_repair, pdf_to_pdfa, pdf_ocr, pdf_to_audio, pdf_from_epub, pdf_from_djvu
   version: 1.0.0
   contact:
     name: PDF Processor API

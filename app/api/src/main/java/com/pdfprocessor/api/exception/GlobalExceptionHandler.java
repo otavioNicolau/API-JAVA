@@ -42,19 +42,21 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(SecurityValidationException.class)
-  public ResponseEntity<ErrorResponse> handleSecurityValidationException(SecurityValidationException ex) {
+  public ResponseEntity<ErrorResponse> handleSecurityValidationException(
+      SecurityValidationException ex) {
     LOGGER.warn("Security validation failed: {} - {}", ex.getErrorCode(), ex.getMessage());
     ErrorResponse error =
         new ErrorResponse(ex.getErrorCode(), ex.getMessage(), LocalDateTime.now());
-    
+
     // Retornar status HTTP apropriado baseado no tipo de erro
-    HttpStatus status = switch (ex.getErrorCode()) {
-      case "FILE_SIZE_EXCEEDED", "MAX_FILES_EXCEEDED" -> HttpStatus.PAYLOAD_TOO_LARGE;
-      case "RATE_LIMIT_EXCEEDED" -> HttpStatus.TOO_MANY_REQUESTS;
-      case "INVALID_API_KEY" -> HttpStatus.UNAUTHORIZED;
-      default -> HttpStatus.BAD_REQUEST;
-    };
-    
+    HttpStatus status =
+        switch (ex.getErrorCode()) {
+          case "FILE_SIZE_EXCEEDED", "MAX_FILES_EXCEEDED" -> HttpStatus.PAYLOAD_TOO_LARGE;
+          case "RATE_LIMIT_EXCEEDED" -> HttpStatus.TOO_MANY_REQUESTS;
+          case "INVALID_API_KEY" -> HttpStatus.UNAUTHORIZED;
+          default -> HttpStatus.BAD_REQUEST;
+        };
+
     return ResponseEntity.status(status).body(error);
   }
 

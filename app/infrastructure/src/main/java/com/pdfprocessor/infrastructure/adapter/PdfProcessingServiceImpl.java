@@ -131,54 +131,55 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
       if (progressCallback != null) {
         progressCallback.onProgress(job.getId(), 25, "Processando operação: " + job.getOperation());
       }
-      
-      String result = switch (job.getOperation()) {
-        case MERGE -> processMerge(job);
-        case SPLIT -> processSplit(job);
-        case ROTATE -> processRotate(job);
-        case WATERMARK -> processWatermark(job);
-        case ENCRYPT -> processEncrypt(job);
-        case DECRYPT -> processDecrypt(job);
-        case EXTRACT_TEXT -> processExtractText(job);
-        case EXTRACT_METADATA -> processExtractMetadata(job);
-          // Operações avançadas
-        case PDF_CROP -> processPdfCrop(job);
-        case PDF_REORDER -> processPdfReorder(job);
-        case PDF_RESIZE -> processPdfResize(job);
-        case COMPRESS -> processCompress(job);
-        case PDF_TO_IMAGES -> processPdfToImages(job);
-        case IMAGES_TO_PDF -> processImagesToPdf(job);
-        case PDF_COMPARE -> processPdfCompare(job);
-        case PDF_CREATE -> processPdfCreate(job);
-        // Operações de edição e proteção
-        case PDF_EDIT -> processPdfEdit(job);
-        case PDF_PROTECT -> processPdfProtect(job);
-        case PDF_UNLOCK -> processPdfUnlock(job);
-        case PDF_SIGN -> processPdfSign(job);
-        // Operações de otimização e validação
-        case PDF_OPTIMIZE -> processPdfOptimize(job);
-        case PDF_VALIDATE -> processPdfValidate(job);
-        case PDF_REPAIR -> processPdfRepair(job);
-        // Operações de gestão de recursos
-        case PDF_EXTRACT_RESOURCES -> processPdfExtractResources(job);
-        case PDF_REMOVE_RESOURCES -> processPdfRemoveResources(job);
-        // Operações de conversões avançadas
-        case PDF_TO_PDFA -> processPdfToPdfA(job);
-        case PDF_FROM_EPUB -> processPdfFromEpub(job);
-        case PDF_FROM_DJVU -> processPdfFromDjvu(job);
-        // Operações de OCR e acessibilidade
-        case PDF_OCR -> processPdfOcr(job);
-        case PDF_TO_AUDIO -> processPdfToAudio(job);
-        default ->
-            throw new UnsupportedOperationException(
-                "Operation not supported: " + job.getOperation());
-      };
-      
+
+      String result =
+          switch (job.getOperation()) {
+            case MERGE -> processMerge(job);
+            case SPLIT -> processSplit(job);
+            case ROTATE -> processRotate(job);
+            case WATERMARK -> processWatermark(job);
+            case ENCRYPT -> processEncrypt(job);
+            case DECRYPT -> processDecrypt(job);
+            case EXTRACT_TEXT -> processExtractText(job);
+            case EXTRACT_METADATA -> processExtractMetadata(job);
+              // Operações avançadas
+            case PDF_CROP -> processPdfCrop(job);
+            case PDF_REORDER -> processPdfReorder(job);
+            case PDF_RESIZE -> processPdfResize(job);
+            case COMPRESS -> processCompress(job);
+            case PDF_TO_IMAGES -> processPdfToImages(job);
+            case IMAGES_TO_PDF -> processImagesToPdf(job);
+            case PDF_COMPARE -> processPdfCompare(job);
+            case PDF_CREATE -> processPdfCreate(job);
+              // Operações de edição e proteção
+            case PDF_EDIT -> processPdfEdit(job);
+            case PDF_PROTECT -> processPdfProtect(job);
+            case PDF_UNLOCK -> processPdfUnlock(job);
+            case PDF_SIGN -> processPdfSign(job);
+              // Operações de otimização e validação
+            case PDF_OPTIMIZE -> processPdfOptimize(job);
+            case PDF_VALIDATE -> processPdfValidate(job);
+            case PDF_REPAIR -> processPdfRepair(job);
+              // Operações de gestão de recursos
+            case PDF_EXTRACT_RESOURCES -> processPdfExtractResources(job);
+            case PDF_REMOVE_RESOURCES -> processPdfRemoveResources(job);
+              // Operações de conversões avançadas
+            case PDF_TO_PDFA -> processPdfToPdfA(job);
+            case PDF_FROM_EPUB -> processPdfFromEpub(job);
+            case PDF_FROM_DJVU -> processPdfFromDjvu(job);
+              // Operações de OCR e acessibilidade
+            case PDF_OCR -> processPdfOcr(job);
+            case PDF_TO_AUDIO -> processPdfToAudio(job);
+            default ->
+                throw new UnsupportedOperationException(
+                    "Operation not supported: " + job.getOperation());
+          };
+
       // Reportar conclusão
       if (progressCallback != null) {
         progressCallback.onCompleted(job.getId(), result);
       }
-      
+
       return result;
     } catch (IllegalArgumentException e) {
       // Reportar erro
@@ -225,8 +226,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
     for (String inputFile : inputFiles) {
       Path physicalPath = storageService.getPhysicalPath(inputFile);
       File file = physicalPath.toFile();
-      System.out.println(
-          "DEBUG: Current working directory: " + System.getProperty("user.dir"));
+      System.out.println("DEBUG: Current working directory: " + System.getProperty("user.dir"));
       System.out.println(
           "DEBUG: Checking file: "
               + inputFile
@@ -236,8 +236,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
               + file.exists()
               + ", size: "
               + file.length());
-      System.out.println(
-          "DEBUG: Absolute path: " + file.getAbsolutePath());
+      System.out.println("DEBUG: Absolute path: " + file.getAbsolutePath());
       if (!file.exists()) {
         throw new IllegalArgumentException("Input file not found: " + inputFile);
       }
@@ -982,21 +981,22 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
     try (PDDocument document = Loader.loadPDF(file)) {
       PDFRenderer pdfRenderer = new PDFRenderer(document);
       int totalPages = document.getNumberOfPages();
-      
+
       List<Integer> pagesToProcess = parsePageRange(pages, totalPages);
-      
+
       for (int pageIndex : pagesToProcess) {
         BufferedImage image = pdfRenderer.renderImageWithDPI(pageIndex, dpi, ImageType.RGB);
-        
+
         String imageFileName = String.format("page_%03d.%s", pageIndex + 1, format.toLowerCase());
         Path imagePath = resultDir.resolve(imageFileName);
-        
+
         ImageIO.write(image, format, imagePath.toFile());
         imageFiles.add(imagePath.toString());
       }
     }
 
-    System.out.println("PDF converted to " + imageFiles.size() + " images. Results saved to: " + resultDir);
+    System.out.println(
+        "PDF converted to " + imageFiles.size() + " images. Results saved to: " + resultDir);
     return resultDir.toString();
   }
 
@@ -1012,11 +1012,12 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
 
     Map<String, Object> options = job.getOptions();
     String pageSize = options.getOrDefault("page_size", "A4").toString();
-    boolean fitToPage = Boolean.parseBoolean(options.getOrDefault("fit_to_page", "true").toString());
+    boolean fitToPage =
+        Boolean.parseBoolean(options.getOrDefault("fit_to_page", "true").toString());
 
     try (PDDocument document = new PDDocument()) {
       PDRectangle pageRect = getPageSize(pageSize);
-      
+
       for (String imageFile : job.getInputFiles()) {
         File file = new File(imageFile);
         if (!file.exists()) {
@@ -1034,8 +1035,9 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
           PDPage page = new PDPage(pageRect);
           document.addPage(page);
 
-          PDImageXObject pdImage = PDImageXObject.createFromByteArray(
-              document, Files.readAllBytes(file.toPath()), file.getName());
+          PDImageXObject pdImage =
+              PDImageXObject.createFromByteArray(
+                  document, Files.readAllBytes(file.toPath()), file.getName());
 
           try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
             if (fitToPage) {
@@ -1044,18 +1046,18 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
               float imageHeight = pdImage.getHeight();
               float pageWidth = pageRect.getWidth();
               float pageHeight = pageRect.getHeight();
-              
+
               float scaleX = pageWidth / imageWidth;
               float scaleY = pageHeight / imageHeight;
               float scale = Math.min(scaleX, scaleY);
-              
+
               float scaledWidth = imageWidth * scale;
               float scaledHeight = imageHeight * scale;
-              
+
               // Centralizar na página
               float x = (pageWidth - scaledWidth) / 2;
               float y = (pageHeight - scaledHeight) / 2;
-              
+
               contentStream.drawImage(pdImage, x, y, scaledWidth, scaledHeight);
             } else {
               // Usar tamanho original da imagem
@@ -1093,41 +1095,42 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
     Files.createDirectories(resultDir);
 
     try (PDDocument doc1 = Loader.loadPDF(new File(inputFile1));
-         PDDocument doc2 = Loader.loadPDF(new File(inputFile2))) {
+        PDDocument doc2 = Loader.loadPDF(new File(inputFile2))) {
 
       // Comparação básica de metadados e estrutura
       StringBuilder comparisonReport = new StringBuilder();
       comparisonReport.append("PDF Comparison Report\n");
       comparisonReport.append("========================\n\n");
-      
+
       // Comparar número de páginas
       int pages1 = doc1.getNumberOfPages();
       int pages2 = doc2.getNumberOfPages();
       comparisonReport.append(String.format("File 1 pages: %d\n", pages1));
       comparisonReport.append(String.format("File 2 pages: %d\n", pages2));
-      comparisonReport.append(String.format("Pages match: %s\n\n", pages1 == pages2 ? "YES" : "NO"));
+      comparisonReport.append(
+          String.format("Pages match: %s\n\n", pages1 == pages2 ? "YES" : "NO"));
 
       // Comparar texto de cada página
       PDFTextStripper stripper = new PDFTextStripper();
       int maxPages = Math.max(pages1, pages2);
       int differentPages = 0;
-      
+
       for (int i = 1; i <= maxPages; i++) {
         String text1 = "";
         String text2 = "";
-        
+
         if (i <= pages1) {
           stripper.setStartPage(i);
           stripper.setEndPage(i);
           text1 = stripper.getText(doc1).trim();
         }
-        
+
         if (i <= pages2) {
           stripper.setStartPage(i);
           stripper.setEndPage(i);
           text2 = stripper.getText(doc2).trim();
         }
-        
+
         boolean pageMatches = text1.equals(text2);
         if (!pageMatches) {
           differentPages++;
@@ -1138,12 +1141,15 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
           }
         }
       }
-      
-      comparisonReport.append(String.format("\nSummary: %d of %d pages are different\n", differentPages, maxPages));
-      comparisonReport.append(String.format("Files are identical: %s\n", differentPages == 0 ? "YES" : "NO"));
+
+      comparisonReport.append(
+          String.format("\nSummary: %d of %d pages are different\n", differentPages, maxPages));
+      comparisonReport.append(
+          String.format("Files are identical: %s\n", differentPages == 0 ? "YES" : "NO"));
 
       // Salvar relatório
-      String reportFilename = options.getOrDefault("output_filename", "comparison_report.txt").toString();
+      String reportFilename =
+          options.getOrDefault("output_filename", "comparison_report.txt").toString();
       Path reportPath = resultDir.resolve(reportFilename);
       Files.write(reportPath, comparisonReport.toString().getBytes(StandardCharsets.UTF_8));
 
@@ -1153,7 +1159,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
 
   private String processPdfCreate(Job job) throws IOException {
     Map<String, Object> options = job.getOptions();
-    
+
     // Criar diretório de resultado
     Path resultDir = Paths.get("storage", "results", job.getId());
     Files.createDirectories(resultDir);
@@ -1162,7 +1168,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
       // Configurações padrão
       String pageSize = options.getOrDefault("page_size", "A4").toString();
       PDRectangle pageRect = getPageSize(pageSize);
-      
+
       // Criar páginas baseado no conteúdo
       if (options.containsKey("text_content")) {
         createPdfFromText(document, options.get("text_content").toString(), pageRect, options);
@@ -1178,7 +1184,9 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
       }
 
       // Adicionar metadados se fornecidos
-      if (options.containsKey("title") || options.containsKey("author") || options.containsKey("subject")) {
+      if (options.containsKey("title")
+          || options.containsKey("author")
+          || options.containsKey("subject")) {
         PDDocumentInformation info = new PDDocumentInformation();
         if (options.containsKey("title")) {
           info.setTitle(options.get("title").toString());
@@ -1193,7 +1201,8 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
       }
 
       // Salvar documento
-      String outputFilename = options.getOrDefault("output_filename", "created_document.pdf").toString();
+      String outputFilename =
+          options.getOrDefault("output_filename", "created_document.pdf").toString();
       Path outputPath = resultDir.resolve(outputFilename);
       document.save(outputPath.toFile());
 
@@ -1208,14 +1217,15 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
     if (job.getInputFiles().size() != 1) {
       throw new IllegalArgumentException("PDF_EDIT operation requires exactly one input file");
     }
-    
+
     Map<String, Object> options = job.getOptions();
     String editType = (String) options.get("edit_type");
-    
+
     if (editType == null) {
-      throw new IllegalArgumentException("Edit type is required (add_text, remove_text, replace_text)");
+      throw new IllegalArgumentException(
+          "Edit type is required (add_text, remove_text, replace_text)");
     }
-    
+
     // Validate edit type and required parameters before loading PDF
     switch (editType.toLowerCase()) {
       case "add_text" -> {
@@ -1231,24 +1241,29 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
           throw new IllegalArgumentException("New text is required for replace_text operation");
         }
       }
-      default -> throw new IllegalArgumentException("Unsupported edit type: " + editType + ". Supported types: add_text, remove_text, replace_text");
+      default ->
+          throw new IllegalArgumentException(
+              "Unsupported edit type: "
+                  + editType
+                  + ". Supported types: add_text, remove_text, replace_text");
     }
-    
+
     Path inputPath = Paths.get(job.getInputFiles().get(0));
     Path resultDir = Paths.get("storage", "results", job.getId());
     Files.createDirectories(resultDir);
-    
+
     try (PDDocument document = Loader.loadPDF(inputPath.toFile())) {
       switch (editType.toLowerCase()) {
         case "add_text" -> addTextToDocument(document, options);
         case "remove_text" -> removeTextFromDocument(document, options);
         case "replace_text" -> replaceTextInDocument(document, options);
       }
-      
-      String outputFilename = options.getOrDefault("output_filename", "edited_" + inputPath.getFileName()).toString();
+
+      String outputFilename =
+          options.getOrDefault("output_filename", "edited_" + inputPath.getFileName()).toString();
       Path outputPath = resultDir.resolve(outputFilename);
       document.save(outputPath.toFile());
-      
+
       return outputPath.toString();
     }
   }
@@ -1260,46 +1275,47 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
     if (job.getInputFiles().size() != 1) {
       throw new IllegalArgumentException("PDF_PROTECT operation requires exactly one input file");
     }
-    
+
     Map<String, Object> options = job.getOptions();
     String userPassword = (String) options.get("userPassword");
     String ownerPassword = (String) options.get("ownerPassword");
-    
+
     if (userPassword == null && ownerPassword == null) {
       throw new IllegalArgumentException("At least one password (user or owner) is required");
     }
-    
+
     Path inputPath = Paths.get(job.getInputFiles().get(0));
     Path resultDir = Paths.get("storage", "results", job.getId());
     Files.createDirectories(resultDir);
-    
+
     try (PDDocument document = Loader.loadPDF(inputPath.toFile())) {
       // Configurar permissões
       AccessPermission accessPermission = new AccessPermission();
-      
+
       // Aplicar restrições baseadas nas opções
       Boolean allowPrint = (Boolean) options.getOrDefault("allowPrint", true);
       Boolean allowCopy = (Boolean) options.getOrDefault("allowCopy", true);
       Boolean allowModify = (Boolean) options.getOrDefault("allowModify", false);
-      
+
       accessPermission.setCanPrint(allowPrint);
       accessPermission.setCanExtractContent(allowCopy);
       accessPermission.setCanModify(allowModify);
-      
+
       // Criar política de proteção
-      StandardProtectionPolicy protectionPolicy = new StandardProtectionPolicy(
-          ownerPassword != null ? ownerPassword : userPassword,
-          userPassword,
-          accessPermission
-      );
-      
+      StandardProtectionPolicy protectionPolicy =
+          new StandardProtectionPolicy(
+              ownerPassword != null ? ownerPassword : userPassword, userPassword, accessPermission);
+
       protectionPolicy.setEncryptionKeyLength(128);
       document.protect(protectionPolicy);
-      
-      String outputFilename = options.getOrDefault("output_filename", "protected_" + inputPath.getFileName()).toString();
+
+      String outputFilename =
+          options
+              .getOrDefault("output_filename", "protected_" + inputPath.getFileName())
+              .toString();
       Path outputPath = resultDir.resolve(outputFilename);
       document.save(outputPath.toFile());
-      
+
       return outputPath.toString();
     }
   }
@@ -1311,25 +1327,28 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
     if (job.getInputFiles().size() != 1) {
       throw new IllegalArgumentException("PDF_UNLOCK operation requires exactly one input file");
     }
-    
+
     Map<String, Object> options = job.getOptions();
     String password = (String) options.get("password");
-    
+
     if (password == null) {
       throw new IllegalArgumentException("Password is required to unlock PDF");
     }
-    
+
     Path inputPath = Paths.get(job.getInputFiles().get(0));
     Path resultDir = Paths.get("storage", "results", job.getId());
     Files.createDirectories(resultDir);
-    
+
     try (PDDocument document = Loader.loadPDF(inputPath.toFile(), password)) {
       if (document.isEncrypted()) {
         // Remover proteção salvando sem criptografia
-        String outputFilename = options.getOrDefault("output_filename", "unlocked_" + inputPath.getFileName()).toString();
+        String outputFilename =
+            options
+                .getOrDefault("output_filename", "unlocked_" + inputPath.getFileName())
+                .toString();
         Path outputPath = resultDir.resolve(outputFilename);
         document.save(outputPath.toFile());
-        
+
         return outputPath.toString();
       } else {
         return "PDF is not encrypted";
@@ -1380,14 +1399,14 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
       // Note: This is a simplified implementation
       // In a production environment, you would use proper digital signature libraries
       // such as iText with BouncyCastle for full PKCS#7/CAdES signature support
-      
+
       // For now, we'll add a signature annotation as a placeholder
       // indicating where the digital signature would be applied
       PDPage firstPage = document.getPage(0);
-      
+
       // Save the document with signature placeholder
       document.save(outputPath.toFile());
-      
+
       return outputPath.toString();
     }
   }
@@ -1399,28 +1418,31 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
     if (job.getInputFiles().size() != 1) {
       throw new IllegalArgumentException("PDF_OPTIMIZE operation requires exactly one input file");
     }
-    
+
     Map<String, Object> options = job.getOptions();
     String quality = (String) options.getOrDefault("quality", "medium");
     boolean removeUnusedObjects = (Boolean) options.getOrDefault("remove_unused_objects", true);
     boolean compressImages = (Boolean) options.getOrDefault("compress_images", true);
-    
+
     Path inputPath = Paths.get(job.getInputFiles().get(0));
     Path resultDir = Paths.get("storage", "results", job.getId());
     Files.createDirectories(resultDir);
-    
+
     try (PDDocument document = Loader.loadPDF(inputPath.toFile())) {
       // Otimizações básicas usando PDFBox
       if (removeUnusedObjects) {
         // PDFBox automaticamente remove objetos não utilizados ao salvar
       }
-      
-      String outputFilename = options.getOrDefault("output_filename", "optimized_" + inputPath.getFileName()).toString();
+
+      String outputFilename =
+          options
+              .getOrDefault("output_filename", "optimized_" + inputPath.getFileName())
+              .toString();
       Path outputPath = resultDir.resolve(outputFilename);
-      
+
       // Salvar com compressão
       document.save(outputPath.toFile());
-      
+
       return outputPath.toString();
     }
   }
@@ -1432,54 +1454,64 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
     if (job.getInputFiles().size() != 1) {
       throw new IllegalArgumentException("PDF_VALIDATE operation requires exactly one input file");
     }
-    
+
     Map<String, Object> options = job.getOptions();
     boolean checkStructure = (Boolean) options.getOrDefault("check_structure", true);
     boolean checkMetadata = (Boolean) options.getOrDefault("check_metadata", true);
     boolean checkPdfA = (Boolean) options.getOrDefault("check_pdfa", false);
-    
+
     Path inputPath = Paths.get(job.getInputFiles().get(0));
     Path resultDir = Paths.get("storage", "results", job.getId());
     Files.createDirectories(resultDir);
-    
+
     StringBuilder validationReport = new StringBuilder();
     validationReport.append("PDF Validation Report\n");
     validationReport.append("===================\n\n");
-    
+
     try (PDDocument document = Loader.loadPDF(inputPath.toFile())) {
       validationReport.append("File: ").append(inputPath.getFileName()).append("\n");
       validationReport.append("Pages: ").append(document.getNumberOfPages()).append("\n");
       validationReport.append("Encrypted: ").append(document.isEncrypted()).append("\n\n");
-      
+
       if (checkStructure) {
         validationReport.append("Structure Validation: PASSED\n");
         validationReport.append("- Document can be opened successfully\n");
         validationReport.append("- All pages are accessible\n\n");
       }
-      
+
       if (checkMetadata) {
         PDDocumentInformation info = document.getDocumentInformation();
         validationReport.append("Metadata Validation:\n");
-        validationReport.append("- Title: ").append(info.getTitle() != null ? "Present" : "Missing").append("\n");
-        validationReport.append("- Author: ").append(info.getAuthor() != null ? "Present" : "Missing").append("\n");
-        validationReport.append("- Creation Date: ").append(info.getCreationDate() != null ? "Present" : "Missing").append("\n\n");
+        validationReport
+            .append("- Title: ")
+            .append(info.getTitle() != null ? "Present" : "Missing")
+            .append("\n");
+        validationReport
+            .append("- Author: ")
+            .append(info.getAuthor() != null ? "Present" : "Missing")
+            .append("\n");
+        validationReport
+            .append("- Creation Date: ")
+            .append(info.getCreationDate() != null ? "Present" : "Missing")
+            .append("\n\n");
       }
-      
+
       if (checkPdfA) {
         validationReport.append("PDF/A Compliance: NOT IMPLEMENTED\n");
         validationReport.append("- Requires veraPDF library for full validation\n\n");
       }
-      
+
       validationReport.append("Overall Status: VALID\n");
-      
+
     } catch (Exception e) {
       validationReport.append("VALIDATION FAILED: ").append(e.getMessage()).append("\n");
     }
-    
-    String outputFilename = options.getOrDefault("output_filename", "validation_report.txt").toString();
+
+    String outputFilename =
+        options.getOrDefault("output_filename", "validation_report.txt").toString();
     Path outputPath = resultDir.resolve(outputFilename);
     Files.write(outputPath, validationReport.toString().getBytes(StandardCharsets.UTF_8));
-    
+
     return outputPath.toString();
   }
 
@@ -1490,61 +1522,63 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
     if (job.getInputFiles().size() != 1) {
       throw new IllegalArgumentException("PDF_REPAIR operation requires exactly one input file");
     }
-    
+
     Map<String, Object> options = job.getOptions();
     boolean autoRepair = (Boolean) options.getOrDefault("auto_repair", true);
     boolean generateReport = (Boolean) options.getOrDefault("generate_report", true);
-    
+
     Path inputPath = Paths.get(job.getInputFiles().get(0));
     Path resultDir = Paths.get("storage", "results", job.getId());
     Files.createDirectories(resultDir);
-    
+
     StringBuilder repairReport = new StringBuilder();
     repairReport.append("PDF Repair Report\n");
     repairReport.append("================\n\n");
-    
+
     try {
       // Tentar carregar o documento
       try (PDDocument document = Loader.loadPDF(inputPath.toFile())) {
         repairReport.append("File: ").append(inputPath.getFileName()).append("\n");
         repairReport.append("Status: Document loaded successfully\n");
         repairReport.append("Pages: ").append(document.getNumberOfPages()).append("\n\n");
-        
+
         if (autoRepair) {
           // Tentar reparos básicos
           repairReport.append("Repair Actions:\n");
           repairReport.append("- Validated document structure\n");
           repairReport.append("- Checked page integrity\n");
-          
-          String outputFilename = options.getOrDefault("output_filename", "repaired_" + inputPath.getFileName()).toString();
+
+          String outputFilename =
+              options
+                  .getOrDefault("output_filename", "repaired_" + inputPath.getFileName())
+                  .toString();
           Path outputPath = resultDir.resolve(outputFilename);
-          
+
           // Salvar documento reparado
           document.save(outputPath.toFile());
           repairReport.append("- Saved repaired document\n\n");
-          
+
           repairReport.append("Repair Status: SUCCESS\n");
-          
+
           if (generateReport) {
             Path reportPath = resultDir.resolve("repair_report.txt");
             Files.write(reportPath, repairReport.toString().getBytes(StandardCharsets.UTF_8));
           }
-          
+
           return outputPath.toString();
         }
-        
       }
     } catch (Exception e) {
       repairReport.append("REPAIR FAILED: ").append(e.getMessage()).append("\n");
       repairReport.append("Recommendation: File may be severely corrupted\n");
     }
-    
+
     if (generateReport) {
       Path reportPath = resultDir.resolve("repair_report.txt");
       Files.write(reportPath, repairReport.toString().getBytes(StandardCharsets.UTF_8));
       return reportPath.toString();
     }
-    
+
     return "Repair completed - check logs for details";
   }
 
@@ -1552,35 +1586,38 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
     if (job.getInputFiles().size() != 1) {
       throw new RuntimeException("PDF_EXTRACT_RESOURCES operation requires exactly one input file");
     }
-    
+
     Map<String, Object> options = job.getOptions();
-    String resourceType = (String) options.getOrDefault("resource_type", "all"); // images, fonts, all
+    String resourceType =
+        (String) options.getOrDefault("resource_type", "all"); // images, fonts, all
     boolean extractImages = resourceType.equals("images") || resourceType.equals("all");
     boolean extractFonts = resourceType.equals("fonts") || resourceType.equals("all");
-    
+
     Path inputPath = Paths.get(job.getInputFiles().get(0));
     Path resultDir = Paths.get("storage", "results", job.getId());
     Files.createDirectories(resultDir);
-    
+
     List<String> extractedResources = new ArrayList<>();
-    
+
     try (PDDocument document = Loader.loadPDF(inputPath.toFile())) {
       if (extractImages) {
         Path imagesDir = resultDir.resolve("images");
         Files.createDirectories(imagesDir);
-        
+
         int imageCount = 0;
         for (int pageIndex = 0; pageIndex < document.getNumberOfPages(); pageIndex++) {
           PDPage page = document.getPage(pageIndex);
           if (page.getResources() != null && page.getResources().getXObjectNames() != null) {
-            for (org.apache.pdfbox.cos.COSName xObjectName : page.getResources().getXObjectNames()) {
+            for (org.apache.pdfbox.cos.COSName xObjectName :
+                page.getResources().getXObjectNames()) {
               try {
-                org.apache.pdfbox.pdmodel.graphics.PDXObject xObject = page.getResources().getXObject(xObjectName);
+                org.apache.pdfbox.pdmodel.graphics.PDXObject xObject =
+                    page.getResources().getXObject(xObjectName);
                 if (xObject instanceof PDImageXObject) {
                   PDImageXObject image = (PDImageXObject) xObject;
                   String imageName = "image_" + pageIndex + "_" + imageCount + ".png";
                   Path imagePath = imagesDir.resolve(imageName);
-                  
+
                   BufferedImage bufferedImage = image.getImage();
                   ImageIO.write(bufferedImage, "PNG", imagePath.toFile());
                   extractedResources.add(imagePath.toString());
@@ -1593,16 +1630,16 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
           }
         }
       }
-      
+
       if (extractFonts) {
         Path fontsDir = resultDir.resolve("fonts");
         Files.createDirectories(fontsDir);
-        
+
         // Criar relatório de fontes (PDFBox não permite extração direta de fontes)
         StringBuilder fontReport = new StringBuilder();
         fontReport.append("Font Resources Report\n");
         fontReport.append("=====================\n\n");
-        
+
         for (int pageIndex = 0; pageIndex < document.getNumberOfPages(); pageIndex++) {
           PDPage page = document.getPage(pageIndex);
           if (page.getResources() != null && page.getResources().getFontNames() != null) {
@@ -1610,71 +1647,86 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
             for (org.apache.pdfbox.cos.COSName fontName : page.getResources().getFontNames()) {
               try {
                 org.apache.pdfbox.pdmodel.font.PDFont font = page.getResources().getFont(fontName);
-                fontReport.append("  - ").append(font.getName()).append(" (").append(font.getClass().getSimpleName()).append(")\n");
+                fontReport
+                    .append("  - ")
+                    .append(font.getName())
+                    .append(" (")
+                    .append(font.getClass().getSimpleName())
+                    .append(")\n");
               } catch (Exception e) {
-                fontReport.append("  - ").append(fontName.getName()).append(" (Error reading font)\n");
+                fontReport
+                    .append("  - ")
+                    .append(fontName.getName())
+                    .append(" (Error reading font)\n");
               }
             }
           }
         }
-        
+
         Path fontReportPath = fontsDir.resolve("fonts_report.txt");
         Files.write(fontReportPath, fontReport.toString().getBytes(StandardCharsets.UTF_8));
         extractedResources.add(fontReportPath.toString());
       }
     }
-    
+
     // Criar relatório de extração
     StringBuilder extractionReport = new StringBuilder();
     extractionReport.append("Resource Extraction Report\n");
     extractionReport.append("=========================\n\n");
     extractionReport.append("Input file: ").append(inputPath.getFileName()).append("\n");
     extractionReport.append("Resource type: ").append(resourceType).append("\n");
-    extractionReport.append("Extracted resources: ").append(extractedResources.size()).append("\n\n");
-    
+    extractionReport
+        .append("Extracted resources: ")
+        .append(extractedResources.size())
+        .append("\n\n");
+
     for (String resource : extractedResources) {
       extractionReport.append("- ").append(Paths.get(resource).getFileName()).append("\n");
     }
-    
+
     Path reportPath = resultDir.resolve("extraction_report.txt");
     Files.write(reportPath, extractionReport.toString().getBytes(StandardCharsets.UTF_8));
-    
+
     return resultDir.toString();
   }
 
   private String processPdfRemoveResources(Job job) throws IOException {
     if (job.getInputFiles().size() != 1) {
-      throw new IllegalArgumentException("PDF_REMOVE_RESOURCES operation requires exactly one input file");
+      throw new IllegalArgumentException(
+          "PDF_REMOVE_RESOURCES operation requires exactly one input file");
     }
-    
+
     Map<String, Object> options = job.getOptions();
-    String resourceType = (String) options.getOrDefault("resource_type", "images"); // images, fonts, metadata
+    String resourceType =
+        (String) options.getOrDefault("resource_type", "images"); // images, fonts, metadata
     boolean removeImages = resourceType.equals("images") || resourceType.equals("all");
     boolean removeMetadata = resourceType.equals("metadata") || resourceType.equals("all");
-    
+
     Path inputPath = Paths.get(job.getInputFiles().get(0));
     Path resultDir = Paths.get("storage", "results", job.getId());
     Files.createDirectories(resultDir);
-    
+
     StringBuilder removalReport = new StringBuilder();
     removalReport.append("Resource Removal Report\n");
     removalReport.append("======================\n\n");
     removalReport.append("Input file: ").append(inputPath.getFileName()).append("\n");
     removalReport.append("Resource type to remove: ").append(resourceType).append("\n\n");
-    
+
     try (PDDocument document = Loader.loadPDF(inputPath.toFile())) {
       int removedCount = 0;
-      
+
       if (removeImages) {
         // Remover imagens das páginas
         for (int pageIndex = 0; pageIndex < document.getNumberOfPages(); pageIndex++) {
           PDPage page = document.getPage(pageIndex);
           if (page.getResources() != null && page.getResources().getXObjectNames() != null) {
             List<org.apache.pdfbox.cos.COSName> imagesToRemove = new ArrayList<>();
-            
-            for (org.apache.pdfbox.cos.COSName xObjectName : page.getResources().getXObjectNames()) {
+
+            for (org.apache.pdfbox.cos.COSName xObjectName :
+                page.getResources().getXObjectNames()) {
               try {
-                org.apache.pdfbox.pdmodel.graphics.PDXObject xObject = page.getResources().getXObject(xObjectName);
+                org.apache.pdfbox.pdmodel.graphics.PDXObject xObject =
+                    page.getResources().getXObject(xObjectName);
                 if (xObject instanceof PDImageXObject) {
                   imagesToRemove.add(xObjectName);
                   removedCount++;
@@ -1683,11 +1735,13 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
                 System.err.println("Error checking image: " + e.getMessage());
               }
             }
-            
+
             // Remover as imagens identificadas
             for (org.apache.pdfbox.cos.COSName imageToRemove : imagesToRemove) {
               try {
-                page.getResources().getCOSObject().removeItem(org.apache.pdfbox.cos.COSName.XOBJECT);
+                page.getResources()
+                    .getCOSObject()
+                    .removeItem(org.apache.pdfbox.cos.COSName.XOBJECT);
               } catch (Exception e) {
                 System.err.println("Error removing image: " + e.getMessage());
               }
@@ -1696,25 +1750,26 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
         }
         removalReport.append("Images removed: ").append(removedCount).append("\n");
       }
-      
+
       if (removeMetadata) {
         // Remover metadados do documento
         PDDocumentInformation info = new PDDocumentInformation();
         document.setDocumentInformation(info);
         removalReport.append("Metadata cleared\n");
       }
-      
+
       // Salvar documento limpo
-      String outputFilename = options.getOrDefault("output_filename", "cleaned_" + inputPath.getFileName()).toString();
+      String outputFilename =
+          options.getOrDefault("output_filename", "cleaned_" + inputPath.getFileName()).toString();
       Path outputPath = resultDir.resolve(outputFilename);
       document.save(outputPath.toFile());
-      
+
       removalReport.append("\nCleaned document saved: ").append(outputFilename).append("\n");
-      
+
       // Salvar relatório
       Path reportPath = resultDir.resolve("removal_report.txt");
       Files.write(reportPath, removalReport.toString().getBytes(StandardCharsets.UTF_8));
-      
+
       return outputPath.toString();
     }
   }
@@ -1737,14 +1792,15 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
 
     Map<String, Object> options = job.getOptions();
     String conformanceLevel = options.getOrDefault("conformance_level", "PDF/A-1b").toString();
-    String outputFilename = options.getOrDefault("output_filename", "pdfa_" + inputFile.getName()).toString();
-    
+    String outputFilename =
+        options.getOrDefault("output_filename", "pdfa_" + inputFile.getName()).toString();
+
     Path outputPath = resultDir.resolve(outputFilename);
 
     try (PDDocument document = Loader.loadPDF(inputFile)) {
       // Implementação básica de conversão para PDF/A
       // Em uma implementação real, seria necessário usar bibliotecas específicas como veraPDF
-      
+
       // Adicionar metadados obrigatórios para PDF/A
       PDDocumentInformation info = document.getDocumentInformation();
       if (info.getTitle() == null || info.getTitle().isEmpty()) {
@@ -1753,7 +1809,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
       if (info.getCreator() == null || info.getCreator().isEmpty()) {
         info.setCreator("PDF Processor API");
       }
-      
+
       document.setDocumentInformation(info);
       document.save(outputPath.toFile());
     }
@@ -1777,9 +1833,14 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
     Files.createDirectories(resultDir);
 
     Map<String, Object> options = job.getOptions();
-    String outputFilename = options.getOrDefault("output_filename", "converted_" + inputFile.getName().replaceAll("\\.epub$", ".pdf")).toString();
+    String outputFilename =
+        options
+            .getOrDefault(
+                "output_filename",
+                "converted_" + inputFile.getName().replaceAll("\\.epub$", ".pdf"))
+            .toString();
     String pageSize = options.getOrDefault("page_size", "A4").toString();
-    
+
     Path outputPath = resultDir.resolve(outputFilename);
 
     // Implementação usando JSoup e Apache Commons Compress para processar EPUB
@@ -1787,33 +1848,38 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
       PDRectangle pageRect = getPageSize(pageSize);
       PDPage page = new PDPage(pageRect);
       document.addPage(page);
-      
+
       // Extrair conteúdo do EPUB usando Apache Commons Compress
       String extractedText = "EPUB Content Extracted";
       try {
         // Simular extração de texto do arquivo EPUB
-        extractedText = "EPUB file processed: " + inputFile.getName() + "\n" +
-                       "Size: " + inputFile.length() + " bytes\n" +
-                       "Conversion completed using JSoup and Commons Compress";
+        extractedText =
+            "EPUB file processed: "
+                + inputFile.getName()
+                + "\n"
+                + "Size: "
+                + inputFile.length()
+                + " bytes\n"
+                + "Conversion completed using JSoup and Commons Compress";
       } catch (Exception e) {
         extractedText = "Error processing EPUB: " + e.getMessage();
       }
-      
+
       // Adicionar conteúdo extraído ao PDF
       try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
         contentStream.beginText();
         contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 12);
         contentStream.newLineAtOffset(50, 750);
-        
+
         String[] lines = extractedText.split("\n");
         for (int i = 0; i < Math.min(lines.length, 30); i++) {
           contentStream.showText(lines[i]);
           contentStream.newLineAtOffset(0, -15);
         }
-        
+
         contentStream.endText();
       }
-      
+
       document.save(outputPath.toFile());
     }
 
@@ -1836,9 +1902,14 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
     Files.createDirectories(resultDir);
 
     Map<String, Object> options = job.getOptions();
-    String outputFilename = options.getOrDefault("output_filename", "converted_" + inputFile.getName().replaceAll("\\.djvu?$", ".pdf")).toString();
+    String outputFilename =
+        options
+            .getOrDefault(
+                "output_filename",
+                "converted_" + inputFile.getName().replaceAll("\\.djvu?$", ".pdf"))
+            .toString();
     String pageSize = options.getOrDefault("page_size", "A4").toString();
-    
+
     Path outputPath = resultDir.resolve(outputFilename);
 
     // Implementação básica de conversão DjVu para PDF
@@ -1847,7 +1918,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
       PDRectangle pageRect = getPageSize(pageSize);
       PDPage page = new PDPage(pageRect);
       document.addPage(page);
-      
+
       // Adicionar texto placeholder indicando que a conversão foi processada
       try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
         contentStream.beginText();
@@ -1858,7 +1929,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
         contentStream.showText("Original file: " + inputPath);
         contentStream.endText();
       }
-      
+
       document.save(outputPath.toFile());
     }
 
@@ -1884,30 +1955,34 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
     Files.createDirectories(resultDir);
 
     Map<String, Object> options = job.getOptions();
-    String outputFilename = options.getOrDefault("output_filename", "ocr_" + inputFile.getName()).toString();
+    String outputFilename =
+        options.getOrDefault("output_filename", "ocr_" + inputFile.getName()).toString();
     String language = options.getOrDefault("language", "eng").toString();
-    
+
     Path outputPath = resultDir.resolve(outputFilename);
 
     // Implementação básica de OCR
     // Em uma implementação real, seria necessário usar bibliotecas como Tesseract OCR
     try (PDDocument document = Loader.loadPDF(inputFile)) {
       PDDocument resultDoc = new PDDocument();
-      
+
       for (int i = 0; i < document.getNumberOfPages(); i++) {
         PDPage originalPage = document.getPage(i);
         PDPage newPage = resultDoc.importPage(originalPage);
-        
+
         // Adicionar texto OCR simulado como overlay
-        try (PDPageContentStream contentStream = new PDPageContentStream(resultDoc, newPage, PDPageContentStream.AppendMode.APPEND, true)) {
+        try (PDPageContentStream contentStream =
+            new PDPageContentStream(
+                resultDoc, newPage, PDPageContentStream.AppendMode.APPEND, true)) {
           contentStream.beginText();
           contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 8);
           contentStream.newLineAtOffset(50, 50);
-          contentStream.showText("OCR processed with language: " + language + " (Page " + (i + 1) + ")");
+          contentStream.showText(
+              "OCR processed with language: " + language + " (Page " + (i + 1) + ")");
           contentStream.endText();
         }
       }
-      
+
       resultDoc.save(outputPath.toFile());
       resultDoc.close();
     }
@@ -1934,37 +2009,55 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
     Files.createDirectories(resultDir);
 
     Map<String, Object> options = job.getOptions();
-    String outputFilename = options.getOrDefault("output_filename", "audio_" + inputFile.getName().replaceAll("\\.pdf$", ".mp3")).toString();
+    String outputFilename =
+        options
+            .getOrDefault(
+                "output_filename", "audio_" + inputFile.getName().replaceAll("\\.pdf$", ".mp3"))
+            .toString();
     String voice = options.getOrDefault("voice", "default").toString();
     Number speed = (Number) options.getOrDefault("speed", 1.0);
     String audioFormat = options.getOrDefault("audio_format", "mp3").toString();
     String audioQuality = options.getOrDefault("audio_quality", "medium").toString();
-    
+
     Path outputPath = resultDir.resolve(outputFilename);
 
     // Implementação usando Apache Commons Lang3 para processamento de texto
     try (PDDocument document = Loader.loadPDF(inputFile)) {
       PDFTextStripper stripper = new PDFTextStripper();
       String text = stripper.getText(document);
-      
+
       // Processar texto usando Apache Commons Lang3
       String processedText = org.apache.commons.lang3.StringUtils.normalizeSpace(text);
       processedText = org.apache.commons.lang3.StringEscapeUtils.escapeHtml4(processedText);
-      
+
       // Criar arquivo de texto temporário com o conteúdo processado
       Path textPath = resultDir.resolve("processed_text.txt");
       Files.write(textPath, processedText.getBytes(StandardCharsets.UTF_8));
-      
+
       // Simular conversão para áudio usando as bibliotecas de som disponíveis
-      String audioInfo = "Audio conversion completed using MP3SPI and Commons Lang3\n" +
-                        "Voice: " + voice + "\n" +
-                        "Speed: " + speed + "\n" +
-                        "Format: " + audioFormat + "\n" +
-                        "Quality: " + audioQuality + "\n" +
-                        "Text length: " + processedText.length() + " characters\n" +
-                        "Processed text preview: " + org.apache.commons.lang3.StringUtils.abbreviate(processedText, 200) + "\n" +
-                        "Source: " + inputFile.getName();
-      
+      String audioInfo =
+          "Audio conversion completed using MP3SPI and Commons Lang3\n"
+              + "Voice: "
+              + voice
+              + "\n"
+              + "Speed: "
+              + speed
+              + "\n"
+              + "Format: "
+              + audioFormat
+              + "\n"
+              + "Quality: "
+              + audioQuality
+              + "\n"
+              + "Text length: "
+              + processedText.length()
+              + " characters\n"
+              + "Processed text preview: "
+              + org.apache.commons.lang3.StringUtils.abbreviate(processedText, 200)
+              + "\n"
+              + "Source: "
+              + inputFile.getName();
+
       Files.write(outputPath, audioInfo.getBytes(StandardCharsets.UTF_8));
     }
 
@@ -1972,20 +2065,22 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
     return outputPath.toString();
   }
 
-  private void addTextToDocument(PDDocument document, Map<String, Object> options) throws IOException {
+  private void addTextToDocument(PDDocument document, Map<String, Object> options)
+      throws IOException {
     String text = (String) options.get("text");
     if (text == null) {
       throw new IllegalArgumentException("Text is required for addText operation");
     }
-    
+
     int pageNumber = Integer.parseInt(options.getOrDefault("page", "1").toString()) - 1;
     float x = Float.parseFloat(options.getOrDefault("x", "50").toString());
     float y = Float.parseFloat(options.getOrDefault("y", "750").toString());
     float fontSize = Float.parseFloat(options.getOrDefault("fontSize", "12").toString());
-    
+
     if (pageNumber >= 0 && pageNumber < document.getNumberOfPages()) {
       PDPage page = document.getPage(pageNumber);
-      try (PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true)) {
+      try (PDPageContentStream contentStream =
+          new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true)) {
         contentStream.beginText();
         contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), fontSize);
         contentStream.newLineAtOffset(x, y);
@@ -1995,38 +2090,47 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
     }
   }
 
-  private void removeTextFromDocument(PDDocument document, Map<String, Object> options) throws IOException {
+  private void removeTextFromDocument(PDDocument document, Map<String, Object> options)
+      throws IOException {
     // Implementação básica - na prática, remover texto específico é complexo
     // Esta implementação remove todo o texto de uma página específica
     int pageNumber = Integer.parseInt(options.getOrDefault("page", "1").toString()) - 1;
-    
+
     if (pageNumber >= 0 && pageNumber < document.getNumberOfPages()) {
       PDPage page = document.getPage(pageNumber);
       // Criar uma nova página em branco com o mesmo tamanho
       PDPage newPage = new PDPage(page.getMediaBox());
       document.removePage(pageNumber);
-      document.getPages().insertBefore(newPage, document.getPage(Math.min(pageNumber, document.getNumberOfPages() - 1)));
+      document
+          .getPages()
+          .insertBefore(
+              newPage, document.getPage(Math.min(pageNumber, document.getNumberOfPages() - 1)));
     }
   }
 
-  private void replaceTextInDocument(PDDocument document, Map<String, Object> options) throws IOException {
+  private void replaceTextInDocument(PDDocument document, Map<String, Object> options)
+      throws IOException {
     // Implementação básica - substitui todo o conteúdo de uma página
     String newText = (String) options.get("new_text");
     if (newText == null) {
       throw new IllegalArgumentException("New text is required for replace_text operation");
     }
-    
+
     int pageNumber = Integer.parseInt(options.getOrDefault("page", "1").toString()) - 1;
-    
+
     if (pageNumber >= 0 && pageNumber < document.getNumberOfPages()) {
       PDPage page = document.getPage(pageNumber);
       PDRectangle pageSize = page.getMediaBox();
-      
+
       // Remover página existente e criar nova
       document.removePage(pageNumber);
       PDPage newPage = new PDPage(pageSize);
-      document.getPages().insertBefore(newPage, pageNumber < document.getNumberOfPages() ? document.getPage(pageNumber) : null);
-      
+      document
+          .getPages()
+          .insertBefore(
+              newPage,
+              pageNumber < document.getNumberOfPages() ? document.getPage(pageNumber) : null);
+
       // Adicionar novo texto
       try (PDPageContentStream contentStream = new PDPageContentStream(document, newPage)) {
         contentStream.beginText();
@@ -2038,7 +2142,9 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
     }
   }
 
-  private void createPdfFromText(PDDocument document, String text, PDRectangle pageRect, Map<String, Object> options) throws IOException {
+  private void createPdfFromText(
+      PDDocument document, String text, PDRectangle pageRect, Map<String, Object> options)
+      throws IOException {
     PDPage page = new PDPage(pageRect);
     document.addPage(page);
 
@@ -2047,7 +2153,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
       float fontSize = Float.parseFloat(options.getOrDefault("font_size", "12").toString());
       float margin = Float.parseFloat(options.getOrDefault("margin", "50").toString());
       float leading = fontSize * 1.2f;
-      
+
       contentStream.beginText();
       contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), fontSize);
       contentStream.newLineAtOffset(margin, pageRect.getHeight() - margin);
@@ -2055,14 +2161,14 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
       // Quebrar texto em linhas
       String[] lines = text.split("\n");
       float maxWidth = pageRect.getWidth() - (2 * margin);
-      
+
       for (String line : lines) {
         // Verificar se a linha cabe na largura da página
         if (line.length() * fontSize * 0.6f > maxWidth) {
           // Quebrar linha longa em múltiplas linhas
           String[] words = line.split(" ");
           StringBuilder currentLine = new StringBuilder();
-          
+
           for (String word : words) {
             String testLine = currentLine.length() > 0 ? currentLine + " " + word : word;
             if (testLine.length() * fontSize * 0.6f <= maxWidth) {
@@ -2075,7 +2181,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
               currentLine = new StringBuilder(word);
             }
           }
-          
+
           if (currentLine.length() > 0) {
             contentStream.showText(currentLine.toString());
             contentStream.newLineAtOffset(0, -leading);
@@ -2085,7 +2191,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
           contentStream.newLineAtOffset(0, -leading);
         }
       }
-      
+
       contentStream.endText();
     }
   }
@@ -2157,7 +2263,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
             case PDF_TO_PDFA -> validatePdfToPdfAOptions(options);
             case PDF_FROM_EPUB -> validatePdfFromEpubOptions(options);
             case PDF_FROM_DJVU -> validatePdfFromDjvuOptions(options);
-            // Operações de OCR e acessibilidade
+              // Operações de OCR e acessibilidade
             case PDF_OCR -> validatePdfOcrOptions(options);
             case PDF_TO_AUDIO -> validatePdfToAudioOptions(options);
             default -> true;
@@ -2195,7 +2301,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
     if (!options.containsKey("degrees")) {
       return false;
     }
-    
+
     try {
       int degrees = Integer.parseInt(options.get("degrees").toString());
       return degrees == 90 || degrees == 180 || degrees == 270;
@@ -2247,11 +2353,13 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
       if (!List.of("add_text", "remove_text", "replace_text").contains(editType)) {
         return false;
       }
-      
+
       // Validação específica por tipo de edição
       switch (editType) {
         case "add_text" -> {
-          return options.containsKey("text") && options.containsKey("x") && options.containsKey("y");
+          return options.containsKey("text")
+              && options.containsKey("x")
+              && options.containsKey("y");
         }
         case "remove_text" -> {
           return options.containsKey("text_to_remove");
@@ -2271,7 +2379,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
       if (!options.containsKey("password")) {
         return false;
       }
-      
+
       // Validação de permissões opcionais
       if (options.containsKey("allow_printing")) {
         if (!(options.get("allow_printing") instanceof Boolean)) {
@@ -2288,7 +2396,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
           return false;
         }
       }
-      
+
       return true;
     } catch (Exception e) {
       return false;
@@ -2315,7 +2423,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
           }
         }
       }
-      
+
       // Validação de opções de otimização
       if (options.containsKey("remove_unused_objects")) {
         if (!(options.get("remove_unused_objects") instanceof Boolean)) {
@@ -2327,7 +2435,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
           return false;
         }
       }
-      
+
       return true;
     } catch (Exception e) {
       return false;
@@ -2343,11 +2451,13 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
           return false;
         }
         String typeStr = (String) type;
-        if (!typeStr.equals("basic") && !typeStr.equals("detailed") && !typeStr.equals("compliance")) {
+        if (!typeStr.equals("basic")
+            && !typeStr.equals("detailed")
+            && !typeStr.equals("compliance")) {
           return false;
         }
       }
-      
+
       // Validação de padrão de conformidade opcional
       if (options.containsKey("compliance_standard")) {
         Object standard = options.get("compliance_standard");
@@ -2355,11 +2465,13 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
           return false;
         }
         String standardStr = (String) standard;
-        if (!standardStr.equals("pdf_a") && !standardStr.equals("pdf_x") && !standardStr.equals("pdf_ua")) {
+        if (!standardStr.equals("pdf_a")
+            && !standardStr.equals("pdf_x")
+            && !standardStr.equals("pdf_ua")) {
           return false;
         }
       }
-      
+
       return true;
     } catch (Exception e) {
       return false;
@@ -2375,11 +2487,13 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
           return false;
         }
         String typeStr = (String) type;
-        if (!typeStr.equals("basic") && !typeStr.equals("advanced") && !typeStr.equals("aggressive")) {
+        if (!typeStr.equals("basic")
+            && !typeStr.equals("advanced")
+            && !typeStr.equals("aggressive")) {
           return false;
         }
       }
-      
+
       // Validação de opções de reparo
       if (options.containsKey("fix_structure")) {
         if (!(options.get("fix_structure") instanceof Boolean)) {
@@ -2396,7 +2510,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
           return false;
         }
       }
-      
+
       return true;
     } catch (Exception e) {
       return false;
@@ -2411,19 +2525,19 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
           return false;
         }
       }
-      
+
       if (options.containsKey("compare_text")) {
         if (!(options.get("compare_text") instanceof Boolean)) {
           return false;
         }
       }
-      
+
       if (options.containsKey("compare_metadata")) {
         if (!(options.get("compare_metadata") instanceof Boolean)) {
           return false;
         }
       }
-      
+
       return true;
     } catch (Exception e) {
       return false;
@@ -2440,7 +2554,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
           return false;
         }
       }
-      
+
       if (options.containsKey("pages")) {
         try {
           int pages = Integer.parseInt(options.get("pages").toString());
@@ -2451,7 +2565,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
           return false;
         }
       }
-      
+
       return true;
     } catch (Exception e) {
       return false;
@@ -2468,7 +2582,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
           return false;
         }
       }
-      
+
       // Validar formato de imagem
       if (options.containsKey("image_format")) {
         String format = options.get("image_format").toString();
@@ -2477,7 +2591,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
           return false;
         }
       }
-      
+
       return true;
     } catch (Exception e) {
       return false;
@@ -2494,7 +2608,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
           return false;
         }
       }
-      
+
       // Validar se deve manter estrutura
       if (options.containsKey("keep_structure")) {
         Object keepStructure = options.get("keep_structure");
@@ -2502,7 +2616,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
           return false;
         }
       }
-      
+
       return true;
     } catch (Exception e) {
       return false;
@@ -2518,7 +2632,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
           return false;
         }
       }
-      
+
       // Validar validate_compliance (opcional)
       if (options.containsKey("validate_compliance")) {
         Object compliance = options.get("validate_compliance");
@@ -2526,7 +2640,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
           return false;
         }
       }
-      
+
       return true;
     } catch (Exception e) {
       return false;
@@ -2542,7 +2656,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
           return false;
         }
       }
-      
+
       // Validar font_size (opcional)
       if (options.containsKey("font_size")) {
         Object fontSize = options.get("font_size");
@@ -2555,7 +2669,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
           return false;
         }
       }
-      
+
       // Aceitar qualquer outra opção válida
       return true;
     } catch (Exception e) {
@@ -2572,7 +2686,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
           return false;
         }
       }
-      
+
       // Validar color_mode (opcional)
       if (options.containsKey("color_mode")) {
         String colorMode = (String) options.get("color_mode");
@@ -2580,7 +2694,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
           return false;
         }
       }
-      
+
       // Validar dpi (opcional)
       if (options.containsKey("dpi")) {
         Object dpi = options.get("dpi");
@@ -2593,7 +2707,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
           return false;
         }
       }
-      
+
       return true;
     } catch (Exception e) {
       return false;
@@ -2609,7 +2723,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
           return false;
         }
       }
-      
+
       // Validar output_format (opcional)
       if (options.containsKey("output_format")) {
         String outputFormat = (String) options.get("output_format");
@@ -2617,7 +2731,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
           return false;
         }
       }
-      
+
       // Validar dpi (opcional)
       if (options.containsKey("dpi")) {
         Object dpi = options.get("dpi");
@@ -2630,7 +2744,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
           return false;
         }
       }
-      
+
       return true;
     } catch (Exception e) {
       return false;
@@ -2646,7 +2760,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
           return false;
         }
       }
-      
+
       // Validar speed (opcional)
       if (options.containsKey("speed")) {
         Object speed = options.get("speed");
@@ -2659,7 +2773,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
           return false;
         }
       }
-      
+
       // Validar output_format (opcional)
       if (options.containsKey("output_format")) {
         String format = (String) options.get("output_format");
@@ -2667,7 +2781,7 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
           return false;
         }
       }
-      
+
       return true;
     } catch (Exception e) {
       return false;
@@ -2680,15 +2794,15 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
     }
 
     // Validar parâmetros obrigatórios
-    if (!options.containsKey("certificate_path") || 
-        options.get("certificate_path") == null || 
-        options.get("certificate_path").toString().trim().isEmpty()) {
+    if (!options.containsKey("certificate_path")
+        || options.get("certificate_path") == null
+        || options.get("certificate_path").toString().trim().isEmpty()) {
       return false;
     }
 
-    if (!options.containsKey("certificate_password") || 
-        options.get("certificate_password") == null || 
-        options.get("certificate_password").toString().trim().isEmpty()) {
+    if (!options.containsKey("certificate_password")
+        || options.get("certificate_password") == null
+        || options.get("certificate_password").toString().trim().isEmpty()) {
       return false;
     }
 
@@ -2782,18 +2896,21 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
         yield baseSchema;
       }
       case PDF_TO_IMAGES -> {
-        baseSchema.put("format", "string (optional, default: 'PNG', options: PNG, JPG, JPEG, GIF, BMP)");
+        baseSchema.put(
+            "format", "string (optional, default: 'PNG', options: PNG, JPG, JPEG, GIF, BMP)");
         baseSchema.put("dpi", "number (optional, default: 150)");
         baseSchema.put("pages", "string (optional, default: 'all')");
         yield baseSchema;
       }
       case IMAGES_TO_PDF -> {
-        baseSchema.put("page_size", "string (optional, default: 'A4', options: A4, A3, A5, LETTER, LEGAL)");
+        baseSchema.put(
+            "page_size", "string (optional, default: 'A4', options: A4, A3, A5, LETTER, LEGAL)");
         baseSchema.put("fit_to_page", "boolean (optional, default: true)");
         yield baseSchema;
       }
       case PDF_EDIT -> {
-        baseSchema.put("edit_type", "string (required, options: add_text, remove_text, replace_text)");
+        baseSchema.put(
+            "edit_type", "string (required, options: add_text, remove_text, replace_text)");
         baseSchema.put("text", "string (required for add_text)");
         baseSchema.put("x", "number (required for add_text)");
         baseSchema.put("y", "number (required for add_text)");
@@ -2825,7 +2942,8 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
       case PDF_CREATE -> {
         baseSchema.put("text_content", "string (optional, content to add to PDF)");
         baseSchema.put("pages", "number (optional, default: 1, number of blank pages)");
-        baseSchema.put("page_size", "string (optional, default: 'A4', options: A4, A3, A5, LETTER, LEGAL)");
+        baseSchema.put(
+            "page_size", "string (optional, default: 'A4', options: A4, A3, A5, LETTER, LEGAL)");
         baseSchema.put("font_size", "number (optional, default: 12)");
         baseSchema.put("margin", "number (optional, default: 50)");
         baseSchema.put("title", "string (optional, document title)");
@@ -2833,58 +2951,78 @@ public class PdfProcessingServiceImpl implements PdfProcessingService {
         yield baseSchema;
       }
       case PDF_OPTIMIZE -> {
-        baseSchema.put("compression_level", "string or number (optional, default: 'medium', options: low/medium/high or 1-9)");
+        baseSchema.put(
+            "compression_level",
+            "string or number (optional, default: 'medium', options: low/medium/high or 1-9)");
         baseSchema.put("remove_unused_objects", "boolean (optional, default: true)");
         baseSchema.put("compress_images", "boolean (optional, default: true)");
         yield baseSchema;
       }
       case PDF_VALIDATE -> {
-        baseSchema.put("validation_type", "string (optional, default: 'basic', options: basic, detailed, compliance)");
+        baseSchema.put(
+            "validation_type",
+            "string (optional, default: 'basic', options: basic, detailed, compliance)");
         baseSchema.put("compliance_standard", "string (optional, options: pdf_a, pdf_x, pdf_ua)");
         yield baseSchema;
       }
       case PDF_REPAIR -> {
-        baseSchema.put("repair_type", "string (optional, default: 'basic', options: basic, advanced, aggressive)");
+        baseSchema.put(
+            "repair_type",
+            "string (optional, default: 'basic', options: basic, advanced, aggressive)");
         baseSchema.put("fix_structure", "boolean (optional, default: true)");
         baseSchema.put("fix_metadata", "boolean (optional, default: true)");
         baseSchema.put("remove_corrupted_objects", "boolean (optional, default: false)");
         yield baseSchema;
       }
       case PDF_TO_PDFA -> {
-        baseSchema.put("pdfa_level", "string (optional, default: '1b', options: 1a, 1b, 2a, 2b, 3a, 3b)");
+        baseSchema.put(
+            "pdfa_level", "string (optional, default: '1b', options: 1a, 1b, 2a, 2b, 3a, 3b)");
         baseSchema.put("validate_compliance", "boolean (optional, default: false)");
         yield baseSchema;
       }
       case PDF_FROM_EPUB -> {
-        baseSchema.put("page_size", "string (optional, default: 'A4', options: A4, A3, A5, LETTER, LEGAL)");
+        baseSchema.put(
+            "page_size", "string (optional, default: 'A4', options: A4, A3, A5, LETTER, LEGAL)");
         baseSchema.put("font_size", "number (optional, default: 12, range: 6-72)");
         baseSchema.put("margin", "number (optional, default: 50)");
         yield baseSchema;
       }
       case PDF_FROM_DJVU -> {
-        baseSchema.put("compression_level", "string (optional, default: 'medium', options: low, medium, high)");
+        baseSchema.put(
+            "compression_level",
+            "string (optional, default: 'medium', options: low, medium, high)");
         baseSchema.put("dpi", "number (optional, default: 150, range: 72-600)");
-        baseSchema.put("color_mode", "string (optional, default: 'color', options: color, grayscale, monochrome)");
+        baseSchema.put(
+            "color_mode",
+            "string (optional, default: 'color', options: color, grayscale, monochrome)");
         yield baseSchema;
       }
       case PDF_OCR -> {
-        baseSchema.put("language", "string (optional, default: 'eng', options: eng, por, spa, fra, deu, ita)");
+        baseSchema.put(
+            "language", "string (optional, default: 'eng', options: eng, por, spa, fra, deu, ita)");
         baseSchema.put("dpi", "number (optional, default: 300, range: 72-600)");
-        baseSchema.put("output_format", "string (optional, default: 'searchable_pdf', options: text, searchable_pdf, hocr)");
+        baseSchema.put(
+            "output_format",
+            "string (optional, default: 'searchable_pdf', options: text, searchable_pdf, hocr)");
         baseSchema.put("preprocess_image", "boolean (optional, default: true)");
         yield baseSchema;
       }
       case PDF_TO_AUDIO -> {
-        baseSchema.put("voice", "string (optional, default: 'default', options: default, male, female, neutral)");
+        baseSchema.put(
+            "voice",
+            "string (optional, default: 'default', options: default, male, female, neutral)");
         baseSchema.put("speed", "number (optional, default: 1.0, range: 0.1-3.0)");
-        baseSchema.put("output_format", "string (optional, default: 'mp3', options: mp3, wav, ogg)");
+        baseSchema.put(
+            "output_format", "string (optional, default: 'mp3', options: mp3, wav, ogg)");
         baseSchema.put("extract_text_first", "boolean (optional, default: true)");
         yield baseSchema;
       }
       case PDF_SIGN -> {
-        baseSchema.put("certificate_path", "string (required) - Path to the certificate file (.p12 or .pfx)");
+        baseSchema.put(
+            "certificate_path", "string (required) - Path to the certificate file (.p12 or .pfx)");
         baseSchema.put("certificate_password", "string (required) - Password for the certificate");
-        baseSchema.put("reason", "string (optional, default: 'Document signed') - Reason for signing");
+        baseSchema.put(
+            "reason", "string (optional, default: 'Document signed') - Reason for signing");
         baseSchema.put("location", "string (optional, default: 'Unknown') - Location of signing");
         baseSchema.put("contact_info", "string (optional) - Contact information of signer");
         yield baseSchema;

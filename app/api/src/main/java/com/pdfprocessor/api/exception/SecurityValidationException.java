@@ -1,8 +1,8 @@
 package com.pdfprocessor.api.exception;
 
 /**
- * Exceção lançada quando validações de segurança falham.
- * Inclui validações de tamanho de arquivo, limite de arquivos, rate limiting, etc.
+ * Exceção lançada quando validações de segurança falham. Inclui validações de tamanho de arquivo,
+ * limite de arquivos, rate limiting, etc.
  */
 public class SecurityValidationException extends RuntimeException {
 

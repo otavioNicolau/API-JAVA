@@ -1,5 +1,6 @@
 /home/otavio/API-JAVA/app/infrastructure/src/main/java/com/pdfprocessor/infrastructure/config/RedisConfig.java
 /home/otavio/API-JAVA/app/infrastructure/src/main/java/com/pdfprocessor/infrastructure/adapter/RedisJobQueue.java
 /home/otavio/API-JAVA/app/infrastructure/src/main/java/com/pdfprocessor/infrastructure/adapter/PdfProcessingServiceImpl.java
+/home/otavio/API-JAVA/app/infrastructure/src/main/java/com/pdfprocessor/infrastructure/config/StorageProperties.java
 /home/otavio/API-JAVA/app/infrastructure/src/main/java/com/pdfprocessor/infrastructure/adapter/LocalStorageService.java
 /home/otavio/API-JAVA/app/infrastructure/src/main/java/com/pdfprocessor/infrastructure/adapter/RedisJobRepository.java

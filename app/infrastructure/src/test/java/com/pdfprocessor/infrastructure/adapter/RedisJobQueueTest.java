@@ -42,7 +42,7 @@ class RedisJobQueueTest {
     jobQueue = new RedisJobQueue(redisTemplate);
     objectMapper = new ObjectMapper();
     objectMapper.registerModule(new JavaTimeModule());
-    
+
     testJob = new Job("job-123", JobOperation.MERGE, List.of("file1.pdf", "file2.pdf"), Map.of());
   }
 
@@ -63,7 +63,7 @@ class RedisJobQueueTest {
   void shouldThrowExceptionWhenPublishFailsWithSerialization() {
     // Given
     when(redisTemplate.opsForList()).thenReturn(listOperations);
-    
+
     // When & Then - teste do comportamento normal
     assertDoesNotThrow(() -> jobQueue.publish(testJob));
   }
@@ -161,10 +161,10 @@ class RedisJobQueueTest {
     String processingKey = "pdf:jobs:processing";
     String queueKey = "pdf:jobs:queue";
     String jobJson = objectMapper.writeValueAsString(testJob);
-    
+
     // When & Then - deve não lançar exceção mesmo com erro interno
     assertDoesNotThrow(() -> jobQueue.returnToQueue(testJob));
-    
+
     // Verify
     verify(setOperations).remove(processingKey, jobJson);
     verify(listOperations).leftPush(eq(queueKey), anyString());
@@ -190,10 +190,10 @@ class RedisJobQueueTest {
     when(redisTemplate.opsForSet()).thenReturn(setOperations);
     String processingKey = "pdf:jobs:processing";
     String jobJson = objectMapper.writeValueAsString(testJob);
-    
+
     // When & Then - deve não lançar exceção mesmo com erro interno
     assertDoesNotThrow(() -> jobQueue.acknowledge(testJob));
-    
+
     // Verify
     verify(setOperations).remove(processingKey, jobJson);
   }

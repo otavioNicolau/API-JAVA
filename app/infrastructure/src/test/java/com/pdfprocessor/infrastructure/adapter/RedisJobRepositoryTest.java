@@ -1,7 +1,7 @@
 package com.pdfprocessor.infrastructure.adapter;
 
 import static org.junit.jupiter.api.Assertions.*;
-//import static org.mockito.ArgumentMatchers.*;
+// import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import com.pdfprocessor.domain.model.Job;
@@ -57,7 +57,8 @@ class RedisJobRepositoryTest {
   void shouldFindJobByIdSuccessfully() {
     // Given
     when(redisTemplate.opsForValue()).thenReturn(valueOperations);
-    String jobJson = "{\"id\":\"job-123\",\"operation\":\"MERGE\",\"inputFiles\":[\"file1.pdf\",\"file2.pdf\"],\"options\":{},\"status\":\"PENDING\",\"createdAt\":\"2023-01-01T10:00:00\",\"updatedAt\":\"2023-01-01T10:00:00\"}";
+    String jobJson =
+        "{\"id\":\"job-123\",\"operation\":\"MERGE\",\"inputFiles\":[\"file1.pdf\",\"file2.pdf\"],\"options\":{},\"status\":\"PENDING\",\"createdAt\":\"2023-01-01T10:00:00\",\"updatedAt\":\"2023-01-01T10:00:00\"}";
     when(valueOperations.get("pdf:job:job-123")).thenReturn(jobJson);
 
     // When
@@ -87,13 +88,15 @@ class RedisJobRepositoryTest {
     // Given
     when(redisTemplate.opsForSet()).thenReturn(setOperations);
     when(redisTemplate.opsForValue()).thenReturn(valueOperations);
-    
+
     Set<Object> jobIds = Set.of("job-1", "job-2");
     when(setOperations.members("pdf:jobs:index")).thenReturn(jobIds);
-    
-    String job1Json = "{\"id\":\"job-1\",\"operation\":\"MERGE\",\"inputFiles\":[\"file1.pdf\"],\"options\":{},\"status\":\"PENDING\",\"createdAt\":\"2023-01-01T10:00:00\",\"updatedAt\":\"2023-01-01T10:00:00\"}";
-    String job2Json = "{\"id\":\"job-2\",\"operation\":\"SPLIT\",\"inputFiles\":[\"file2.pdf\"],\"options\":{},\"status\":\"PENDING\",\"createdAt\":\"2023-01-01T10:00:00\",\"updatedAt\":\"2023-01-01T10:00:00\"}";
-    
+
+    String job1Json =
+        "{\"id\":\"job-1\",\"operation\":\"MERGE\",\"inputFiles\":[\"file1.pdf\"],\"options\":{},\"status\":\"PENDING\",\"createdAt\":\"2023-01-01T10:00:00\",\"updatedAt\":\"2023-01-01T10:00:00\"}";
+    String job2Json =
+        "{\"id\":\"job-2\",\"operation\":\"SPLIT\",\"inputFiles\":[\"file2.pdf\"],\"options\":{},\"status\":\"PENDING\",\"createdAt\":\"2023-01-01T10:00:00\",\"updatedAt\":\"2023-01-01T10:00:00\"}";
+
     when(valueOperations.get("pdf:job:job-1")).thenReturn(job1Json);
     when(valueOperations.get("pdf:job:job-2")).thenReturn(job2Json);
 

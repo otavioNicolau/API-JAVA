@@ -129,15 +129,45 @@ class JobResponseTest {
   void shouldImplementEqualsCorrectly() {
     // Given
     LocalDateTime now = LocalDateTime.now();
-    JobResponse response1 = new JobResponse(
-        "job-123", JobOperation.MERGE, JobStatus.PENDING, List.of("file1.pdf"), Map.of(),
-        null, null, 0, now, null, null);
-    JobResponse response2 = new JobResponse(
-        "job-123", JobOperation.MERGE, JobStatus.PENDING, List.of("file1.pdf"), Map.of(),
-        null, null, 0, now, null, null);
-    JobResponse response3 = new JobResponse(
-        "job-456", JobOperation.SPLIT, JobStatus.PENDING, List.of("file1.pdf"), Map.of(),
-        null, null, 0, now, null, null);
+    JobResponse response1 =
+        new JobResponse(
+            "job-123",
+            JobOperation.MERGE,
+            JobStatus.PENDING,
+            List.of("file1.pdf"),
+            Map.of(),
+            null,
+            null,
+            0,
+            now,
+            null,
+            null);
+    JobResponse response2 =
+        new JobResponse(
+            "job-123",
+            JobOperation.MERGE,
+            JobStatus.PENDING,
+            List.of("file1.pdf"),
+            Map.of(),
+            null,
+            null,
+            0,
+            now,
+            null,
+            null);
+    JobResponse response3 =
+        new JobResponse(
+            "job-456",
+            JobOperation.SPLIT,
+            JobStatus.PENDING,
+            List.of("file1.pdf"),
+            Map.of(),
+            null,
+            null,
+            0,
+            now,
+            null,
+            null);
 
     // When & Then
     assertEquals(response1, response2);
@@ -150,12 +180,32 @@ class JobResponseTest {
   void shouldImplementHashCodeCorrectly() {
     // Given
     LocalDateTime now = LocalDateTime.now();
-    JobResponse response1 = new JobResponse(
-        "job-123", JobOperation.MERGE, JobStatus.PENDING, List.of("file1.pdf"), Map.of(),
-        null, null, 0, now, null, null);
-    JobResponse response2 = new JobResponse(
-        "job-123", JobOperation.MERGE, JobStatus.PENDING, List.of("file1.pdf"), Map.of(),
-        null, null, 0, now, null, null);
+    JobResponse response1 =
+        new JobResponse(
+            "job-123",
+            JobOperation.MERGE,
+            JobStatus.PENDING,
+            List.of("file1.pdf"),
+            Map.of(),
+            null,
+            null,
+            0,
+            now,
+            null,
+            null);
+    JobResponse response2 =
+        new JobResponse(
+            "job-123",
+            JobOperation.MERGE,
+            JobStatus.PENDING,
+            List.of("file1.pdf"),
+            Map.of(),
+            null,
+            null,
+            0,
+            now,
+            null,
+            null);
 
     // When & Then
     assertEquals(response1.hashCode(), response2.hashCode());
@@ -164,9 +214,19 @@ class JobResponseTest {
   @Test
   void shouldImplementToStringCorrectly() {
     // Given
-    JobResponse response = new JobResponse(
-        "job-123", JobOperation.MERGE, JobStatus.PROCESSING, List.of("file1.pdf"), Map.of(),
-        null, null, 50, LocalDateTime.now(), null, null);
+    JobResponse response =
+        new JobResponse(
+            "job-123",
+            JobOperation.MERGE,
+            JobStatus.PROCESSING,
+            List.of("file1.pdf"),
+            Map.of(),
+            null,
+            null,
+            50,
+            LocalDateTime.now(),
+            null,
+            null);
 
     // When
     String toString = response.toString();

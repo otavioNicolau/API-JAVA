@@ -3,6 +3,7 @@ package com.pdfprocessor.infrastructure.adapter;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import com.pdfprocessor.infrastructure.config.StorageProperties;
 import java.io.*;
 import java.nio.file.*;
 import java.util.List;
@@ -23,14 +24,16 @@ class LocalStorageServiceTest {
 
   @BeforeEach
   void setUp() throws IOException {
-    storageService = new LocalStorageService();
+    StorageProperties storageProperties = mock(StorageProperties.class);
+    when(storageProperties.getBasePath()).thenReturn(tempDir.toString());
+    storageService = new LocalStorageService(storageProperties);
     testJobId = "test-job-123";
     testFilename = "test-file.pdf";
-    
+
     // Criar diretório de storage temporário
     testStorageDir = tempDir.resolve("storage");
     Files.createDirectories(testStorageDir);
-    
+
     // Mudar o diretório de trabalho para usar o tempDir
     System.setProperty("user.dir", tempDir.toString());
   }
@@ -59,9 +62,11 @@ class LocalStorageServiceTest {
   @Test
   void shouldThrowExceptionWhenStoreFailsWithNullInputStream() {
     // When & Then
-    assertThrows(RuntimeException.class, () -> {
-      storageService.store(testJobId, testFilename, null);
-    });
+    assertThrows(
+        RuntimeException.class,
+        () -> {
+          storageService.store(testJobId, testFilename, null);
+        });
   }
 
   @Test
@@ -72,7 +77,7 @@ class LocalStorageServiceTest {
     Files.createDirectories(jobDir);
     Path filePath = jobDir.resolve(testFilename);
     Files.writeString(filePath, content);
-    
+
     String absolutePath = filePath.toString();
 
     // When
@@ -90,9 +95,11 @@ class LocalStorageServiceTest {
     String nonExistentPath = "./storage/non-existent/file.pdf";
 
     // When & Then
-    assertThrows(RuntimeException.class, () -> {
-      storageService.retrieve(nonExistentPath);
-    });
+    assertThrows(
+        RuntimeException.class,
+        () -> {
+          storageService.retrieve(nonExistentPath);
+        });
   }
 
   @Test

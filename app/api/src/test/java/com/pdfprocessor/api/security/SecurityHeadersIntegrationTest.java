@@ -81,7 +81,8 @@ class SecurityHeadersIntegrationTest {
     verify(response).setHeader("X-Frame-Options", "DENY");
     verify(response).setHeader("X-XSS-Protection", "1; mode=block");
     // Verify cache headers are NOT set for non-API endpoints
-    verify(response, org.mockito.Mockito.never()).setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    verify(response, org.mockito.Mockito.never())
+        .setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
     verify(response, org.mockito.Mockito.never()).setHeader("Pragma", "no-cache");
     verify(response, org.mockito.Mockito.never()).setHeader("Expires", "0");
     verify(filterChain).doFilter(request, response);

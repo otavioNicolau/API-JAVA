@@ -1,14 +1,13 @@
 package com.pdfprocessor.api.service;
 
-import com.pdfprocessor.api.exception.SecurityValidationException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
+import com.pdfprocessor.api.exception.SecurityValidationException;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class RateLimitServiceTest {
 
@@ -47,8 +46,7 @@ class RateLimitServiceTest {
     // A 101ª requisição deve ser rejeitada
     SecurityValidationException exception =
         assertThrows(
-            SecurityValidationException.class,
-            () -> rateLimitService.checkRateLimit(apiKey));
+            SecurityValidationException.class, () -> rateLimitService.checkRateLimit(apiKey));
 
     assertEquals("RATE_LIMIT_EXCEEDED", exception.getErrorCode());
     assertTrue(exception.getMessage().contains("Rate limit exceeded"));
@@ -64,12 +62,10 @@ class RateLimitServiceTest {
     }
 
     // Verificar que chegou ao limite
-    assertThrows(
-        SecurityValidationException.class, () -> rateLimitService.checkRateLimit(apiKey));
+    assertThrows(SecurityValidationException.class, () -> rateLimitService.checkRateLimit(apiKey));
 
     // Avançar o clock em 1 hora e 1 minuto
-    Clock newClock =
-        Clock.fixed(Instant.parse("2024-01-15T11:01:00Z"), ZoneId.systemDefault());
+    Clock newClock = Clock.fixed(Instant.parse("2024-01-15T11:01:00Z"), ZoneId.systemDefault());
     rateLimitService = new RateLimitService(newClock);
 
     // Agora deve permitir novas requisições
@@ -98,8 +94,7 @@ class RateLimitServiceTest {
     }
 
     // apiKey1 deve estar no limite, apiKey2 ainda deve funcionar
-    assertThrows(
-        SecurityValidationException.class, () -> rateLimitService.checkRateLimit(apiKey1));
+    assertThrows(SecurityValidationException.class, () -> rateLimitService.checkRateLimit(apiKey1));
     assertDoesNotThrow(() -> rateLimitService.checkRateLimit(apiKey2));
   }
 
@@ -137,12 +132,10 @@ class RateLimitServiceTest {
     }
 
     // Avançar 30 minutos - criar nova instância com clock atualizado
-    Clock newClock =
-        Clock.fixed(Instant.parse("2024-01-15T10:30:00Z"), ZoneId.systemDefault());
-    
+    Clock newClock = Clock.fixed(Instant.parse("2024-01-15T10:30:00Z"), ZoneId.systemDefault());
+
     // Para simular janela deslizante, vamos testar o comportamento após 1 hora
-    Clock oneHourLater =
-        Clock.fixed(Instant.parse("2024-01-15T11:01:00Z"), ZoneId.systemDefault());
+    Clock oneHourLater = Clock.fixed(Instant.parse("2024-01-15T11:01:00Z"), ZoneId.systemDefault());
     RateLimitService newService = new RateLimitService(oneHourLater);
 
     // Com nova instância (janela resetada), deve permitir novas requisições

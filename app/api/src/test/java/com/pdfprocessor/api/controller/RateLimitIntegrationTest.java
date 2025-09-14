@@ -1,5 +1,11 @@
 package com.pdfprocessor.api.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.pdfprocessor.api.service.InputValidationService;
 import com.pdfprocessor.api.service.RateLimitService;
 import com.pdfprocessor.application.dto.JobResponse;
@@ -20,12 +26,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @SpringBootTest
 @AutoConfigureWebMvc
 @ActiveProfiles("test")
@@ -34,7 +34,7 @@ class RateLimitIntegrationTest {
   @Autowired private WebApplicationContext webApplicationContext;
 
   @Autowired private RateLimitService rateLimitService;
-  
+
   @MockBean private InputValidationService inputValidationService;
   @MockBean private CreateJobUseCase createJobUseCase;
   @MockBean private GetJobStatusUseCase getJobStatusUseCase;
@@ -46,13 +46,13 @@ class RateLimitIntegrationTest {
     mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     // Limpar dados de rate limit antes de cada teste
     rateLimitService.clearRateLimitData();
-    
+
     // Configurar mocks para não interferir nos testes de rate limit
     doNothing().when(inputValidationService).validateOperation(any());
     doNothing().when(inputValidationService).validateUploadedFiles(any());
     doNothing().when(inputValidationService).validateInputFiles(any());
     doNothing().when(inputValidationService).validateOptionsJson(any());
-    
+
     // Mock do CreateJobUseCase para retornar JobResponse
     JobResponse mockResponse = new JobResponse();
     mockResponse.setId("test-job-id");

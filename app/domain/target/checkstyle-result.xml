@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <checkstyle version="9.3">
-<file name="/home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/model/JobOperation.java">
-</file>
 <file name="/home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/model/Job.java">
 <error line="38" column="10" severity="warning" message="More than 7 parameters (found 11)." source="com.puppycrawl.tools.checkstyle.checks.sizes.ParameterNumberCheck"/>
 <error line="117" column="34" severity="warning" message="&apos;progress&apos; hides a field." source="com.puppycrawl.tools.checkstyle.checks.coding.HiddenFieldCheck"/>
@@ -9,26 +7,5 @@
 <error line="134" column="27" severity="warning" message="&apos;errorMessage&apos; hides a field." source="com.puppycrawl.tools.checkstyle.checks.coding.HiddenFieldCheck"/>
 <error line="162" column="5" severity="warning" message="&apos;if&apos; construct must use &apos;{}&apos;s." source="com.puppycrawl.tools.checkstyle.checks.blocks.NeedBracesCheck"/>
 <error line="163" column="5" severity="warning" message="&apos;if&apos; construct must use &apos;{}&apos;s." source="com.puppycrawl.tools.checkstyle.checks.blocks.NeedBracesCheck"/>
-</file>
-<file name="/home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/model/JobStatus.java">
-</file>
-<file name="/home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/exception/JobNotCompletedException.java">
-</file>
-<file name="/home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/exception/JobNotFoundException.java">
-</file>
-<file name="/home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/exception/ResultNotFoundException.java">
-</file>
-<file name="/home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/port/StorageService.java">
-</file>
-<file name="/home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/port/JobRepository.java">
-</file>
-<file name="/home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/port/JobQueue.java">
-</file>
-<file name="/home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/port/ProgressNotificationService.java">
-<error line="3" column="1" severity="warning" message="Redundant import from the same package - com.pdfprocessor.domain.port.ProgressCallback." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
-</file>
-<file name="/home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/port/PdfProcessingService.java">
-</file>
-<file name="/home/otavio/API-JAVA/app/domain/src/main/java/com/pdfprocessor/domain/port/ProgressCallback.java">
 </file>
 </checkstyle>

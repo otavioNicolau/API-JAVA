@@ -1,8 +1,8 @@
 package com.pdfprocessor.worker.processor;
 
-//import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+// import static org.mockito.ArgumentMatchers.any;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import com.pdfprocessor.domain.model.Job;
 import com.pdfprocessor.domain.model.JobOperation;
@@ -34,7 +34,9 @@ class JobProcessorTest {
 
   @BeforeEach
   void setUp() {
-    jobProcessor = new JobProcessor(jobRepository, storageService, pdfProcessingService, progressNotificationService);
+    jobProcessor =
+        new JobProcessor(
+            jobRepository, storageService, pdfProcessingService, progressNotificationService);
   }
 
   @Test
@@ -42,7 +44,8 @@ class JobProcessorTest {
     // Given
     Job job = createTestJob();
     String expectedResultPath = "/path/to/result.pdf";
-    when(pdfProcessingService.processJob(job, progressNotificationService)).thenReturn(expectedResultPath);
+    when(pdfProcessingService.processJob(job, progressNotificationService))
+        .thenReturn(expectedResultPath);
 
     // When
     jobProcessor.process(job);
@@ -51,7 +54,7 @@ class JobProcessorTest {
     assertEquals(JobStatus.COMPLETED, job.getStatus());
     assertEquals(expectedResultPath, job.getResultPath());
     assertNotNull(job.getCompletedAt());
-    
+
     verify(jobRepository, times(2)).save(job); // Once for PROCESSING, once for COMPLETED
     verify(pdfProcessingService).processJob(job, progressNotificationService);
   }
@@ -65,14 +68,17 @@ class JobProcessorTest {
     when(pdfProcessingService.processJob(job, progressNotificationService)).thenThrow(exception);
 
     // When & Then
-    RuntimeException thrownException = assertThrows(RuntimeException.class, () -> {
-      jobProcessor.process(job);
-    });
+    RuntimeException thrownException =
+        assertThrows(
+            RuntimeException.class,
+            () -> {
+              jobProcessor.process(job);
+            });
 
     assertEquals("Falha no processamento do job: " + job.getId(), thrownException.getMessage());
     assertEquals(JobStatus.FAILED, job.getStatus());
     assertEquals(errorMessage, job.getErrorMessage());
-    
+
     verify(jobRepository, times(2)).save(job); // Once for PROCESSING, once for FAILED
     verify(pdfProcessingService).processJob(job, progressNotificationService);
   }
@@ -82,7 +88,8 @@ class JobProcessorTest {
     // Given
     Job job = createTestJob();
     String expectedResultPath = "/path/to/result.pdf";
-    when(pdfProcessingService.processJob(job, progressNotificationService)).thenReturn(expectedResultPath);
+    when(pdfProcessingService.processJob(job, progressNotificationService))
+        .thenReturn(expectedResultPath);
 
     // When
     jobProcessor.process(job);
@@ -99,7 +106,8 @@ class JobProcessorTest {
     // Given
     Job job = createTestJob();
     String expectedResultPath = "/path/to/result.pdf";
-    when(pdfProcessingService.processJob(job, progressNotificationService)).thenReturn(expectedResultPath);
+    when(pdfProcessingService.processJob(job, progressNotificationService))
+        .thenReturn(expectedResultPath);
 
     // When
     jobProcessor.process(job);
@@ -113,7 +121,8 @@ class JobProcessorTest {
     // Given
     Job job = createTestJob();
     String expectedResultPath = "/path/to/result.pdf";
-    when(pdfProcessingService.processJob(job, progressNotificationService)).thenReturn(expectedResultPath);
+    when(pdfProcessingService.processJob(job, progressNotificationService))
+        .thenReturn(expectedResultPath);
 
     // When
     jobProcessor.process(job);

@@ -56,8 +56,7 @@ class JobTest {
     Map<String, Object> options = Map.of();
 
     // When & Then
-    assertThrows(
-        NullPointerException.class, () -> new Job(null, operation, inputFiles, options));
+    assertThrows(NullPointerException.class, () -> new Job(null, operation, inputFiles, options));
   }
 
   @Test

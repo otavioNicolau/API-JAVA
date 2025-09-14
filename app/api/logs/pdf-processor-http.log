@@ -1,256 +1,48 @@
-2025-09-06 09:53:44 - Request: GET /api/v1/health from 0:0:0:0:0:0:0:1
-2025-09-06 09:53:44 - Response: GET /api/v1/health - Status: 200 - Duration: 81ms
-2025-09-06 09:53:49 - Request: GET /api/v1/operations from 0:0:0:0:0:0:0:1
-2025-09-06 09:53:49 - Response: GET /api/v1/operations - Status: 200 - Duration: 46ms
-2025-09-06 10:05:48 - Request: GET /api/v1/operations from 0:0:0:0:0:0:0:1
-2025-09-06 10:05:48 - Response: GET /api/v1/operations - Status: 200 - Duration: 9ms
-2025-09-06 10:05:55 - Request: GET /api/v1/operations from 0:0:0:0:0:0:0:1
-2025-09-06 10:05:55 - Response: GET /api/v1/operations - Status: 200 - Duration: 2ms
-2025-09-06 10:06:12 - Request: POST /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 10:06:12 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 26ms
-2025-09-06 10:06:19 - Request: POST /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 10:06:19 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 4ms
-2025-09-06 10:06:42 - Request: POST /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 10:06:42 - Response: POST /api/v1/jobs - Status: 200 - Duration: 52ms
-2025-09-06 10:08:32 - Request: GET /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 10:08:32 - Response: GET /api/v1/jobs - Status: 200 - Duration: 91ms
-2025-09-06 10:08:38 - Request: GET /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 10:08:38 - Response: GET /api/v1/jobs - Status: 200 - Duration: 53ms
-2025-09-06 10:08:55 - Request: GET /api/v1/jobs/e95e0d9a-13b4-4d63-9cad-42174be1c00f from 0:0:0:0:0:0:0:1
-2025-09-06 10:08:55 - Response: GET /api/v1/jobs/e95e0d9a-13b4-4d63-9cad-42174be1c00f - Status: 200 - Duration: 10ms
-2025-09-06 10:09:01 - Request: GET /api/v1/jobs/e95e0d9a-13b4-4d63-9cad-42174be1c00f from 0:0:0:0:0:0:0:1
-2025-09-06 10:09:01 - Response: GET /api/v1/jobs/e95e0d9a-13b4-4d63-9cad-42174be1c00f - Status: 200 - Duration: 5ms
-2025-09-06 10:37:18 - Request: POST /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 10:37:18 - Response: POST /api/v1/jobs - Status: 200 - Duration: 16ms
-2025-09-06 10:43:21 - Request: GET /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 10:43:21 - Response: GET /api/v1/jobs - Status: 200 - Duration: 39ms
-2025-09-06 12:19:58 - Request: GET /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 12:19:58 - Response: GET /api/v1/jobs - Status: 200 - Duration: 260ms
-2025-09-06 12:20:29 - Request: GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:20:29 - [RESPONSE] GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download - Status: 500 - Duration: 25ms
-2025-09-06 12:20:29 - Exception in request: GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download - Error: Error downloading job result
-2025-09-06 12:20:41 - Request: GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:20:41 - [RESPONSE] GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download - Status: 500 - Duration: 5ms
-2025-09-06 12:20:41 - Exception in request: GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download - Error: Error downloading job result
-2025-09-06 12:20:42 - Request: GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:20:42 - [RESPONSE] GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download - Status: 500 - Duration: 6ms
-2025-09-06 12:20:42 - Exception in request: GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download - Error: Error downloading job result
-2025-09-06 12:20:42 - Request: GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:20:42 - [RESPONSE] GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download - Status: 500 - Duration: 3ms
-2025-09-06 12:20:42 - Exception in request: GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download - Error: Error downloading job result
-2025-09-06 12:20:42 - Request: GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:20:42 - [RESPONSE] GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download - Status: 500 - Duration: 5ms
-2025-09-06 12:20:42 - Exception in request: GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download - Error: Error downloading job result
-2025-09-06 12:21:59 - Request: GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:21:59 - [RESPONSE] GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download - Status: 500 - Duration: 5ms
-2025-09-06 12:21:59 - Exception in request: GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download - Error: Error downloading job result
-2025-09-06 12:22:05 - Request: GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:22:05 - [RESPONSE] GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download - Status: 500 - Duration: 9ms
-2025-09-06 12:22:05 - Exception in request: GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download - Error: Error downloading job result
-2025-09-06 12:22:10 - Request: GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:22:10 - [RESPONSE] GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download - Status: 500 - Duration: 9ms
-2025-09-06 12:22:10 - Exception in request: GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download - Error: Error downloading job result
-2025-09-06 12:23:08 - Request: GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:23:08 - [RESPONSE] GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download - Status: 500 - Duration: 279ms
-2025-09-06 12:23:08 - Exception in request: GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download - Error: Error downloading job result
-2025-09-06 12:23:24 - Request: GET /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 12:23:24 - Response: GET /api/v1/jobs - Status: 200 - Duration: 72ms
-2025-09-06 12:23:53 - Request: GET /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 12:23:53 - Response: GET /api/v1/jobs - Status: 200 - Duration: 17ms
-2025-09-06 12:24:18 - Request: GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:24:19 - [RESPONSE] GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download - Status: 500 - Duration: 8ms
-2025-09-06 12:24:19 - Exception in request: GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download - Error: Error downloading job result
-2025-09-06 12:24:57 - Request: GET /api/v1/jobs/e95e0d9a-13b4-4d63-9cad-42174be1c00f/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:24:57 - [RESPONSE] GET /api/v1/jobs/e95e0d9a-13b4-4d63-9cad-42174be1c00f/download - Status: 500 - Duration: 6ms
-2025-09-06 12:24:57 - Exception in request: GET /api/v1/jobs/e95e0d9a-13b4-4d63-9cad-42174be1c00f/download - Error: Error downloading job result
-2025-09-06 12:25:39 - Request: GET /api/v1/jobs/e95e0d9a-13b4-4d63-9cad-42174be1c00f/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:25:39 - [RESPONSE] GET /api/v1/jobs/e95e0d9a-13b4-4d63-9cad-42174be1c00f/download - Status: 500 - Duration: 6ms
-2025-09-06 12:25:39 - Exception in request: GET /api/v1/jobs/e95e0d9a-13b4-4d63-9cad-42174be1c00f/download - Error: Error downloading job result
-2025-09-06 12:25:51 - Request: GET /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 12:25:51 - Response: GET /api/v1/jobs - Status: 200 - Duration: 20ms
-2025-09-06 12:26:04 - Request: GET /api/v1/jobs/e95e0d9a-13b4-4d63-9cad-42174be1c00f/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:26:04 - [RESPONSE] GET /api/v1/jobs/e95e0d9a-13b4-4d63-9cad-42174be1c00f/download - Status: 500 - Duration: 5ms
-2025-09-06 12:26:04 - Exception in request: GET /api/v1/jobs/e95e0d9a-13b4-4d63-9cad-42174be1c00f/download - Error: Error downloading job result
-2025-09-06 12:26:10 - Request: GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:26:10 - [RESPONSE] GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download - Status: 500 - Duration: 9ms
-2025-09-06 12:26:10 - Exception in request: GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download - Error: Error downloading job result
-2025-09-06 12:26:25 - Request: GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:26:25 - [RESPONSE] GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download - Status: 500 - Duration: 7ms
-2025-09-06 12:26:25 - Exception in request: GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download - Error: Error downloading job result
-2025-09-06 12:26:26 - Request: GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:26:26 - [RESPONSE] GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download - Status: 500 - Duration: 2ms
-2025-09-06 12:26:26 - Exception in request: GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000/download - Error: Error downloading job result
-2025-09-06 12:26:26 - Request: GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000 from 0:0:0:0:0:0:0:1
-2025-09-06 12:26:26 - [RESPONSE] GET /api/v1/jobs/550e8400-e29b-41d4-a716-446655440000 - Status: 404 - Duration: 7ms
-2025-09-06 12:27:33 - Request: GET /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 12:27:33 - Response: GET /api/v1/jobs - Status: 200 - Duration: 19ms
-2025-09-06 12:27:59 - Request: GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:27:59 - [RESPONSE] GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download - Status: 500 - Duration: 6ms
-2025-09-06 12:27:59 - Exception in request: GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download - Error: Error downloading job result
-2025-09-06 12:28:07 - Request: GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:28:07 - [RESPONSE] GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download - Status: 500 - Duration: 4ms
-2025-09-06 12:28:07 - Exception in request: GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download - Error: Error downloading job result
-2025-09-06 12:28:08 - Request: GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:28:08 - [RESPONSE] GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download - Status: 500 - Duration: 16ms
-2025-09-06 12:28:08 - Exception in request: GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download - Error: Error downloading job result
-2025-09-06 12:28:08 - Request: GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:28:08 - [RESPONSE] GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download - Status: 500 - Duration: 4ms
-2025-09-06 12:28:08 - Exception in request: GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download - Error: Error downloading job result
-2025-09-06 12:28:19 - Request: GET /api/v1/jobs/e95e0d9a-13b4-4d63-9cad-42174be1c00f from 0:0:0:0:0:0:0:1
-2025-09-06 12:28:19 - Response: GET /api/v1/jobs/e95e0d9a-13b4-4d63-9cad-42174be1c00f - Status: 200 - Duration: 4ms
-2025-09-06 12:28:33 - Request: GET /api/v1/jobs/e95e0d9a-13b4-4d63-9cad-42174be1c00f from 0:0:0:0:0:0:0:1
-2025-09-06 12:28:33 - Response: GET /api/v1/jobs/e95e0d9a-13b4-4d63-9cad-42174be1c00f - Status: 200 - Duration: 4ms
-2025-09-06 12:28:39 - Request: GET /api/v1/jobs/e95e0d9a-13b4-4d63-9cad-42174be1c00f/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:28:39 - [RESPONSE] GET /api/v1/jobs/e95e0d9a-13b4-4d63-9cad-42174be1c00f/download - Status: 500 - Duration: 6ms
-2025-09-06 12:28:39 - Exception in request: GET /api/v1/jobs/e95e0d9a-13b4-4d63-9cad-42174be1c00f/download - Error: Error downloading job result
-2025-09-06 12:32:24 - Request: GET /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 12:32:24 - Response: GET /api/v1/jobs - Status: 200 - Duration: 21ms
-2025-09-06 12:32:36 - Request: GET /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 12:32:36 - Response: GET /api/v1/jobs - Status: 200 - Duration: 17ms
-2025-09-06 12:33:47 - Request: GET /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 12:33:48 - Response: GET /api/v1/jobs - Status: 200 - Duration: 271ms
-2025-09-06 12:34:35 - Request: GET /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 12:34:35 - Response: GET /api/v1/jobs - Status: 200 - Duration: 37ms
-2025-09-06 12:34:54 - Request: GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:34:54 - [RESPONSE] GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download - Status: 500 - Duration: 17ms
-2025-09-06 12:34:55 - Exception in request: GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download - Error: Error downloading job result
-2025-09-06 12:35:42 - Request: GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:35:42 - [RESPONSE] GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download - Status: 500 - Duration: 5ms
-2025-09-06 12:35:42 - Exception in request: GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download - Error: Error downloading job result
-2025-09-06 12:35:54 - Request: GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:35:54 - [RESPONSE] GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download - Status: 500 - Duration: 4ms
-2025-09-06 12:35:54 - Exception in request: GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download - Error: Error downloading job result
-2025-09-06 12:36:43 - Request: GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:36:43 - [RESPONSE] GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download - Status: 500 - Duration: 300ms
-2025-09-06 12:36:43 - Exception in request: GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download - Error: Error downloading job result
-2025-09-06 12:37:01 - Request: GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:37:01 - [RESPONSE] GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download - Status: 500 - Duration: 4ms
-2025-09-06 12:37:01 - Exception in request: GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download - Error: Error downloading job result
-2025-09-06 12:37:29 - Request: GET /api/v1/jobs/test/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:37:29 - [RESPONSE] GET /api/v1/jobs/test/download - Status: 500 - Duration: 11ms
-2025-09-06 12:37:29 - Exception in request: GET /api/v1/jobs/test/download - Error: Error downloading job result
-2025-09-06 12:37:59 - Request: GET /api/v1/jobs/test/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:37:59 - [RESPONSE] GET /api/v1/jobs/test/download - Status: 500 - Duration: 9ms
-2025-09-06 12:38:10 - Request: GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:38:10 - [RESPONSE] GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download - Status: 500 - Duration: 10ms
-2025-09-06 12:38:10 - Exception in request: GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download - Error: Error downloading job result
-2025-09-06 12:38:24 - Request: GET /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 12:38:25 - Response: GET /api/v1/jobs - Status: 200 - Duration: 53ms
-2025-09-06 12:46:03 - Request: GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:46:03 - [RESPONSE] GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download - Status: 500 - Duration: 7ms
-2025-09-06 12:46:03 - Exception in request: GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download - Error: Error downloading job result
-2025-09-06 12:46:58 - Request: GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:46:59 - [RESPONSE] GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download - Status: 500 - Duration: 278ms
-2025-09-06 12:46:59 - Exception in request: GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download - Error: Error downloading job result
-2025-09-06 12:47:29 - Request: GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:47:29 - [RESPONSE] GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download - Status: 500 - Duration: 9ms
-2025-09-06 12:47:41 - Request: GET /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 12:47:41 - Response: GET /api/v1/jobs - Status: 200 - Duration: 92ms
-2025-09-06 12:47:47 - Request: GET /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 12:47:47 - Response: GET /api/v1/jobs - Status: 200 - Duration: 43ms
-2025-09-06 12:48:04 - Request: GET /api/v1/jobs/f459e09c-de1d-4a5b-97e3-526c8bdaca24/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:48:04 - [RESPONSE] GET /api/v1/jobs/f459e09c-de1d-4a5b-97e3-526c8bdaca24/download - Status: 500 - Duration: 4ms
-2025-09-06 12:48:25 - Request: GET /api/v1/jobs/f459e09c-de1d-4a5b-97e3-526c8bdaca24/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:48:25 - [RESPONSE] GET /api/v1/jobs/f459e09c-de1d-4a5b-97e3-526c8bdaca24/download - Status: 500 - Duration: 5ms
-2025-09-06 12:48:56 - Request: GET /api/v1/jobs/f459e09c-de1d-4a5b-97e3-526c8bdaca24/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:48:56 - Response: GET /api/v1/jobs/f459e09c-de1d-4a5b-97e3-526c8bdaca24/download - Status: 200 - Duration: 6ms
-2025-09-06 12:52:07 - Request: POST /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 12:52:07 - [RESPONSE] POST /api/v1/jobs - Status: 400 - Duration: 4ms
-2025-09-06 12:52:26 - Request: POST /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 12:52:26 - Response: POST /api/v1/jobs - Status: 200 - Duration: 30ms
-2025-09-06 12:52:48 - Request: GET /api/v1/jobs/153822b0-e9b7-4221-a9d6-7e258c6aa0fc from 0:0:0:0:0:0:0:1
-2025-09-06 12:52:48 - Response: GET /api/v1/jobs/153822b0-e9b7-4221-a9d6-7e258c6aa0fc - Status: 200 - Duration: 17ms
-2025-09-06 12:56:26 - Request: GET /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 12:56:26 - Response: GET /api/v1/jobs - Status: 200 - Duration: 29ms
-2025-09-06 12:56:50 - Request: GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:56:50 - [RESPONSE] GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download - Status: 500 - Duration: 17ms
-2025-09-06 12:56:50 - Exception in request: GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download - Error: Error downloading job result
-2025-09-06 12:57:06 - Request: GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download from 0:0:0:0:0:0:0:1
-2025-09-06 12:57:06 - [RESPONSE] GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download - Status: 500 - Duration: 12ms
-2025-09-06 12:57:06 - Exception in request: GET /api/v1/jobs/79da81c3-d222-4703-99f2-d70ee89babe3/download - Error: Error downloading job result
-2025-09-06 12:58:01 - Request: POST /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 12:58:01 - Response: POST /api/v1/jobs - Status: 200 - Duration: 9ms
-2025-09-06 12:58:18 - Request: GET /api/v1/jobs/3134bf81-c2a1-473f-9080-2cda1430a9d2 from 0:0:0:0:0:0:0:1
-2025-09-06 12:58:18 - Response: GET /api/v1/jobs/3134bf81-c2a1-473f-9080-2cda1430a9d2 - Status: 200 - Duration: 6ms
-2025-09-06 12:59:45 - Request: GET /api/v1/jobs/3134bf81-c2a1-473f-9080-2cda1430a9d2 from 0:0:0:0:0:0:0:1
-2025-09-06 12:59:45 - Response: GET /api/v1/jobs/3134bf81-c2a1-473f-9080-2cda1430a9d2 - Status: 200 - Duration: 6ms
-2025-09-06 12:59:59 - Request: GET /api/v1/jobs/3134bf81-c2a1-473f-9080-2cda1430a9d2 from 0:0:0:0:0:0:0:1
-2025-09-06 12:59:59 - Response: GET /api/v1/jobs/3134bf81-c2a1-473f-9080-2cda1430a9d2 - Status: 200 - Duration: 3ms
-2025-09-06 13:00:54 - Request: POST /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 13:00:54 - Response: POST /api/v1/jobs - Status: 200 - Duration: 5ms
-2025-09-06 13:01:08 - Request: GET /api/v1/jobs/993ffc4e-12e9-4c93-a885-7fb84a61b9ed from 0:0:0:0:0:0:0:1
-2025-09-06 13:01:08 - Response: GET /api/v1/jobs/993ffc4e-12e9-4c93-a885-7fb84a61b9ed - Status: 200 - Duration: 4ms
-2025-09-06 13:03:34 - Request: POST /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 13:03:34 - Response: POST /api/v1/jobs - Status: 200 - Duration: 5ms
-2025-09-06 13:08:37 - Request: POST /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 13:08:37 - Response: POST /api/v1/jobs - Status: 200 - Duration: 19ms
-2025-09-06 13:08:39 - Request: POST /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 13:08:39 - Response: POST /api/v1/jobs - Status: 200 - Duration: 15ms
-2025-09-06 13:08:53 - Request: GET /api/v1/jobs/14150cd0-b421-4646-b367-62343a23bc73 from 0:0:0:0:0:0:0:1
-2025-09-06 13:08:53 - Response: GET /api/v1/jobs/14150cd0-b421-4646-b367-62343a23bc73 - Status: 200 - Duration: 8ms
-2025-09-06 13:10:17 - Request: POST /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 13:10:17 - Response: POST /api/v1/jobs - Status: 200 - Duration: 4ms
-2025-09-06 13:10:29 - Request: POST /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 13:10:29 - Response: POST /api/v1/jobs - Status: 200 - Duration: 6ms
-2025-09-06 13:10:49 - Request: GET /api/v1/jobs/4eb9778e-766f-411d-ad48-62102aefe623 from 0:0:0:0:0:0:0:1
-2025-09-06 13:10:49 - Response: GET /api/v1/jobs/4eb9778e-766f-411d-ad48-62102aefe623 - Status: 200 - Duration: 2ms
-2025-09-06 13:11:04 - Request: GET /api/v1/jobs/4eb9778e-766f-411d-ad48-62102aefe623 from 0:0:0:0:0:0:0:1
-2025-09-06 13:11:04 - Response: GET /api/v1/jobs/4eb9778e-766f-411d-ad48-62102aefe623 - Status: 200 - Duration: 3ms
-2025-09-06 13:15:23 - Request: POST /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 13:15:23 - Response: POST /api/v1/jobs - Status: 200 - Duration: 20ms
-2025-09-06 13:19:00 - Request: POST /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 13:19:00 - Response: POST /api/v1/jobs - Status: 200 - Duration: 5ms
-2025-09-06 13:20:37 - Request: POST /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 13:20:37 - Response: POST /api/v1/jobs - Status: 200 - Duration: 4ms
-2025-09-06 13:20:49 - Request: POST /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 13:20:49 - Response: POST /api/v1/jobs - Status: 200 - Duration: 12ms
-2025-09-06 13:21:24 - Request: GET /api/v1/jobs/d762365b-53f5-45b7-bdf5-b2eb0dc70ba0 from 0:0:0:0:0:0:0:1
-2025-09-06 13:21:24 - Response: GET /api/v1/jobs/d762365b-53f5-45b7-bdf5-b2eb0dc70ba0 - Status: 200 - Duration: 16ms
-2025-09-06 13:21:34 - Request: GET /api/v1/jobs/d762365b-53f5-45b7-bdf5-b2eb0dc70ba0 from 0:0:0:0:0:0:0:1
-2025-09-06 13:21:34 - Response: GET /api/v1/jobs/d762365b-53f5-45b7-bdf5-b2eb0dc70ba0 - Status: 200 - Duration: 4ms
-2025-09-06 13:22:32 - Request: POST /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 13:22:32 - Response: POST /api/v1/jobs - Status: 200 - Duration: 7ms
-2025-09-06 13:22:48 - Request: POST /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 13:22:48 - Response: POST /api/v1/jobs - Status: 200 - Duration: 4ms
-2025-09-06 13:23:18 - Request: GET /api/v1/jobs/73645411-4e6c-4168-9bfc-c9bf4f40932c from 0:0:0:0:0:0:0:1
-2025-09-06 13:23:18 - Response: GET /api/v1/jobs/73645411-4e6c-4168-9bfc-c9bf4f40932c - Status: 200 - Duration: 3ms
-2025-09-06 13:35:13 - Request: POST /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 13:35:13 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 19ms
-2025-09-06 13:35:36 - Request: POST /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 13:35:36 - Response: POST /api/v1/jobs - Status: 200 - Duration: 305ms
-2025-09-06 13:35:54 - Request: POST /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 13:35:54 - Response: POST /api/v1/jobs - Status: 200 - Duration: 7ms
-2025-09-06 13:36:02 - Request: GET /api/v1/jobs/ec996a8c-ebb1-4292-8b58-f9a867abf11b from 0:0:0:0:0:0:0:1
-2025-09-06 13:36:02 - Response: GET /api/v1/jobs/ec996a8c-ebb1-4292-8b58-f9a867abf11b - Status: 200 - Duration: 62ms
-2025-09-06 13:36:14 - Request: GET /api/v1/jobs/ec996a8c-ebb1-4292-8b58-f9a867abf11b from 0:0:0:0:0:0:0:1
-2025-09-06 13:36:14 - Response: GET /api/v1/jobs/ec996a8c-ebb1-4292-8b58-f9a867abf11b - Status: 200 - Duration: 8ms
-2025-09-06 13:38:14 - Request: POST /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 13:38:14 - Response: POST /api/v1/jobs - Status: 200 - Duration: 319ms
-2025-09-06 13:38:25 - Request: POST /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 13:38:25 - Response: POST /api/v1/jobs - Status: 200 - Duration: 17ms
-2025-09-06 13:38:38 - Request: GET /api/v1/jobs/436eb819-73e6-4dca-a7d3-762181309f2a from 0:0:0:0:0:0:0:1
-2025-09-06 13:38:38 - Response: GET /api/v1/jobs/436eb819-73e6-4dca-a7d3-762181309f2a - Status: 200 - Duration: 36ms
-2025-09-06 13:40:14 - Request: POST /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 13:40:14 - Response: POST /api/v1/jobs - Status: 200 - Duration: 11ms
-2025-09-06 13:40:23 - Request: POST /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 13:40:23 - Response: POST /api/v1/jobs - Status: 200 - Duration: 5ms
-2025-09-06 13:40:36 - Request: GET /api/v1/jobs/25e29761-3ca6-4c52-89f5-be8b1856a559 from 0:0:0:0:0:0:0:1
-2025-09-06 13:40:36 - Response: GET /api/v1/jobs/25e29761-3ca6-4c52-89f5-be8b1856a559 - Status: 200 - Duration: 2ms
-2025-09-06 13:41:31 - Request: POST /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 13:41:31 - Response: POST /api/v1/jobs - Status: 200 - Duration: 11ms
-2025-09-06 13:41:40 - Request: POST /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 13:41:40 - Response: POST /api/v1/jobs - Status: 200 - Duration: 15ms
-2025-09-06 13:41:58 - Request: GET /api/v1/jobs/4c502d4b-4286-4dfb-9ef1-5c4617941625 from 0:0:0:0:0:0:0:1
-2025-09-06 13:41:58 - Response: GET /api/v1/jobs/4c502d4b-4286-4dfb-9ef1-5c4617941625 - Status: 200 - Duration: 4ms
-2025-09-06 13:44:21 - Request: POST /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 13:44:21 - Response: POST /api/v1/jobs - Status: 200 - Duration: 6ms
-2025-09-06 13:44:30 - Request: POST /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 13:44:30 - Response: POST /api/v1/jobs - Status: 200 - Duration: 8ms
-2025-09-06 13:44:45 - Request: GET /api/v1/jobs/ebcabd33-3a5c-4574-926b-3606ad2db119 from 0:0:0:0:0:0:0:1
-2025-09-06 13:44:45 - Response: GET /api/v1/jobs/ebcabd33-3a5c-4574-926b-3606ad2db119 - Status: 200 - Duration: 6ms
-2025-09-06 13:46:56 - Request: POST /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 13:46:56 - Response: POST /api/v1/jobs - Status: 200 - Duration: 8ms
-2025-09-06 13:49:53 - Request: POST /api/v1/jobs from 0:0:0:0:0:0:0:1
-2025-09-06 13:49:53 - Response: POST /api/v1/jobs - Status: 200 - Duration: 10ms
-2025-09-06 13:50:08 - Request: GET /api/v1/jobs/41786ace-55dd-44fa-b9db-7de9ee14a9a3 from 0:0:0:0:0:0:0:1
-2025-09-06 13:50:08 - Response: GET /api/v1/jobs/41786ace-55dd-44fa-b9db-7de9ee14a9a3 - Status: 200 - Duration: 3ms
+2025-09-14 10:08:05 - Request: POST /api/v1/jobs from 127.0.0.1
+2025-09-14 10:08:06 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 260ms
+2025-09-14 10:08:06 - Request: POST /api/v1/jobs from 127.0.0.1
+2025-09-14 10:08:06 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 6ms
+2025-09-14 10:08:06 - Request: POST /api/v1/jobs from 127.0.0.1
+2025-09-14 10:08:06 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 6ms
+2025-09-14 10:08:06 - Request: POST /api/v1/jobs from 127.0.0.1
+2025-09-14 10:08:06 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 5ms
+2025-09-14 10:08:07 - Request: GET /api/v1/jobs/job-123 from 127.0.0.1
+2025-09-14 10:08:07 - Response: GET /api/v1/jobs/job-123 - Status: 200 - Duration: 31ms
+2025-09-14 10:08:07 - Request: GET /api/v1/jobs/invalid-job-id/events from 127.0.0.1
+2025-09-14 10:08:07 - [RESPONSE] GET /api/v1/jobs/invalid-job-id/events - Status: 404 - Duration: 8ms
+2025-09-14 10:08:07 - Exception in request: GET /api/v1/jobs/invalid-job-id/events - Error: Job não encontrado: invalid-job-id
+2025-09-14 10:08:07 - Request: GET /api/v1/jobs from 127.0.0.1
+2025-09-14 10:08:07 - Response: GET /api/v1/jobs - Status: 200 - Duration: 10ms
+2025-09-14 10:08:07 - Request: GET /api/v1/jobs/test-job-123/events from 127.0.0.1
+2025-09-14 10:08:07 - Request: POST /api/v1/jobs from 127.0.0.1
+2025-09-14 10:08:07 - Response: POST /api/v1/jobs - Status: 200 - Duration: 23ms
+2025-09-14 10:08:07 - Request: POST /api/v1/jobs from 127.0.0.1
+2025-09-14 10:08:07 - [RESPONSE] POST /api/v1/jobs - Status: 413 - Duration: 8ms
+2025-09-14 10:08:07 - Request: POST /api/v1/jobs from 127.0.0.1
+2025-09-14 10:08:07 - Response: POST /api/v1/jobs - Status: 200 - Duration: 4ms
+2025-09-14 10:08:07 - Request: POST /api/v1/jobs from 127.0.0.1
+2025-09-14 10:08:07 - [RESPONSE] POST /api/v1/jobs - Status: 413 - Duration: 4ms
+2025-09-14 10:17:48 - Request: POST /api/v1/jobs from 127.0.0.1
+2025-09-14 10:17:48 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 320ms
+2025-09-14 10:17:48 - Request: POST /api/v1/jobs from 127.0.0.1
+2025-09-14 10:17:48 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 8ms
+2025-09-14 10:17:48 - Request: POST /api/v1/jobs from 127.0.0.1
+2025-09-14 10:17:48 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 5ms
+2025-09-14 10:17:48 - Request: POST /api/v1/jobs from 127.0.0.1
+2025-09-14 10:17:48 - [RESPONSE] POST /api/v1/jobs - Status: 500 - Duration: 8ms
+2025-09-14 10:17:50 - Request: GET /api/v1/jobs/job-123 from 127.0.0.1
+2025-09-14 10:17:50 - Response: GET /api/v1/jobs/job-123 - Status: 200 - Duration: 75ms
+2025-09-14 10:17:50 - Request: GET /api/v1/jobs/invalid-job-id/events from 127.0.0.1
+2025-09-14 10:17:51 - [RESPONSE] GET /api/v1/jobs/invalid-job-id/events - Status: 404 - Duration: 13ms
+2025-09-14 10:17:51 - Exception in request: GET /api/v1/jobs/invalid-job-id/events - Error: Job não encontrado: invalid-job-id
+2025-09-14 10:17:51 - Request: GET /api/v1/jobs from 127.0.0.1
+2025-09-14 10:17:51 - Response: GET /api/v1/jobs - Status: 200 - Duration: 12ms
+2025-09-14 10:17:51 - Request: GET /api/v1/jobs/test-job-123/events from 127.0.0.1
+2025-09-14 10:17:52 - Request: POST /api/v1/jobs from 127.0.0.1
+2025-09-14 10:17:52 - Response: POST /api/v1/jobs - Status: 200 - Duration: 52ms
+2025-09-14 10:17:52 - Request: POST /api/v1/jobs from 127.0.0.1
+2025-09-14 10:17:52 - [RESPONSE] POST /api/v1/jobs - Status: 413 - Duration: 15ms
+2025-09-14 10:17:52 - Request: POST /api/v1/jobs from 127.0.0.1
+2025-09-14 10:17:52 - Response: POST /api/v1/jobs - Status: 200 - Duration: 6ms
+2025-09-14 10:17:52 - Request: POST /api/v1/jobs from 127.0.0.1
+2025-09-14 10:17:52 - [RESPONSE] POST /api/v1/jobs - Status: 413 - Duration: 9ms

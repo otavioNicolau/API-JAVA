@@ -19,18 +19,18 @@ class RedisConnectivityTest {
     // Test basic Redis connectivity
     String testKey = "test:connectivity";
     String testValue = "test-value";
-    
+
     // Set a value
     redisTemplate.opsForValue().set(testKey, testValue);
-    
+
     // Get the value back
     String retrievedValue = (String) redisTemplate.opsForValue().get(testKey);
-    
+
     assertEquals(testValue, retrievedValue);
-    
+
     // Clean up
     redisTemplate.delete(testKey);
-    
+
     System.out.println("Redis connectivity test passed!");
   }
 }

@@ -33,12 +33,13 @@ class RedisConfigTest {
     // Then
     assertNotNull(redisTemplate);
     assertEquals(connectionFactory, redisTemplate.getConnectionFactory());
-    
+
     // Verificar serializadores
     assertTrue(redisTemplate.getKeySerializer() instanceof StringRedisSerializer);
     assertTrue(redisTemplate.getHashKeySerializer() instanceof StringRedisSerializer);
     assertTrue(redisTemplate.getValueSerializer() instanceof GenericJackson2JsonRedisSerializer);
-    assertTrue(redisTemplate.getHashValueSerializer() instanceof GenericJackson2JsonRedisSerializer);
+    assertTrue(
+        redisTemplate.getHashValueSerializer() instanceof GenericJackson2JsonRedisSerializer);
   }
 
   @Test
@@ -48,7 +49,9 @@ class RedisConfigTest {
 
     // Then
     assertNotNull(factory);
-    assertTrue(factory instanceof org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory);
+    assertTrue(
+        factory
+            instanceof org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory);
   }
 
   @Test
@@ -81,9 +84,11 @@ class RedisConfigTest {
     RedisConfig config = new RedisConfig();
 
     // When & Then
-    assertThrows(IllegalStateException.class, () -> {
-      config.redisTemplate(null);
-    });
+    assertThrows(
+        IllegalStateException.class,
+        () -> {
+          config.redisTemplate(null);
+        });
   }
 
   @Test

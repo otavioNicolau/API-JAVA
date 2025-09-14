@@ -42,7 +42,8 @@ class CreateJobUseCaseTest {
         new CreateJobRequest(JobOperation.MERGE, List.of("file1.pdf", "file2.pdf"), Map.of());
     request.setJobId("job-123");
 
-    Job savedJob = new Job("job-123", JobOperation.MERGE, List.of("file1.pdf", "file2.pdf"), Map.of());
+    Job savedJob =
+        new Job("job-123", JobOperation.MERGE, List.of("file1.pdf", "file2.pdf"), Map.of());
 
     when(pdfProcessingService.supportsOperation(JobOperation.MERGE)).thenReturn(true);
     when(pdfProcessingService.validateOptions(eq(JobOperation.MERGE), any())).thenReturn(true);
@@ -72,8 +73,7 @@ class CreateJobUseCaseTest {
     when(pdfProcessingService.supportsOperation(JobOperation.SPLIT)).thenReturn(true);
     when(pdfProcessingService.validateOptions(eq(JobOperation.SPLIT), any())).thenReturn(true);
     when(pdfProcessingService.getSupportedOperations()).thenReturn(List.of(JobOperation.SPLIT));
-    when(jobRepository.save(any(Job.class)))
-        .thenAnswer(invocation -> invocation.getArgument(0));
+    when(jobRepository.save(any(Job.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
     // When
     JobResponse response = createJobUseCase.execute(request);
@@ -176,7 +176,6 @@ class CreateJobUseCaseTest {
   void shouldThrowExceptionWhenPdfProcessingServiceIsNull() {
     // When & Then
     assertThrows(
-        NullPointerException.class,
-        () -> new CreateJobUseCase(jobRepository, jobQueue, null));
+        NullPointerException.class, () -> new CreateJobUseCase(jobRepository, jobQueue, null));
   }
 }

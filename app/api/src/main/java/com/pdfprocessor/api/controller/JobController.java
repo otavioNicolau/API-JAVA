@@ -2,7 +2,7 @@ package com.pdfprocessor.api.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-//import com.pdfprocessor.api.exception.SecurityValidationException;
+// import com.pdfprocessor.api.exception.SecurityValidationException;
 import com.pdfprocessor.api.service.InputValidationService;
 import com.pdfprocessor.api.service.RateLimitService;
 import com.pdfprocessor.application.dto.CreateJobRequest;
@@ -22,6 +22,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import jakarta.servlet.http.HttpServletRequest;
 
 /** Controller REST para operações de jobs de processamento de PDF. */
 @RestController
@@ -115,16 +115,13 @@ public class JobController {
         @ApiResponse(responseCode = "422", description = "Dados não processáveis")
       })
   public ResponseEntity<JobResponse> createJob(
-      @Parameter(
-              description = "Tipo de operação a ser executada",
-              required = true)
+      @Parameter(description = "Tipo de operação a ser executada", required = true)
           @RequestParam("operation")
           JobOperation operation,
       @Parameter(description = "Arquivos PDF para upload (opcional se inputFiles for fornecido)")
           @RequestPart(value = "files", required = false)
           List<MultipartFile> files,
-      @Parameter(
-              description = "Arquivos adicionais para upload (alternativa ao parâmetro files)")
+      @Parameter(description = "Arquivos adicionais para upload (alternativa ao parâmetro files)")
           @RequestPart(value = "inputFiles", required = false)
           List<MultipartFile> inputFiles,
       @Parameter(
@@ -156,12 +153,13 @@ public class JobController {
       // Verificar rate limit por API key
       String apiKey = httpRequest.getHeader("X-API-Key");
       rateLimitService.checkRateLimit(apiKey);
-      
+
       System.out.println("DEBUG: API Key = " + apiKey);
       System.out.println("DEBUG: Operation = " + operation);
       System.out.println("DEBUG: Files = " + (files != null ? files.size() : "null"));
-      System.out.println("DEBUG: InputFiles = " + (inputFiles != null ? inputFiles.size() : "null"));
-      
+      System.out.println(
+          "DEBUG: InputFiles = " + (inputFiles != null ? inputFiles.size() : "null"));
+
       // Validações rigorosas de entrada
       inputValidationService.validateOperation(operation.name());
       inputValidationService.validateUploadedFiles(files);
@@ -169,12 +167,13 @@ public class JobController {
         inputValidationService.validateUploadedFiles(inputFiles);
       }
       inputValidationService.validateOptionsJson(optionsJson);
-      
+
       // Validar que pelo menos um tipo de entrada foi fornecido
       if ((files == null || files.isEmpty()) && (inputFiles == null || inputFiles.isEmpty())) {
-        throw new IllegalArgumentException("Pelo menos um arquivo deve ser fornecido via 'files' ou 'inputFiles'");
+        throw new IllegalArgumentException(
+            "Pelo menos um arquivo deve ser fornecido via 'files' ou 'inputFiles'");
       }
-      
+
       // Gerar ID único para o job
       String jobId = UUID.randomUUID().toString();
 
@@ -194,7 +193,7 @@ public class JobController {
           }
         }
       }
-      
+
       if (inputFiles != null && !inputFiles.isEmpty()) {
         // Caso 2: Upload de arquivos via parâmetro 'inputFiles'
         for (MultipartFile file : inputFiles) {
@@ -258,7 +257,7 @@ public class JobController {
           int size) {
     // Validar parâmetros de paginação
     inputValidationService.validatePaginationParams(page, size);
-    
+
     List<JobResponse> response = listAllJobsUseCase.execute(page, size);
     return ResponseEntity.ok(response);
   }
@@ -311,7 +310,7 @@ public class JobController {
           String jobId) {
     // Validar ID do job
     inputValidationService.validateJobId(jobId);
-    
+
     JobResponse response = getJobStatusUseCase.execute(jobId);
     return ResponseEntity.ok(response);
   }
@@ -369,7 +368,7 @@ public class JobController {
     try {
       // Validar ID do job
       inputValidationService.validateJobId(jobId);
-      
+
       DownloadResultUseCase.DownloadResponse result = downloadResultUseCase.execute(jobId);
 
       return ResponseEntity.ok()
@@ -416,7 +415,7 @@ public class JobController {
           String jobId) {
     // Validar ID do job
     inputValidationService.validateJobId(jobId);
-    
+
     JobResponse response = cancelJobUseCase.execute(jobId);
     return ResponseEntity.ok(response);
   }
@@ -424,24 +423,28 @@ public class JobController {
   @GetMapping(value = "/{jobId}/events", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
   @Operation(
       summary = "Acompanhar progresso do job em tempo real",
-      description = "Estabelece uma conexão Server-Sent Events (SSE) para receber atualizações em tempo real do progresso de um job específico")
+      description =
+          "Estabelece uma conexão Server-Sent Events (SSE) para receber atualizações em tempo real do progresso de um job específico")
   @ApiResponses(
       value = {
         @ApiResponse(
             responseCode = "200",
             description = "Conexão SSE estabelecida com sucesso",
-            content = @Content(
-                mediaType = "text/event-stream",
-                examples = {
-                  @ExampleObject(
-                      name = "job_update",
-                      value = "event: job-update\ndata: {\"jobId\":\"550e8400-e29b-41d4-a716-446655440000\",\"operation\":\"MERGE\",\"status\":\"PROCESSING\",\"progress\":45}\n\n",
-                      description = "Atualização de progresso"),
-                  @ExampleObject(
-                      name = "job_finished",
-                      value = "event: job-finished\ndata: {\"jobId\":\"550e8400-e29b-41d4-a716-446655440000\",\"operation\":\"MERGE\",\"status\":\"COMPLETED\",\"progress\":100}\n\n",
-                      description = "Job concluído")
-                })),
+            content =
+                @Content(
+                    mediaType = "text/event-stream",
+                    examples = {
+                      @ExampleObject(
+                          name = "job_update",
+                          value =
+                              "event: job-update\ndata: {\"jobId\":\"550e8400-e29b-41d4-a716-446655440000\",\"operation\":\"MERGE\",\"status\":\"PROCESSING\",\"progress\":45}\n\n",
+                          description = "Atualização de progresso"),
+                      @ExampleObject(
+                          name = "job_finished",
+                          value =
+                              "event: job-finished\ndata: {\"jobId\":\"550e8400-e29b-41d4-a716-446655440000\",\"operation\":\"MERGE\",\"status\":\"COMPLETED\",\"progress\":100}\n\n",
+                          description = "Job concluído")
+                    })),
         @ApiResponse(responseCode = "404", description = "Job não encontrado"),
         @ApiResponse(responseCode = "401", description = "Não autorizado")
       })
@@ -451,11 +454,11 @@ public class JobController {
           String jobId) {
     // Validar ID do job
     inputValidationService.validateJobId(jobId);
-    
+
     try {
       // Verificar se o job existe
       getJobStatusUseCase.execute(jobId);
-      
+
       // Criar e retornar o emitter SSE
       return sseService.createEmitter(jobId);
     } catch (com.pdfprocessor.domain.exception.JobNotFoundException ex) {

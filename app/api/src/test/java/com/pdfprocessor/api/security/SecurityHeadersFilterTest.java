@@ -1,7 +1,7 @@
 package com.pdfprocessor.api.security;
 
-//import static org.junit.jupiter.api.Assertions.assertEquals;
-//import static org.mockito.Mockito.mock;
+// import static org.junit.jupiter.api.Assertions.assertEquals;
+// import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -89,18 +89,19 @@ class SecurityHeadersFilterTest {
     verify(response).setHeader("X-Frame-Options", "DENY");
     verify(response).setHeader("X-XSS-Protection", "1; mode=block");
     verify(response).setHeader("Server", "PDF-Processor-API");
-    
+
     // Cache headers should not be set for non-API endpoints
     ArgumentCaptor<String> headerCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> valueCaptor = ArgumentCaptor.forClass(String.class);
-    verify(response, org.mockito.Mockito.atLeastOnce()).setHeader(headerCaptor.capture(), valueCaptor.capture());
-    
+    verify(response, org.mockito.Mockito.atLeastOnce())
+        .setHeader(headerCaptor.capture(), valueCaptor.capture());
+
     // Verify cache headers are not present
     java.util.List<String> headers = headerCaptor.getAllValues();
     org.junit.jupiter.api.Assertions.assertFalse(headers.contains("Cache-Control"));
     org.junit.jupiter.api.Assertions.assertFalse(headers.contains("Pragma"));
     org.junit.jupiter.api.Assertions.assertFalse(headers.contains("Expires"));
-    
+
     verify(filterChain).doFilter(request, response);
   }
 
@@ -116,12 +117,13 @@ class SecurityHeadersFilterTest {
     // Then
     ArgumentCaptor<String> headerCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> valueCaptor = ArgumentCaptor.forClass(String.class);
-    verify(response, org.mockito.Mockito.atLeastOnce()).setHeader(headerCaptor.capture(), valueCaptor.capture());
-    
+    verify(response, org.mockito.Mockito.atLeastOnce())
+        .setHeader(headerCaptor.capture(), valueCaptor.capture());
+
     // Verify HSTS header is not present for HTTP
     java.util.List<String> headers = headerCaptor.getAllValues();
     org.junit.jupiter.api.Assertions.assertFalse(headers.contains("Strict-Transport-Security"));
-    
+
     verify(filterChain).doFilter(request, response);
   }
 }

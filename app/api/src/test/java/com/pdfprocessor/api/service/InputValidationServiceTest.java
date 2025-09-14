@@ -3,7 +3,7 @@ package com.pdfprocessor.api.service;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.pdfprocessor.api.exception.SecurityValidationException;
-//import com.pdfprocessor.domain.model.JobOperation;
+// import com.pdfprocessor.domain.model.JobOperation;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -46,8 +46,7 @@ class InputValidationServiceTest {
     // When & Then
     SecurityValidationException exception =
         assertThrows(
-            SecurityValidationException.class,
-            () -> inputValidationService.validateOperation(""));
+            SecurityValidationException.class, () -> inputValidationService.validateOperation(""));
     assertEquals("Operation parameter is required", exception.getMessage());
   }
 
@@ -76,8 +75,9 @@ class InputValidationServiceTest {
   @Test
   void shouldThrowExceptionForTooManyFiles() {
     // Given
-    List<MultipartFile> files = Collections.nCopies(11, 
-        new MockMultipartFile("file", "test.pdf", "application/pdf", new byte[1024]));
+    List<MultipartFile> files =
+        Collections.nCopies(
+            11, new MockMultipartFile("file", "test.pdf", "application/pdf", new byte[1024]));
 
     // When & Then
     SecurityValidationException exception =
@@ -107,15 +107,16 @@ class InputValidationServiceTest {
   void shouldThrowExceptionForInvalidFileType() {
     // Given
     List<MultipartFile> files =
-        Arrays.asList(
-            new MockMultipartFile("file", "test.exe", "application/exe", new byte[1024]));
+        Arrays.asList(new MockMultipartFile("file", "test.exe", "application/exe", new byte[1024]));
 
     // When & Then
     SecurityValidationException exception =
         assertThrows(
             SecurityValidationException.class,
             () -> inputValidationService.validateUploadedFiles(files));
-    assertEquals("File extension '.exe' not allowed. Allowed extensions: .pdf, .jpg, .jpeg, .png, .gif, .bmp, .tiff, .tif", exception.getMessage());
+    assertEquals(
+        "File extension '.exe' not allowed. Allowed extensions: .pdf, .jpg, .jpeg, .png, .gif, .bmp, .tiff, .tif",
+        exception.getMessage());
   }
 
   @Test
@@ -237,8 +238,7 @@ class InputValidationServiceTest {
     // When & Then
     SecurityValidationException exception =
         assertThrows(
-            SecurityValidationException.class,
-            () -> inputValidationService.validateJobId(null));
+            SecurityValidationException.class, () -> inputValidationService.validateJobId(null));
     assertEquals("Job ID is required", exception.getMessage());
   }
 
@@ -256,8 +256,7 @@ class InputValidationServiceTest {
   void shouldValidateInputProvidedSuccessfully() {
     // Given
     List<MultipartFile> files =
-        Arrays.asList(
-            new MockMultipartFile("file", "test.pdf", "application/pdf", new byte[1024]));
+        Arrays.asList(new MockMultipartFile("file", "test.pdf", "application/pdf", new byte[1024]));
     List<String> inputFiles = null;
 
     // When & Then
@@ -271,16 +270,14 @@ class InputValidationServiceTest {
         assertThrows(
             SecurityValidationException.class,
             () -> inputValidationService.validateInputProvided(null, null));
-    assertEquals(
-        "Either files or inputFiles parameter is required",
-        exception.getMessage());
+    assertEquals("Either files or inputFiles parameter is required", exception.getMessage());
 
     exception =
         assertThrows(
             SecurityValidationException.class,
-            () -> inputValidationService.validateInputProvided(Collections.emptyList(), Collections.emptyList()));
-    assertEquals(
-        "Either files or inputFiles parameter is required",
-        exception.getMessage());
+            () ->
+                inputValidationService.validateInputProvided(
+                    Collections.emptyList(), Collections.emptyList()));
+    assertEquals("Either files or inputFiles parameter is required", exception.getMessage());
   }
 }

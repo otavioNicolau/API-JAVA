@@ -63,13 +63,13 @@ public class LocalStorageService implements StorageService {
     if (path.isAbsolute()) {
       return path;
     }
-    
+
     // Se é um caminho relativo que começa com ./storage, substitui pelo base path configurado
     if (filePath.startsWith("./storage/")) {
       String relativePart = filePath.substring("./storage/".length());
       return Paths.get(storageProperties.getBasePath(), relativePart).toAbsolutePath();
     }
-    
+
     // Para outros caminhos relativos, resolve baseado no base path
     return Paths.get(storageProperties.getBasePath()).resolve(filePath).toAbsolutePath();
   }
