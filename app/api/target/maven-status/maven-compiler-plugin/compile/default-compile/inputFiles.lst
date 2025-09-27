@@ -14,5 +14,6 @@
 /home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/service/RateLimitService.java
 /home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/controller/MonitoringController.java
 /home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/service/InputValidationService.java
+/home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/config/CorsConfig.java
 /home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/security/SecurityHeadersFilter.java
 /home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/config/OpenApiConfig.java

@@ -49,7 +49,7 @@ logging:
 # Configurações específicas da aplicação
 app:
   storage:
-    base-path: /home/otavio/API-JAVA/app/api/storage
+    base-path: ./storage
   processing:
     max-concurrent-jobs: 10
     timeout-seconds: 300
@@ -61,3 +61,4 @@ app:
       - "dev-key-12345"
       - "test-key-67890"
       - "prod-key-abcdef"
+      - "442800"

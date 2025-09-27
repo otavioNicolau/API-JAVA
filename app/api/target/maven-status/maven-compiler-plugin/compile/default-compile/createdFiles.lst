@@ -4,6 +4,7 @@ com/pdfprocessor/api/exception/GlobalExceptionHandler$ErrorResponse.class
 com/pdfprocessor/api/controller/JobController.class
 com/pdfprocessor/api/security/SecurityHeadersFilter.class
 com/pdfprocessor/api/service/RateLimitService$RequestWindow.class
+com/pdfprocessor/api/config/CorsConfig.class
 com/pdfprocessor/api/service/InputValidationService.class
 com/pdfprocessor/api/controller/HealthController.class
 com/pdfprocessor/api/config/WebMvcConfig.class

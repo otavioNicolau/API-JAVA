@@ -3,9 +3,12 @@ package com.pdfprocessor.application.usecase;
 import com.pdfprocessor.application.dto.CreateJobRequest;
 import com.pdfprocessor.application.dto.JobResponse;
 import com.pdfprocessor.domain.model.Job;
-import com.pdfprocessor.domain.port.JobQueue;
+import com.pdfprocessor.domain.model.JobOperation;
 import com.pdfprocessor.domain.port.JobRepository;
 import com.pdfprocessor.domain.port.PdfProcessingService;
+import com.pdfprocessor.domain.port.JobQueue;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
@@ -32,6 +35,10 @@ public class CreateJobUseCase {
    * @return resposta com dados do job criado
    */
   public JobResponse execute(CreateJobRequest request) {
+    System.out.println("DEBUG: CreateJobUseCase.execute() called with request: " + request);
+    System.out.println("DEBUG: Request operation: " + (request != null ? request.getOperation() : "null"));
+    System.out.println("DEBUG: Request inputFiles: " + (request != null ? request.getInputFiles() : "null"));
+    
     validateRequest(request);
 
     // Usa o jobId fornecido pelo request (já gerado no controller)
@@ -58,8 +65,17 @@ public class CreateJobUseCase {
       throw new IllegalArgumentException("Operation is required");
     }
 
-    if (request.getInputFiles() == null || request.getInputFiles().isEmpty()) {
-      throw new IllegalArgumentException("At least one input file is required");
+    System.out.println("DEBUG: UseCase validation - Operation: " + request.getOperation());
+    System.out.println("DEBUG: UseCase validation - Is PDF_CREATE: " + request.getOperation().equals(JobOperation.PDF_CREATE));
+    System.out.println("DEBUG: UseCase validation - InputFiles: " + request.getInputFiles());
+    System.out.println("DEBUG: UseCase validation - InputFiles null: " + (request.getInputFiles() == null));
+    System.out.println("DEBUG: UseCase validation - InputFiles empty: " + (request.getInputFiles() != null && request.getInputFiles().isEmpty()));
+
+    // Validação de arquivos de entrada removida - será feita no controller
+    
+    // Para PDF_CREATE, garantir lista vazia de arquivos
+    if (request.getOperation().equals(JobOperation.PDF_CREATE) && request.getInputFiles() == null) {
+      request.setInputFiles(new ArrayList<>());
     }
 
     // Debug: verificar instância do serviço e operações suportadas

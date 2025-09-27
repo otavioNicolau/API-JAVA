@@ -8,9 +8,22 @@
 <error line="161" column="5" severity="warning" message="&apos;if&apos; construct must use &apos;{}&apos;s." source="com.puppycrawl.tools.checkstyle.checks.blocks.NeedBracesCheck"/>
 </file>
 <file name="/home/otavio/API-JAVA/app/application/src/main/java/com/pdfprocessor/application/dto/CreateJobRequest.java">
-<error line="22" column="29" severity="warning" message="&apos;{&apos; is not followed by whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
-<error line="22" column="30" severity="warning" message="&apos;}&apos; is not preceded with whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
-<error line="65" column="5" severity="warning" message="&apos;if&apos; construct must use &apos;{}&apos;s." source="com.puppycrawl.tools.checkstyle.checks.blocks.NeedBracesCheck"/>
-<error line="66" column="5" severity="warning" message="&apos;if&apos; construct must use &apos;{}&apos;s." source="com.puppycrawl.tools.checkstyle.checks.blocks.NeedBracesCheck"/>
+<error line="20" column="29" severity="warning" message="&apos;{&apos; is not followed by whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
+<error line="20" column="30" severity="warning" message="&apos;}&apos; is not preceded with whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
+<error line="63" column="5" severity="warning" message="&apos;if&apos; construct must use &apos;{}&apos;s." source="com.puppycrawl.tools.checkstyle.checks.blocks.NeedBracesCheck"/>
+<error line="64" column="5" severity="warning" message="&apos;if&apos; construct must use &apos;{}&apos;s." source="com.puppycrawl.tools.checkstyle.checks.blocks.NeedBracesCheck"/>
+</file>
+<file name="/home/otavio/API-JAVA/app/application/src/main/java/com/pdfprocessor/application/usecase/ListAllJobsUseCase.java">
+</file>
+<file name="/home/otavio/API-JAVA/app/application/src/main/java/com/pdfprocessor/application/usecase/DownloadResultUseCase.java">
+</file>
+<file name="/home/otavio/API-JAVA/app/application/src/main/java/com/pdfprocessor/application/usecase/CreateJobUseCase.java">
+<error line="10" column="8" severity="warning" message="Unused import - java.time.LocalDateTime." source="com.puppycrawl.tools.checkstyle.checks.imports.UnusedImportsCheck"/>
+<error line="69" severity="warning" message="Line is longer than 120 characters (found 127)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="72" severity="warning" message="Line is longer than 120 characters (found 146)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+</file>
+<file name="/home/otavio/API-JAVA/app/application/src/main/java/com/pdfprocessor/application/usecase/GetJobStatusUseCase.java">
+</file>
+<file name="/home/otavio/API-JAVA/app/application/src/main/java/com/pdfprocessor/application/usecase/CancelJobUseCase.java">
 </file>
 </checkstyle>

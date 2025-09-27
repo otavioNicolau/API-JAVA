@@ -1,8 +1,9 @@
-#Sun Sep 14 10:17:26 BRT 2025
+#Sun Sep 14 22:17:14 BRT 2025
 /home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/config/ApiKeyAuthenticationFilter.java=1757855021647
+/home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/config/CorsConfig.java=1757882718773
 /home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/config/JacksonConfig.java=1756927437653
 /home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/config/LoggingInterceptor.java=1756927774682
-/home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/config/SecurityConfig.java=1757855021713
+/home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/config/SecurityConfig.java=1757882750773
 /home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/config/WebConfig.java=1756927437594
 /home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/config/WebMvcConfig.java=1756927437697
 /home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/controller/MonitoringController.java=1756927437550
@@ -10,6 +11,6 @@
 /home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/exception/GlobalExceptionHandler.java=1757855021780
 /home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/exception/SecurityValidationException.java=1757855021744
 /home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/service/InputValidationService.java=1757855021486
-/home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/service/RateLimitService.java=1757855021533
+/home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/service/RateLimitService.java=1757874227943
 /home/otavio/API-JAVA/app/api/src/main/java/com/pdfprocessor/api/service/SseService.java=1757855021572
 configuration*?=A4C3433D07FDF75A258AF89E8028BAE5CD142D0E

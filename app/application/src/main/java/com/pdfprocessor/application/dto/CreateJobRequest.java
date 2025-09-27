@@ -1,7 +1,6 @@
 package com.pdfprocessor.application.dto;
 
 import com.pdfprocessor.domain.model.JobOperation;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
@@ -14,10 +13,9 @@ public class CreateJobRequest {
 
   @NotNull(message = "Operação é obrigatória") private JobOperation operation;
 
-  @NotEmpty(message = "Lista de arquivos de entrada não pode estar vazia")
   private List<String> inputFiles;
 
-  @NotNull(message = "Opções não podem ser nulas") private Map<String, Object> options;
+  private Map<String, Object> options;
 
   public CreateJobRequest() {}
 

@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class RateLimitService {
 
-  private static final int MAX_REQUESTS_PER_HOUR = 100;
+  private static final int MAX_REQUESTS_PER_HOUR = 10000; // Temporariamente aumentado para teste de carga
   private static final int WINDOW_SIZE_MINUTES = 60;
 
   private final Clock clock;

@@ -150,6 +150,10 @@ public class JobController {
       HttpServletRequest httpRequest) {
 
     try {
+      System.out.println("DEBUG: Controller method called - operation: " + operation);
+      System.out.println("DEBUG: Controller method called - files: " + (files != null ? files.size() : "null"));
+      System.out.println("DEBUG: Controller method called - inputFiles: " + (inputFiles != null ? inputFiles.size() : "null"));
+      
       // Verificar rate limit por API key
       String apiKey = httpRequest.getHeader("X-API-Key");
       rateLimitService.checkRateLimit(apiKey);
@@ -162,16 +166,27 @@ public class JobController {
 
       // Validações rigorosas de entrada
       inputValidationService.validateOperation(operation.name());
-      inputValidationService.validateUploadedFiles(files);
-      if (inputFiles != null && !inputFiles.isEmpty()) {
-        inputValidationService.validateUploadedFiles(inputFiles);
+      
+      // Para PDF_CREATE, não validar arquivos pois não são necessários
+      if (!operation.equals(JobOperation.PDF_CREATE)) {
+        inputValidationService.validateUploadedFiles(files);
+        if (inputFiles != null && !inputFiles.isEmpty()) {
+          inputValidationService.validateUploadedFiles(inputFiles);
+        }
       }
+      
       inputValidationService.validateOptionsJson(optionsJson);
 
-      // Validar que pelo menos um tipo de entrada foi fornecido
-      if ((files == null || files.isEmpty()) && (inputFiles == null || inputFiles.isEmpty())) {
+      // Validar que pelo menos um tipo de entrada foi fornecido (exceto para operações que criam PDFs do zero)
+      boolean requiresInputFiles = !operation.equals(JobOperation.PDF_CREATE);
+      if (requiresInputFiles && (files == null || files.isEmpty()) && (inputFiles == null || inputFiles.isEmpty())) {
         throw new IllegalArgumentException(
             "Pelo menos um arquivo deve ser fornecido via 'files' ou 'inputFiles'");
+      }
+      
+      // Para PDF_CREATE, garantir que não há arquivos de entrada
+      if (operation.equals(JobOperation.PDF_CREATE)) {
+        files = null; // Limpar arquivos para PDF_CREATE
       }
 
       // Gerar ID único para o job
@@ -221,9 +236,22 @@ public class JobController {
       request.setInputFiles(finalInputFiles);
       request.setOptions(options);
       request.setJobId(jobId); // Passar o jobId gerado
+      
+      System.out.println("DEBUG: CreateJobRequest - Operation: " + request.getOperation());
+      System.out.println("DEBUG: CreateJobRequest - InputFiles: " + request.getInputFiles());
+      System.out.println("DEBUG: CreateJobRequest - InputFiles size: " + (request.getInputFiles() != null ? request.getInputFiles().size() : "null"));
 
-      JobResponse response = createJobUseCase.execute(request);
-      return ResponseEntity.ok(response);
+      System.out.println("DEBUG: Prestes a chamar createJobUseCase.execute()");
+      try {
+        JobResponse response = createJobUseCase.execute(request);
+        System.out.println("DEBUG: createJobUseCase.execute() retornou com sucesso");
+        return ResponseEntity.ok(response);
+      } catch (Exception e) {
+        System.out.println("DEBUG: Exceção capturada no controller: " + e.getClass().getName());
+        System.out.println("DEBUG: Mensagem da exceção: " + e.getMessage());
+        e.printStackTrace();
+        throw e;
+      }
     } catch (IOException e) {
       throw new RuntimeException("Failed to store uploaded files", e);
     }
